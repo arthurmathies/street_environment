@@ -4,12 +4,25 @@
 #include "lms/math/vertex.h"
 #include "street_environment.h"
 
+#ifdef USE_CEREAL
+#include "lms/serializable.h"
+#include "cereal/cerealizable.h"
+#include "cereal/cereal.hpp"
+#include "cereal/types/polymorphic.hpp"
+#include "cereal/archives/portable_binary.hpp"
+#endif
+
 namespace street_environment{
 /**
  * @brief A dynamic entity can be the vehicle itself but also every other
  * moving obstacle.
  */
-struct Obstacle:public EnvironmentObject {
+struct Obstacle:public EnvironmentObject
+#ifdef USE_CEREAL
+    , public lms::Serializable
+#endif
+{
+
     //TODO die Delta-Werte passen beim 1. Aufrufen nicht!
     /**
      * @brief Global position of the entity. x and y are given in meters.
@@ -74,7 +87,29 @@ struct Obstacle:public EnvironmentObject {
      * @return delta velocity in m/s
      */
     float deltaVelocity() const;
+
+    // cereal implementation
+    #ifdef USE_CEREAL
+        //get default interface for datamanager
+        CEREAL_SERIALIZATION()
+
+        //cereal methods
+        template<class Archive>
+        void save(Archive & archive) const {
+            archive (position, viewDirection, velocity, moveDirection, lastPositon, lastVelocity);
+        }
+
+        template<class Archive>
+        void load(Archive & archive) {
+            archive (position, viewDirection, velocity, moveDirection, lastPositon, lastVelocity);
+        }
+    #endif
+
 };
+
 } //street_environment
 
+#ifdef USE_CEREAL
+CEREAL_REGISTER_TYPE(street_environment::Obstacle)
+#endif
 #endif /* OBSTACLE_H */

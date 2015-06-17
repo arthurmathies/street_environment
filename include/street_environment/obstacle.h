@@ -2,7 +2,11 @@
 #define OBSTACLE_H
 
 #include "lms/math/vertex.h"
-#include "street_environment.h"
+#include "street_environment/road.h"
+
+extern "C"{
+#include "../object_tracker/objectTracker_emxAPI.h"
+}
 
 #ifdef USE_CEREAL
 #include "lms/serializable.h"
@@ -23,6 +27,11 @@ struct Obstacle:public EnvironmentObject
     , public lms::Serializable
 #endif
 {
+
+    //Kalman stuff
+    double state[3];
+    double oldState[3];
+    double stateCovariance[9];
 
     //TODO die Delta-Werte passen beim 1. Aufrufen nicht!
     /**
@@ -58,6 +67,10 @@ struct Obstacle:public EnvironmentObject
     float lastVelocity;
 
     Obstacle();
+    /**
+     * @brief init used to init the kalman!
+     */
+    bool init;
 
     /**
      * @brief Set the position for the current cycle. Should be called only
@@ -65,8 +78,7 @@ struct Obstacle:public EnvironmentObject
      * @param position global position of the entity
      * @param viewDirection direction vector of the view of the entity
      */
-    void updatePosition(const lms::math::vertex2f &position,
-                        const lms::math::vertex2f &viewDirection);
+    void updatePosition(const lms::math::vertex2f &position,const street_environment::RoadLane &middle);
 
     /**
      * @brief Set the velocity for the current cycle. Should be called only

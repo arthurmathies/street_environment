@@ -10,15 +10,21 @@
 #include "cereal/types/vector.hpp"
 #include "cereal/types/string.hpp"
 #include "cereal/types/memory.hpp"
+#include <cereal/access.hpp>
 #endif
 
 namespace street_environment {
 
 class EnvironmentObject
 {
+#ifdef USE_CEREAL
+    friend class cereal::access;
+#endif
 private:
     std::string m_name;
 public:
+    virtual ~EnvironmentObject() {}
+
     template <typename T>
     std::shared_ptr<T> getCopyAsPtr() const{
         return std::shared_ptr<T>(new T(*static_cast<const T*>(this)));
@@ -35,23 +41,6 @@ public:
     void name(std::string name){
         m_name = name;
     }
-
-
-    // cereal implementation
-    #ifdef USE_CEREAL
-
-        //cereal methods
-        template<class Archive>
-        void save(Archive & archive) const {
-            archive (m_name);
-        }
-
-        template<class Archive>
-        void load(Archive & archive) {
-            archive(m_name);
-        }
-    #endif
-
 };
 
 class Environment
@@ -87,7 +76,26 @@ public:
     #endif
 };
 
+}  // namespace street_environment
+
+#ifdef USE_CEREAL
+namespace cereal {
+
+template<class Archive>
+void save(Archive &archive, const street_environment::EnvironmentObject &obj) {
+    archive(obj.name());
 }
+
+template<class Archive>
+void load(Archive &archive, street_environment::EnvironmentObject &obj) {
+    std::string name;
+    archive(name);
+    obj.name(name);
+}
+
+}  // namespace cereal
+#endif // USE_CEREAL
+
 #endif /* SENSOR_ENVIRONMENT_H */
 
 

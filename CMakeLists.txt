@@ -15,3 +15,15 @@ include_directories("${OBJ_TRACKER}")
 file(GLOB tracker "${OBJ_TRACKER}/*.c" "${OBJ_TRACKER}/*.h")
 add_library (street_environment SHARED ${SOURCES} ${HEADERS} ${tracker})
 #target_link_libraries (street_environment PRIVATE lms)
+
+
+set (TESTS
+    "src/test/serialization.cpp"
+)
+
+if(USE_GOOGLETEST)
+    message("Compile street_environment testing executable")
+    add_executable(street_environment_test ${TESTS})
+    target_link_libraries(street_environment_test PRIVATE street_environment gtest gtest_main)
+    add_test(StreetEnvironment street_environment_test)
+endif()

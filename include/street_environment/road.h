@@ -49,11 +49,15 @@ namespace street_environment {
         template<class Archive>
         void save(Archive & archive) const {
             archive (m_type, polarDarstellung, polarPartLength);
+            lms::math::polyLine2f::save(archive);
+            EnvironmentObject::save(archive);
         }
 
         template<class Archive>
         void load(Archive & archive) {
             archive(m_type, polarDarstellung, polarPartLength);
+            lms::math::polyLine2f::load(archive);
+            EnvironmentObject::load(archive);
         }
     #endif
 

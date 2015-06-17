@@ -104,6 +104,10 @@ CEREAL_REGISTER_TYPE(street_environment::Obstacle)
 #endif
 
 namespace cereal {
+    template <class Archive>
+    struct specialize<Archive, street_environment::Obstacle, cereal::specialization::non_member_serialize> {};
+      // cereal no longer has any ambiguity when serializing street_environment::Obstacle
+
     template<class Archive>
     void serialize(Archive & archive, street_environment::Obstacle &obs) {
         archive (cereal::base_class<street_environment::EnvironmentObject>(&obs),

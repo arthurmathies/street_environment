@@ -10,6 +10,7 @@
 #include "cereal/cereal.hpp"
 #include "cereal/types/polymorphic.hpp"
 #include "cereal/archives/portable_binary.hpp"
+#include <cereal/types/base_class.hpp>
 #endif
 
 namespace street_environment{
@@ -92,17 +93,6 @@ struct Obstacle:public EnvironmentObject
     #ifdef USE_CEREAL
         //get default interface for datamanager
         CEREAL_SERIALIZATION()
-
-        //cereal methods
-        template<class Archive>
-        void save(Archive & archive) const {
-            archive (position, viewDirection, velocity, moveDirection, lastPositon, lastVelocity);
-        }
-
-        template<class Archive>
-        void load(Archive & archive) {
-            archive (position, viewDirection, velocity, moveDirection, lastPositon, lastVelocity);
-        }
     #endif
 
 };
@@ -112,4 +102,14 @@ struct Obstacle:public EnvironmentObject
 #ifdef USE_CEREAL
 CEREAL_REGISTER_TYPE(street_environment::Obstacle)
 #endif
+
+namespace cereal {
+    template<class Archive>
+    void serialize(Archive & archive, street_environment::Obstacle &obs) {
+        archive (cereal::base_class<street_environment::EnvironmentObject>(&obs),
+                 obs.position, obs.viewDirection, obs.velocity,
+                 obs.moveDirection, obs.lastPositon, obs.lastVelocity);
+    }
+}  // namespace cereal
+
 #endif /* OBSTACLE_H */

@@ -16,6 +16,7 @@
 #include "cereal/types/memory.hpp"
 #include "cereal/types/vector.hpp"
 #include "cereal/archives/portable_binary.hpp"
+#include <cereal/types/base_class.hpp>
 #endif
 
 namespace street_environment {
@@ -44,30 +45,29 @@ namespace street_environment {
             m_type = type;
         }
 
-    #ifdef USE_CEREAL
-        //cereal methods
-        template<class Archive>
-        void save(Archive & archive) const {
-            archive (m_type, polarDarstellung, polarPartLength);
-            lms::math::polyLine2f::save(archive);
-            EnvironmentObject::save(archive);
+        template <class Archive>
+        void serialize( Archive & archive) {
+            archive (cereal::base_class<lms::math::polyLine2f>(this),
+                     cereal::base_class<street_environment::EnvironmentObject>(this),
+                     m_type, polarDarstellung, polarPartLength);
         }
-
-        template<class Archive>
-        void load(Archive & archive) {
-            archive(m_type, polarDarstellung, polarPartLength);
-            lms::math::polyLine2f::load(archive);
-            EnvironmentObject::load(archive);
-        }
-    #endif
-
     };
 
 
     typedef std::shared_ptr<RoadLane> RoadLanePtr;
-}
+}  // namespace street_environment
+
+namespace cereal {
+
+template <class Archive>
+struct specialize<Archive, street_environment::RoadLane, cereal::specialization::member_serialize> {};
+  // cereal no longer has any ambiguity when serializing street_environment::RoadLane
+
+}  // namespace cereal
 
 #ifdef USE_CEREAL
 CEREAL_REGISTER_TYPE(street_environment::RoadLane)
+//CEREAL_REGISTER_DYNAMIC_INIT(street_environment)
 #endif
+
 #endif /* ENVIRONMENT_H */

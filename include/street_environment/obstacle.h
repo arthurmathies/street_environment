@@ -90,6 +90,17 @@ struct Obstacle:public EnvironmentObject
                         const lms::math::vertex2f &moveDirection);
 
     /**
+     * @brief getStreetDistanceTangential
+     * @return the length to the object tangential
+     */
+    float getStreetDistanceTangential();
+    /**
+     * @brief getStreetDistanceOrthogonal
+     * @return  the length to the object orthogonal
+     */
+    float getStreetDistanceOrthogonal();
+
+    /**
      * @brief Distance travelled compared to the last cycle.
      * @return distance in m
      */

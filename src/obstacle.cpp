@@ -82,6 +82,15 @@ float Obstacle::movedDistance() const {
     return this->position.distance(this->lastPositon);
 }
 
+float Obstacle::getStreetDistanceOrthogonal(){
+    //TODO
+    return 0;
+}
+float Obstacle::getStreetDistanceTangential(){
+    //TODO
+    return 0;
+}
+
 float Obstacle::deltaVelocity() const {
     return this->velocity - this->lastVelocity;
 }

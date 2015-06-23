@@ -2,7 +2,7 @@
  * File: _coder_objectTracker_api.h 
  *  
  * MATLAB Coder version            : 2.7 
- * C/C++ source code generated on  : 17-Jun-2015 12:18:42 
+ * C/C++ source code generated on  : 23-Jun-2015 12:44:02 
  */
 
 #ifndef ___CODER_OBJECTTRACKER_API_H__
@@ -37,9 +37,9 @@ typedef struct emxArray_real_T emxArray_real_T;
 extern void objectTracker_initialize(emlrtContext *aContext);
 extern void objectTracker_terminate(void);
 extern void objectTracker_atexit(void);
-extern void objectTracker_api(const mxArray *prhs[10], const mxArray *plhs[2]);
+extern void objectTracker_api(const mxArray *prhs[11], const mxArray *plhs[2]);
 extern void objectTracker_xil_terminate(void);
-extern void objectTracker(int16_T init, emxArray_real_T *laneModel, real_T lanePieceLength, real_T r[3], real_T Pk[9], real_T Q, real_T R, emxArray_real_T *x_measure, emxArray_real_T *y_measure, real_T delta_x);
+extern void objectTracker(int16_T init, emxArray_real_T *laneModel, real_T lanePieceLength, real_T r[4], real_T Pk[16], real_T Q, real_T Rx, real_T Ry, emxArray_real_T *x_measure, emxArray_real_T *y_measure, real_T delta_x);
 
 #endif
 /* 

@@ -29,65 +29,38 @@ struct Obstacle:public EnvironmentObject
 {
 
     //Kalman stuff
-    double state[3];
-    double oldState[3];
-    double stateCovariance[9];
+    double state[4];
+    double oldState[4];
+    double stateCovariance[16];
 
     //TODO die Delta-Werte passen beim 1. Aufrufen nicht!
     /**
-     * @brief Global position of the entity. x and y are given in meters.
+     * @brief stores the position before the kalman!
      */
-    lms::math::vertex2f position;
-
+    lms::math::vertex2f m_tmpPosition;
+    bool m_validKalman;
     /**
-     * @brief Direction vector that points to the direction the entity is
-     * looking at.
+     * @brief validKalman
+     * @return true if the last m_tmpPosition was used in the kalman
      */
-    lms::math::vertex2f viewDirection;
-
-    /**
-     * @brief Velocity in m/s of the entity.
-     */
-    float velocity;
-
-    /**
-     * @brief Direction vector that points to the direction the entity is
-     * driving to.
-     */
-    lms::math::vertex2f moveDirection;
-
-    /**
-     * @brief Global position of the entity in the last cycle.
-     */
-    lms::math::vertex2f lastPositon;
-
-    /**
-     * @brief Velocity of the entity in the last cycle.
-     */
-    float lastVelocity;
+    bool validKalman() const;
 
     Obstacle();
     /**
      * @brief init used to init the kalman!
      */
-    bool init;
+    bool m_init;
+
 
     /**
-     * @brief Set the position for the current cycle. Should be called only
-     * once per cycle.
-     * @param position global position of the entity
-     * @param viewDirection direction vector of the view of the entity
+     * @brief updatePosition
+     * @param position
      */
-    void updatePosition(const lms::math::vertex2f &position,const street_environment::RoadLane &middle);
+    void updatePosition(const lms::math::vertex2f &position);
 
-    /**
-     * @brief Set the velocity for the current cycle. Should be called only
-     * once per cycle.
-     * @param velocity velocity of the entity
-     * @param moveDirection direction vector of the movement of the entity
-     */
-    void updateVelocity(float velocity,
-                        const lms::math::vertex2f &moveDirection);
+    lms::math::vertex2f position();
+
+    void kalman(const street_environment::RoadLane &middle);
 
     /**
      * @brief getStreetDistanceTangential
@@ -99,18 +72,6 @@ struct Obstacle:public EnvironmentObject
      * @return  the length to the object orthogonal
      */
     float getStreetDistanceOrthogonal();
-
-    /**
-     * @brief Distance travelled compared to the last cycle.
-     * @return distance in m
-     */
-    float movedDistance() const;
-
-    /**
-     * @brief Difference in velocity to the last cycle.
-     * @return delta velocity in m/s
-     */
-    float deltaVelocity() const;
 
     // cereal implementation
     #ifdef USE_CEREAL
@@ -134,8 +95,7 @@ namespace cereal {
     template<class Archive>
     void serialize(Archive & archive, street_environment::Obstacle &obs) {
         archive (cereal::base_class<street_environment::EnvironmentObject>(&obs),
-                 obs.position, obs.viewDirection, obs.velocity,
-                 obs.moveDirection, obs.lastPositon, obs.lastVelocity);
+                 obs.m_tmpPosition);
     }
 }  // namespace cereal
 

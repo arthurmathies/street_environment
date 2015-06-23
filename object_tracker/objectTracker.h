@@ -2,7 +2,7 @@
  * File: objectTracker.h
  *
  * MATLAB Coder version            : 2.7
- * C/C++ source code generated on  : 17-Jun-2015 12:18:42
+ * C/C++ source code generated on  : 23-Jun-2015 12:44:02
  */
 
 #ifndef __OBJECTTRACKER_H__
@@ -18,8 +18,9 @@
 
 /* Function Declarations */
 extern void objectTracker(short init, const emxArray_real_T *laneModel, double
-  lanePieceLength, double r[3], double Pk[9], double Q, double R, const
-  emxArray_real_T *x_measure, const emxArray_real_T *y_measure, double delta_x);
+  lanePieceLength, double r[4], double Pk[16], double Q, double Rx, double Ry,
+  const emxArray_real_T *x_measure, const emxArray_real_T *y_measure, double
+  delta_x);
 
 #endif
 

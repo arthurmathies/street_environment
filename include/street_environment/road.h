@@ -2,7 +2,6 @@
 #define ENVIRONMENT_H
 
 #include <vector>
-#include <lms/imaging/warp.h>
 #include "lms/math/vertex.h"
 #include "lms/math/polyline.h"
 #include "street_environment/street_environment.h"
@@ -16,7 +15,7 @@
 #include "cereal/types/memory.hpp"
 #include "cereal/types/vector.hpp"
 #include "cereal/archives/portable_binary.hpp"
-#include <cereal/types/base_class.hpp>
+#include "cereal/types/base_class.hpp"
 #endif
 
 namespace street_environment {
@@ -25,10 +24,12 @@ namespace street_environment {
         LEFT, MIDDLE, RIGHT
     };
 
-    class RoadLane:public lms::math::polyLine2f,public EnvironmentObject
+    class RoadLane : public EnvironmentObject, public lms::math::polyLine2f
     {
         RoadLaneType m_type;
     public:
+        virtual ~RoadLane() {}
+
         /**
          * @brief polarDarstellung
          * polarDarstellung[0] is the y-deviance
@@ -47,9 +48,9 @@ namespace street_environment {
 
         template <class Archive>
         void serialize( Archive & archive) {
-            archive (cereal::base_class<lms::math::polyLine2f>(this),
-                     cereal::base_class<street_environment::EnvironmentObject>(this),
-                     m_type, polarDarstellung, polarPartLength);
+            archive (cereal::base_class<street_environment::EnvironmentObject>(this),
+                        cereal::base_class<lms::math::polyLine2f>(this),
+                      m_type, polarDarstellung, polarPartLength);
         }
     };
 
@@ -66,7 +67,7 @@ struct specialize<Archive, street_environment::RoadLane, cereal::specialization:
 }  // namespace cereal
 
 #ifdef USE_CEREAL
-CEREAL_REGISTER_TYPE(street_environment::RoadLane)
+//CEREAL_REGISTER_TYPE(street_environment::RoadLane)
 //CEREAL_REGISTER_DYNAMIC_INIT(street_environment)
 #endif
 

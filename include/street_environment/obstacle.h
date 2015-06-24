@@ -14,7 +14,7 @@ extern "C"{
 #include "cereal/cereal.hpp"
 #include "cereal/types/polymorphic.hpp"
 #include "cereal/archives/portable_binary.hpp"
-#include <cereal/types/base_class.hpp>
+#include "cereal/types/base_class.hpp"
 #endif
 
 namespace street_environment{
@@ -27,6 +27,7 @@ struct Obstacle:public EnvironmentObject
     , public lms::Serializable
 #endif
 {
+    virtual ~Obstacle() {}
 
     //Kalman stuff
     double state[3];
@@ -105,6 +106,14 @@ struct Obstacle:public EnvironmentObject
     #ifdef USE_CEREAL
         //get default interface for datamanager
         CEREAL_SERIALIZATION()
+
+        template<class Archive>
+        void serialize(Archive & archive) {
+            archive (
+                cereal::base_class<street_environment::EnvironmentObject>(this),
+                position, viewDirection, velocity,
+                moveDirection, lastPositon, lastVelocity);
+        }
     #endif
 
 };
@@ -112,20 +121,13 @@ struct Obstacle:public EnvironmentObject
 } //street_environment
 
 #ifdef USE_CEREAL
-CEREAL_REGISTER_TYPE(street_environment::Obstacle)
+//CEREAL_REGISTER_TYPE(street_environment::Obstacle)
 #endif
 
 namespace cereal {
     template <class Archive>
-    struct specialize<Archive, street_environment::Obstacle, cereal::specialization::non_member_serialize> {};
+    struct specialize<Archive, street_environment::Obstacle, cereal::specialization::member_serialize> {};
       // cereal no longer has any ambiguity when serializing street_environment::Obstacle
-
-    template<class Archive>
-    void serialize(Archive & archive, street_environment::Obstacle &obs) {
-        archive (cereal::base_class<street_environment::EnvironmentObject>(&obs),
-                 obs.position, obs.viewDirection, obs.velocity,
-                 obs.moveDirection, obs.lastPositon, obs.lastVelocity);
-    }
 }  // namespace cereal
 
 #endif /* OBSTACLE_H */

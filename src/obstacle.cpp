@@ -29,7 +29,7 @@ void Obstacle::updatePosition(const lms::math::vertex2f &position) {
     //return;
 }
 
-void Obstacle::kalman(const street_environment::RoadLane &middle){
+void Obstacle::kalman(const street_environment::RoadLane &middle, float distanceMoved){
     static_assert(sizeof(state)/sizeof(double) == 4,"Obstacle::kalman: Size doesn't match idiot!");
 
     //Set old state
@@ -40,7 +40,6 @@ void Obstacle::kalman(const street_environment::RoadLane &middle){
     //get new values for kalman
     double trustModel = 0.1;
     double trustMeasure = 0.1;
-    double movedPos = 0;
     const emxArray_real_T *laneModel = emxCreate_real_T(middle.polarDarstellung.size(),1);
     for(uint i = 0; i < middle.polarDarstellung.size(); i++){
         laneModel->data[i] = middle.polarDarstellung[i];
@@ -50,7 +49,7 @@ void Obstacle::kalman(const street_environment::RoadLane &middle){
     emxArray_real_T *measureY = emxCreate_real_T(1,1);
     measureY->data[0]=m_tmpPosition.y;
     //kalman it
-    objectTracker(1,laneModel, middle.polarPartLength, state, stateCovariance, trustModel, trustMeasure,trustMeasure, measureX, measureY, movedPos);
+    objectTracker(1,laneModel, middle.polarPartLength, state, stateCovariance, trustModel, trustMeasure,trustMeasure, measureX, measureY, distanceMoved);
 
     //destroy stuff
     //TODO

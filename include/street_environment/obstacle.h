@@ -60,7 +60,7 @@ struct Obstacle:public EnvironmentObject
 
     lms::math::vertex2f position();
 
-    void kalman(const street_environment::RoadLane &middle);
+    void kalman(const street_environment::RoadLane &middle,float distanceMoved);
 
     /**
      * @brief getStreetDistanceTangential

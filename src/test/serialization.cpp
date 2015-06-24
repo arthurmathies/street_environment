@@ -9,6 +9,7 @@
 #include <sstream>
 
 #include <cereal/archives/portable_binary.hpp>
+#include <cereal/types/polymorphic.hpp>
 
 using namespace street_environment;
 
@@ -58,8 +59,36 @@ TEST(Serialization, RoadLane) {
     }
 }
 
+TEST(Serialization, Obstacle) {
+    ASSERT_EQ(output_serializers<Obstacle>::value, 1);
+
+    std::stringstream ss;
+    {
+        cereal::PortableBinaryOutputArchive oarchive(ss);
+
+        std::shared_ptr<EnvironmentObject> ptr = std::make_shared<Obstacle>();
+        ptr->name("obsty");
+        (static_cast<Obstacle*>(ptr.get()))->updatePosition(lms::math::vertex2f(1,0));
+        //ptr->type(RoadLaneType::MIDDLE);
+
+        oarchive(ptr);
+    }
+
+    {
+        cereal::PortableBinaryInputArchive iarchive(ss);
+
+        std::shared_ptr<EnvironmentObject> obj;
+        iarchive(obj);
+
+        Obstacle *lane = dynamic_cast<Obstacle*>(obj.get());
+        ASSERT_NE(nullptr, lane);
+        ASSERT_EQ(std::string("obsty"), lane->name());
+        ASSERT_EQ(lms::math::vertex2f(1,0), lane->position());
+    }
+}
+
 TEST(Serialization, EnvironmentObject) {
-    ASSERT_GT(output_serializers<EnvironmentObject>::value, 0);
+    ASSERT_EQ(output_serializers<EnvironmentObject>::value, 1);
 
     std::stringstream ss;
     {
@@ -94,11 +123,11 @@ TEST(Serialization, Environment) {
 
         Environment env;
 
-        auto lane = std::make_shared<RoadLane>();
+        std::shared_ptr<RoadLane> lane = std::make_shared<RoadLane>();
         lane->name("my lane");
         lane->type(RoadLaneType::MIDDLE);
 
-        auto obstacle = std::make_shared<Obstacle>();
+        std::shared_ptr<Obstacle> obstacle = std::make_shared<Obstacle>();
         obstacle->name("obstacle");
 
         env.objects.push_back(lane);
@@ -111,18 +140,18 @@ TEST(Serialization, Environment) {
         cereal::PortableBinaryInputArchive iarchive(ss); // Create an input archive
 
         Environment env;
-        //iarchive(env); // Read the data from the archive
+        iarchive(env); // Read the data from the archive
 
         ASSERT_EQ(2, env.objects.size());
 
-        //ASSERT_EQ(std::string("my lane"), env.objects[0]->name());
+        ASSERT_EQ(std::string("my lane"), env.objects[0]->name());
 
-//        EnvironmentObject *obj = env.objects[0].get();
-//        RoadLane* lane = dynamic_cast<RoadLane*>(obj);
-//        ASSERT_NE(nullptr, lane);
-//        ASSERT_EQ(RoadLaneType::MIDDLE, lane->type());
+        EnvironmentObject *obj = env.objects[0].get();
+        RoadLane* lane = dynamic_cast<RoadLane*>(obj);
+        ASSERT_NE(nullptr, lane);
+        ASSERT_EQ(RoadLaneType::MIDDLE, lane->type());
 
 
-        //ASSERT_EQ(std::string("obstacle"), env.objects[1]->name());
+        ASSERT_EQ(std::string("obstacle"), env.objects[1]->name());
     }
 }

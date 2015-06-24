@@ -68,7 +68,7 @@ TEST(Serialization, Obstacle) {
 
         std::shared_ptr<EnvironmentObject> ptr = std::make_shared<Obstacle>();
         ptr->name("obsty");
-        (static_cast<Obstacle*>(ptr.get()))->updateVelocity(1, lms::math::vertex2f(1,0));
+        (static_cast<Obstacle*>(ptr.get()))->updatePosition(lms::math::vertex2f(1,0));
         //ptr->type(RoadLaneType::MIDDLE);
 
         oarchive(ptr);
@@ -83,7 +83,7 @@ TEST(Serialization, Obstacle) {
         Obstacle *lane = dynamic_cast<Obstacle*>(obj.get());
         ASSERT_NE(nullptr, lane);
         ASSERT_EQ(std::string("obsty"), lane->name());
-        ASSERT_FLOAT_EQ(1, lane->deltaVelocity());
+        ASSERT_EQ(lms::math::vertex2f(1,0), lane->position());
     }
 }
 

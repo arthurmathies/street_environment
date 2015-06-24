@@ -3,22 +3,41 @@ extern "C"{
 #include "objectTracker.h"
 }
 namespace street_environment{
-Obstacle::Obstacle() : position(0, 0), viewDirection(1, 0),
-    velocity(0), moveDirection(1, 0), lastPositon(0, 0), lastVelocity(0) {
+Obstacle::Obstacle() : m_tmpPosition(0, 0){
 
-    for(int i = 0; i < 9; i++){
+    for(int i = 0; i < 16; i++){
         stateCovariance[i] = 0;
     }
     stateCovariance[0] = 1;
-    stateCovariance[4] = 1;
-    stateCovariance[8] = 1;
-    init = true;
+    stateCovariance[5] = 1;
+    stateCovariance[10] = 1;
+    stateCovariance[15] = 1;
+    m_init = true;
 }
 
-void Obstacle::updatePosition(const lms::math::vertex2f &position,const street_environment::RoadLane &middle) {
-    //this->position = position;
-    //return;
+bool Obstacle::validKalman() const{
+    return m_validKalman;
+}
 
+lms::math::vertex2f Obstacle::position(){
+    return m_tmpPosition;
+}
+
+void Obstacle::updatePosition(const lms::math::vertex2f &position) {
+    this->m_tmpPosition = position;
+    m_validKalman = false;
+    //return;
+}
+
+void Obstacle::kalman(const street_environment::RoadLane &middle){
+    static_assert(sizeof(state)/sizeof(double) == 4,"Obstacle::kalman: Size doesn't match idiot!");
+
+    //Set old state
+    for(uint i = 0; i < sizeof(state)/sizeof(double); i++){
+        oldState[i] = state[i];
+    }
+
+    //get new values for kalman
     double trustModel = 0.1;
     double trustMeasure = 0.1;
     double movedPos = 0;
@@ -26,18 +45,21 @@ void Obstacle::updatePosition(const lms::math::vertex2f &position,const street_e
     for(uint i = 0; i < middle.polarDarstellung.size(); i++){
         laneModel->data[i] = middle.polarDarstellung[i];
     }
-    //Kalman everthing
     emxArray_real_T *measureX = emxCreate_real_T(1,1);
-    measureX->data[0]=position.x;
+    measureX->data[0]=m_tmpPosition.x;
     emxArray_real_T *measureY = emxCreate_real_T(1,1);
-    measureY->data[0]=position.y;
+    measureY->data[0]=m_tmpPosition.y;
+    //kalman it
+    objectTracker(1,laneModel, middle.polarPartLength, state, stateCovariance, trustModel, trustMeasure,trustMeasure, measureX, measureY, movedPos);
 
-    objectTracker(1,laneModel, middle.polarPartLength, state, stateCovariance, trustModel, trustMeasure, measureX, measureY, movedPos);
-    std::cout <<"Obstacle-input: " << position.x << " "<<position.y<<" "<<middle.polarPartLength<<std::endl;
+    //destroy stuff
+    //TODO
+
+    //Convert the kalman-result
+    std::cout <<"Obstacle-input: " << m_tmpPosition.x << " "<<m_tmpPosition.y<<" "<<middle.polarPartLength<<std::endl;
     double arcLength = state[0];
+    double orthLength = state[1];
     std::cout <<"KALMAN-vals: " <<arcLength << " " <<  state[1] << " "<< state[2]<<std::endl;
-
-    this->lastVelocity = this->velocity;
     double currentLength = 0;
 
     for(int i = 1; i < (int)middle.points().size(); i++){
@@ -45,12 +67,11 @@ void Obstacle::updatePosition(const lms::math::vertex2f &position,const street_e
         if(currentLength +dd > arcLength){
             lms::math::vertex2f d = (middle.points()[i] -middle.points()[i-1]).normalize();
             //setzen der position
-            updateVelocity(state[1],d);
-            d*=(arcLength-currentLength);
-            //setzt die aktuelle position zur alten
-            this->lastPositon = this->position;
-            std::cout << "obstacle-dd: "<<d.x << " " <<d.y<<std::endl;
-            this->position = middle.points()[i-1]+d;
+            //Bis jetzt nur tangential
+            lms::math::vertex2f tang = d*(arcLength-currentLength);
+            lms::math::vertex2f orth = d.rotateClockwise90deg()*orthLength;
+            this->m_tmpPosition = middle.points()[i-1]+tang+orth;
+            //Addiere den orthogonalen anteil
             break;
         }else{
             currentLength += dd;
@@ -65,24 +86,17 @@ void Obstacle::updatePosition(const lms::math::vertex2f &position,const street_e
             std::cout <<std::endl;
         }
     }
-
-
-    this->viewDirection = viewDirection;
-    init = false;
+    m_validKalman = false;
+    m_init = false;
 }
 
-void Obstacle::updateVelocity(float velocity,
-                    const lms::math::vertex2f &moveDirection) {
-    this->lastVelocity = this->velocity;
-    this->velocity = velocity;
-    this->moveDirection = moveDirection;
+float Obstacle::getStreetDistanceOrthogonal(){
+    //TODO
+    return 0;
+}
+float Obstacle::getStreetDistanceTangential(){
+    //TODO
+    return 0;
 }
 
-float Obstacle::movedDistance() const {
-    return this->position.distance(this->lastPositon);
-}
-
-float Obstacle::deltaVelocity() const {
-    return this->velocity - this->lastVelocity;
-}
 } //street_environment

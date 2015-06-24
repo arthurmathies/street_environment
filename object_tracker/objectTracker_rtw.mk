@@ -2,7 +2,7 @@
 ## Makefile generated for MATLAB file/project 'objectTracker'. 
 ## 
 ## Makefile     : objectTracker_rtw.mk
-## Generated on : Wed Jun 17 12:18:47 2015
+## Generated on : Tue Jun 23 12:44:08 2015
 ## MATLAB Coder version: 2.7 (R2014b)
 ## 
 ## Build Info:
@@ -204,7 +204,7 @@ DEFINES = $(DEFINES_STANDARD)
 ## SOURCE FILES
 ###########################################################################
 
-SRCS = $(START_DIR)\codegen\lib\objectTracker\objectTracker_initialize.c $(START_DIR)\codegen\lib\objectTracker\objectTracker_terminate.c $(START_DIR)\codegen\lib\objectTracker\objectTracker.c $(START_DIR)\codegen\lib\objectTracker\objectTracker_emxutil.c $(START_DIR)\codegen\lib\objectTracker\objectTracker_emxAPI.c $(START_DIR)\codegen\lib\objectTracker\rt_nonfinite.c $(START_DIR)\codegen\lib\objectTracker\rtGetNaN.c $(START_DIR)\codegen\lib\objectTracker\rtGetInf.c
+SRCS = $(START_DIR)\codegen\lib\objectTracker\objectTracker_initialize.c $(START_DIR)\codegen\lib\objectTracker\objectTracker_terminate.c $(START_DIR)\codegen\lib\objectTracker\objectTracker.c $(START_DIR)\codegen\lib\objectTracker\mean.c $(START_DIR)\codegen\lib\objectTracker\objectTracker_emxutil.c $(START_DIR)\codegen\lib\objectTracker\objectTracker_emxAPI.c $(START_DIR)\codegen\lib\objectTracker\rt_nonfinite.c $(START_DIR)\codegen\lib\objectTracker\rtGetNaN.c $(START_DIR)\codegen\lib\objectTracker\rtGetInf.c
 
 ALL_SRCS = $(SRCS)
 
@@ -212,7 +212,7 @@ ALL_SRCS = $(SRCS)
 ## OBJECTS
 ###########################################################################
 
-OBJS = objectTracker_initialize.obj objectTracker_terminate.obj objectTracker.obj objectTracker_emxutil.obj objectTracker_emxAPI.obj rt_nonfinite.obj rtGetNaN.obj rtGetInf.obj
+OBJS = objectTracker_initialize.obj objectTracker_terminate.obj objectTracker.obj mean.obj objectTracker_emxutil.obj objectTracker_emxAPI.obj rt_nonfinite.obj rtGetNaN.obj rtGetInf.obj
 
 ALL_OBJS = $(OBJS)
 

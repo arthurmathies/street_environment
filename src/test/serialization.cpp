@@ -115,13 +115,13 @@ TEST(Serialization, EnvironmentObject) {
 
 TEST(Serialization, Environment) {
     // Static tests for valid serializers
-    ASSERT_GT(output_serializers<Environment>::value, 0);
+    ASSERT_GT(output_serializers<EnvironmentObjects>::value, 0);
 
     std::stringstream ss;
     {
         cereal::PortableBinaryOutputArchive oarchive(ss); // Create an output archive
 
-        Environment env;
+        EnvironmentObjects env;
 
         std::shared_ptr<RoadLane> lane = std::make_shared<RoadLane>();
         lane->name("my lane");
@@ -139,7 +139,7 @@ TEST(Serialization, Environment) {
     {
         cereal::PortableBinaryInputArchive iarchive(ss); // Create an input archive
 
-        Environment env;
+        EnvironmentObjects env;
         iarchive(env); // Read the data from the archive
 
         ASSERT_EQ(2, env.objects.size());

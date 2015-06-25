@@ -17,7 +17,6 @@
 CEREAL_FORCE_DYNAMIC_INIT(street_environment)
 
 namespace street_environment {
-
 class EnvironmentObject
 {
 private:
@@ -48,6 +47,7 @@ public:
     }
 };
 
+template<typename T>
 class Environment
 #ifdef USE_CEREAL
     : public lms::Serializable
@@ -64,7 +64,7 @@ public:
         }
         return nullptr;
     }
-    std::vector<std::shared_ptr<EnvironmentObject>> objects;
+    std::vector<std::shared_ptr<T>> objects;
 
     #ifdef USE_CEREAL
         //get default interface for datamanager
@@ -76,14 +76,18 @@ public:
         }
     #endif
 };
-
+class RoadLane;
+class Obstacle;
+typedef Environment<EnvironmentObject> EnvironmentObjects;
+typedef Environment<RoadLane> EnvironmentRoadLane;
+typedef Environment<Obstacle> EnvironmentObstacles;
 }  // namespace street_environment
 
 #ifdef USE_CEREAL
 namespace cereal {
 
-template <class Archive>
-struct specialize<Archive, street_environment::Environment, cereal::specialization::member_serialize> {};
+template <class Archive, typename T>
+struct specialize<Archive, street_environment::Environment<T>, cereal::specialization::member_serialize> {};
   // cereal no longer has any ambiguity when serializing street_environment::Environment
 
 }  // namespace cereal

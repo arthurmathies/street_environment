@@ -22,12 +22,11 @@ namespace street_environment{
  * @brief A dynamic entity can be the vehicle itself but also every other
  * moving obstacle.
  */
-struct Obstacle:public EnvironmentObject
+class Obstacle:public EnvironmentObject
 #ifdef USE_CEREAL
     , public lms::Serializable
 #endif
 {
-    virtual ~Obstacle() {}
 
     //Kalman stuff
     double state[4];
@@ -40,6 +39,9 @@ struct Obstacle:public EnvironmentObject
      */
     lms::math::vertex2f m_tmpPosition;
     bool m_validKalman;
+
+public:
+    virtual ~Obstacle() {}
     /**
      * @brief validKalman
      * @return true if the last m_tmpPosition was used in the kalman
@@ -59,7 +61,7 @@ struct Obstacle:public EnvironmentObject
      */
     void updatePosition(const lms::math::vertex2f &position);
 
-    lms::math::vertex2f position();
+    lms::math::vertex2f position() const;
 
     void kalman(const street_environment::RoadLane &middle,float distanceMoved);
 
@@ -67,12 +69,12 @@ struct Obstacle:public EnvironmentObject
      * @brief getStreetDistanceTangential
      * @return the length to the object tangential
      */
-    float getStreetDistanceTangential();
+    float getStreetDistanceTangential() const;
     /**
      * @brief getStreetDistanceOrthogonal
      * @return  the length to the object orthogonal
      */
-    float getStreetDistanceOrthogonal();
+    float getStreetDistanceOrthogonal() const;
 
     // cereal implementation
     #ifdef USE_CEREAL

@@ -19,7 +19,7 @@ bool Obstacle::validKalman() const{
     return m_validKalman;
 }
 
-lms::math::vertex2f Obstacle::position(){
+lms::math::vertex2f Obstacle::position() const{
     return m_tmpPosition;
 }
 
@@ -89,11 +89,11 @@ void Obstacle::kalman(const street_environment::RoadLane &middle, float distance
     m_init = false;
 }
 
-float Obstacle::getStreetDistanceOrthogonal(){
+float Obstacle::getStreetDistanceOrthogonal() const{
     //TODO
     return 0;
 }
-float Obstacle::getStreetDistanceTangential(){
+float Obstacle::getStreetDistanceTangential() const{
     //TODO
     return 0;
 }

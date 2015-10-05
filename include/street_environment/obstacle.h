@@ -32,6 +32,8 @@ class Obstacle:public EnvironmentObject
        return 1;
     }
 
+    bool fistRun;
+
     //Kalman stuff
     double state[4];
     double oldState[4];
@@ -51,6 +53,7 @@ public:
      * @return true if the last m_tmpPosition was used in the kalman
      */
     bool validKalman() const;
+    void simple(float distanceMoved);
 
     Obstacle();
     /**

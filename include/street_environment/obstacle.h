@@ -28,6 +28,10 @@ class Obstacle:public EnvironmentObject
 #endif
 {
 
+    int getType() const override{
+       return 1;
+    }
+
     //Kalman stuff
     double state[4];
     double oldState[4];

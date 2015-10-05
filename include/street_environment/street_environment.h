@@ -33,6 +33,7 @@ public:
     T& getAsReference() const{
         return *static_cast<T*>(this);
     }
+    virtual int getType() const = 0;
 
     std::string name() const{
         return m_name;

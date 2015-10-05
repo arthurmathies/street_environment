@@ -30,6 +30,10 @@ namespace street_environment {
     public:
         virtual ~RoadLane() {}
 
+        int getType()const override{
+           return 0;
+        }
+
         /**
          * @brief polarDarstellung
          * polarDarstellung[0] is the y-deviance

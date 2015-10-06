@@ -14,6 +14,7 @@ Obstacle::Obstacle() : m_tmpPosition(0, 0){
     stateCovariance[15] = 1;
     m_init = true;
     fistRun = true;
+    m_timesFound = 0;
 }
 
 bool Obstacle::validKalman() const{
@@ -30,16 +31,20 @@ void Obstacle::updatePosition(const lms::math::vertex2f &position) {
 }
 
 void Obstacle::simple(float distanceMoved){
-    std::cout<<"d: "<<distanceMoved<< " davor: " << m_tmpPosition.x << " "<<m_tmpPosition.y<<std::endl;
     lms::math::vertex2f tmp = m_tmpPosition;
     tmp = tmp.normalize()*distanceMoved;
-    std::cout << "X: " << tmp.x<<std::endl;
     if(tmp.x > 0){
         tmp = tmp.negate();
-        std::cout << "NEGATE"<<std::endl;
     }
     m_tmpPosition = m_tmpPosition +tmp;
-    std::cout<< "danach: " << m_tmpPosition.x << " "<<m_tmpPosition.y<<std::endl;
+}
+
+void Obstacle::found(){
+    found(1);
+}
+
+void Obstacle::found(int count){
+    m_timesFound+=count;
 }
 
 void Obstacle::kalman(const street_environment::RoadLane &middle, float distanceMoved){

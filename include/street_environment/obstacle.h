@@ -33,6 +33,7 @@ class Obstacle:public EnvironmentObject
     }
 
     bool fistRun;
+    int m_timesFound;
 
     //Kalman stuff
     double state[4];
@@ -54,6 +55,13 @@ public:
      */
     bool validKalman() const;
     void simple(float distanceMoved);
+
+    void found();
+    void found(int count);
+
+    int timesFound(){
+        return m_timesFound;
+    }
 
     Obstacle();
     /**

@@ -1,7 +1,9 @@
 #include "street_environment/obstacle.h"
-extern "C"{
-#include "objectTracker.h"
-}
+
+//extern "C"{
+#include "lib/objectTracker/objectTracker.h"
+#include "lib/objectTracker/objectTracker_emxAPI.h"
+//}
 namespace street_environment{
 Obstacle::Obstacle() : m_tmpPosition(0, 0){
 
@@ -48,8 +50,8 @@ void Obstacle::found(int count){
 }
 
 void Obstacle::kalman(const street_environment::RoadLane &middle, float distanceMoved){
-    simple(distanceMoved);
-    /*
+    //simple(distanceMoved);
+
     static_assert(sizeof(state)/sizeof(double) == 4,"Obstacle::kalman: Size doesn't match idiot!");
 
     //Set old state
@@ -64,17 +66,16 @@ void Obstacle::kalman(const street_environment::RoadLane &middle, float distance
     for(uint i = 0; i < middle.polarDarstellung.size(); i++){
         laneModel->data[i] = middle.polarDarstellung[i];
     }
-    emxArray_real_T *measureX = emxCreate_real_T(1,1);
-    measureX->data[0]=m_tmpPosition.x;
-    emxArray_real_T *measureY = emxCreate_real_T(1,1);
-    measureY->data[0]=m_tmpPosition.y;
+    //TODO
+    float measureX =m_tmpPosition.x;
+    float measureY =m_tmpPosition.y;
     std::cout<<"DATA INPUT: "<< distanceMoved <<" oldPos: "<< m_tmpPosition.x<<" "<<m_tmpPosition.y<<std::endl;
     //kalman it
     //1 for init
     if(fistRun)
-        objectTracker(1,laneModel, middle.polarPartLength, state, stateCovariance, trustModel, trustMeasure,trustMeasure, measureX, measureY, distanceMoved);
-    else
-        objectTracker(0,laneModel, middle.polarPartLength, state, stateCovariance, trustModel, trustMeasure,trustMeasure, measureX, measureY, distanceMoved);
+        objectTracker(1,laneModel, middle.polarPartLength, state, stateCovariance, trustModel, trustMeasure,trustMeasure, measureX, measureY, distanceMoved,true);
+    //else
+    //    objectTracker(0,laneModel, middle.polarPartLength, state, stateCovariance, trustModel, trustMeasure,trustMeasure, measureX, measureY, distanceMoved,true);
     fistRun = false;
 
     //Convert the kalman-result
@@ -100,7 +101,7 @@ void Obstacle::kalman(const street_environment::RoadLane &middle, float distance
     }
     std::cout<<"DATA OUTPUT 2: "<< m_tmpPosition.x<<" "<<m_tmpPosition.y<<std::endl;
 
-*/
+
     /*
     //TODO
     std::cout<<"PRINT stateCovariance"<<std::endl;

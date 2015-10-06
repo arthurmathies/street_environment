@@ -4,10 +4,6 @@
 #include "lms/math/vertex.h"
 #include "street_environment/road.h"
 
-extern "C"{
-#include "../object_tracker/objectTracker_emxAPI.h"
-}
-
 #ifdef USE_CEREAL
 #include "lms/serializable.h"
 #include "cereal/cerealizable.h"

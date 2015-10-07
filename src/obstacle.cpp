@@ -69,7 +69,7 @@ void Obstacle::kalman(const street_environment::RoadLane &middle, float distance
     //TODO
     float measureX =m_tmpPosition.x;
     float measureY =m_tmpPosition.y;
-    std::cout<<"DATA INPUT: "<< distanceMoved <<" oldPos: "<< m_tmpPosition.x<<" "<<m_tmpPosition.y<<std::endl;
+    //std::cout<<"DATA INPUT: "<< distanceMoved <<" oldPos: "<< m_tmpPosition.x<<" "<<m_tmpPosition.y<<std::endl;
     //kalman it
     //1 for init
     if(fistRun)
@@ -81,7 +81,7 @@ void Obstacle::kalman(const street_environment::RoadLane &middle, float distance
     //Convert the kalman-result
     double arcLength = state[0];
     double orthLength = state[2];
-    std::cout <<"KALMAN-vals: " <<"arcLength: "<<  arcLength << " orthLength: "<< orthLength<<std::endl;
+    //std::cout <<"KALMAN-vals: " <<"arcLength: "<<  arcLength << " orthLength: "<< orthLength<<std::endl;
     double currentLength = 0;
 
     for(int i = 1; i < (int)middle.points().size(); i++){
@@ -99,7 +99,7 @@ void Obstacle::kalman(const street_environment::RoadLane &middle, float distance
             currentLength += dd;
         }
     }
-    std::cout<<"DATA OUTPUT 2: "<< m_tmpPosition.x<<" "<<m_tmpPosition.y<<std::endl;
+    //std::cout<<"DATA OUTPUT 2: "<< m_tmpPosition.x<<" "<<m_tmpPosition.y<<std::endl;
 
 
     /*

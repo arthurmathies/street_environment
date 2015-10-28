@@ -7,6 +7,7 @@ set (HEADERS
     "include/street_environment/street_environment.h"
     "include/street_environment/obstacle.h"
     "include/street_environment/road.h"
+    "include/street_environment/crossing.h"
 )
 
 include_directories("include" "codegen")

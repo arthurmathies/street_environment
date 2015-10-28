@@ -24,7 +24,7 @@ class Obstacle:public EnvironmentObject
 #endif
 {
 
-    int getType() const override{
+    virtual int getType() const override{
        return 1;
     }
 

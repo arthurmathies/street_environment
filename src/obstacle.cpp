@@ -23,6 +23,14 @@ bool Obstacle::validKalman() const{
     return m_validKalman;
 }
 
+bool Obstacle::match(const Obstacle &obj) const{
+    if(!EnvironmentObject::match(obj)){
+        return false;
+    }
+    //TODO use measurement accuracy
+    return (position().distance(obj.position())<0.2);
+}
+
 lms::math::vertex2f Obstacle::position() const{
     return m_tmpPosition;
 }

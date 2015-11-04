@@ -28,6 +28,17 @@ namespace street_environment {
     {
         RoadLaneType m_type;
     public:
+
+        virtual bool match(const RoadLane &obj) const{
+            //doesn't handle subclasses
+            if(!EnvironmentObject::match(obj)){
+                return false;
+            }
+            //TODO
+
+            return false;
+
+        }
         virtual ~RoadLane() {}
 
         int getType()const override{

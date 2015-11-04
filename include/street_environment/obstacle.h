@@ -24,10 +24,6 @@ class Obstacle:public EnvironmentObject
 #endif
 {
 
-    virtual int getType() const override{
-       return 1;
-    }
-
     bool fistRun;
     int m_timesFound;
 
@@ -44,6 +40,10 @@ class Obstacle:public EnvironmentObject
     bool m_validKalman;
 
 public:
+    static constexpr int TYPE = 1;
+    virtual int getType() const override{
+       return TYPE;
+    }
     virtual ~Obstacle() {}
     /**
      * @brief validKalman
@@ -54,6 +54,8 @@ public:
 
     void found();
     void found(int count);
+
+    virtual bool match(const Obstacle &obj) const;
 
     int timesFound(){
         return m_timesFound;

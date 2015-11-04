@@ -46,6 +46,10 @@ public:
     void serialize( Archive & ar ) {
         ar(m_name);
     }
+
+    virtual bool match(const EnvironmentObject &obj) const{
+        return obj.getType() == getType();
+    }
 };
 
 template<typename T>

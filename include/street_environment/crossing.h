@@ -13,8 +13,19 @@ private:
     bool m_blocked;
 
 public:
+    static constexpr int TYPE = 2;
+
+    virtual bool match(const Crossing &obj) const{
+        if(!Obstacle::match(obj)){
+            return false;
+        }
+        //TODO
+        return false;
+    }
+
+
     int getType() const override{
-       return 2;
+       return TYPE;
     }
 
 

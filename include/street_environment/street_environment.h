@@ -12,9 +12,9 @@
 #include "cereal/types/string.hpp"
 #include "cereal/access.hpp"
 #include "cereal/types/polymorphic.hpp"
-#endif
 
 CEREAL_FORCE_DYNAMIC_INIT(street_environment)
+#endif
 
 namespace street_environment {
 class EnvironmentObject

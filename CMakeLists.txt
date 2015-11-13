@@ -14,7 +14,7 @@ include_directories("include" "codegen")
 file(GLOB matlab "codegen/lib/objectTracker/*.cpp" "codegen/lib/objectTracker/*.h")
 message(${matlab})
 add_library (street_environment SHARED ${SOURCES} ${HEADERS} ${matlab})
-target_link_libraries (street_environment PRIVATE math_lib)
+target_link_libraries (street_environment PRIVATE math_lib lmscore)
 
 
 #set (TESTS

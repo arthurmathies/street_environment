@@ -26,10 +26,15 @@ namespace street_environment {
         LEFT, MIDDLE, RIGHT
     };
 
-    class RoadLane : public EnvironmentObject, public lms::Inheritance, public lms::math::polyLine2f
-    {
+    class RoadLane : public EnvironmentObject, public lms::Inheritance, public lms::math::polyLine2f{
         RoadLaneType m_type;
     public:
+        bool isSubType(size_t hashcode) const override{
+            std::cout << "########################################WTH THIS IS CALLED????"<<std::endl;
+            return lms::Impl<EnvironmentObject,lms::math::polyLine2f>::isSubType(hashcode,this);
+        }
+
+        RoadLane(){}
 
         virtual bool match(const RoadLane &obj) const{
             //doesn't handle subclasses
@@ -62,26 +67,21 @@ namespace street_environment {
         void type(RoadLaneType type){
             m_type = type;
         }
-
-        template <class Archive>
-        void serialize( Archive & archive) {
-            archive (cereal::base_class<street_environment::EnvironmentObject>(this),
-                        cereal::base_class<lms::math::polyLine2f>(this),
-                      m_type, polarDarstellung, polarPartLength);
-        }
-
-        bool isSubType(size_t hashcode) override{
-            if(hashcode == typeid(EnvironmentObject).hash_code()){//as it doesn't handle abstract classes am
-                //is subtype
-                return true;
-            }
-            return lms::Inheritance::isSubType<lms::math::vertex2f>(hashcode);
-        }
     };
 
 
     typedef std::shared_ptr<RoadLane> RoadLanePtr;
 }  // namespace street_environment
+
+#ifdef USE_CEREAL
+
+
+template <class Archive>
+void serialize( Archive & archive) {
+    archive (cereal::base_class<street_environment::EnvironmentObject>(this),
+                cereal::base_class<lms::math::polyLine2f>(this),
+              m_type, polarDarstellung, polarPartLength);
+}
 
 namespace cereal {
 
@@ -91,7 +91,7 @@ struct specialize<Archive, street_environment::RoadLane, cereal::specialization:
 
 }  // namespace cereal
 
-#ifdef USE_CEREAL
+
 //CEREAL_REGISTER_TYPE(street_environment::RoadLane)
 //CEREAL_REGISTER_DYNAMIC_INIT(street_environment)
 #endif

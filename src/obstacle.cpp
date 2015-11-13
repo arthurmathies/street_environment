@@ -1,9 +1,8 @@
 #include "street_environment/obstacle.h"
 
-//extern "C"{
 #include "lib/objectTracker/objectTracker.h"
 #include "lib/objectTracker/objectTracker_emxAPI.h"
-//}
+
 namespace street_environment{
 Obstacle::Obstacle() : m_tmpPosition(0, 0){
 

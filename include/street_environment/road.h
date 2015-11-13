@@ -2,9 +2,11 @@
 #define ENVIRONMENT_H
 
 #include <vector>
+#include "lms/inheritance.h"
 #include "lms/math/vertex.h"
 #include "lms/math/polyline.h"
 #include "street_environment/street_environment.h"
+
 
 #ifdef USE_CEREAL
 #include "lms/serializable.h"
@@ -24,7 +26,7 @@ namespace street_environment {
         LEFT, MIDDLE, RIGHT
     };
 
-    class RoadLane : public EnvironmentObject, public lms::math::polyLine2f
+    class RoadLane : public EnvironmentObject, public lms::Inheritance, public lms::math::polyLine2f
     {
         RoadLaneType m_type;
     public:
@@ -66,6 +68,14 @@ namespace street_environment {
             archive (cereal::base_class<street_environment::EnvironmentObject>(this),
                         cereal::base_class<lms::math::polyLine2f>(this),
                       m_type, polarDarstellung, polarPartLength);
+        }
+
+        bool isSubType(size_t hashcode) override{
+            if(hashcode == typeid(EnvironmentObject).hash_code()){//as it doesn't handle abstract classes am
+                //is subtype
+                return true;
+            }
+            return lms::Inheritance::isSubType<lms::math::vertex2f>(hashcode);
         }
     };
 

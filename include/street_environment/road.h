@@ -67,6 +67,14 @@ namespace street_environment {
         void type(RoadLaneType type){
             m_type = type;
         }
+
+        // member cereal serialize method
+        template <class Archive>
+        void serialize( Archive & archive) {
+            archive (cereal::base_class<street_environment::EnvironmentObject>(this),
+                        cereal::base_class<lms::math::polyLine2f>(this),
+                      m_type, polarDarstellung, polarPartLength);
+        }
     };
 
 
@@ -74,14 +82,6 @@ namespace street_environment {
 }  // namespace street_environment
 
 #ifdef USE_CEREAL
-
-
-template <class Archive>
-void serialize( Archive & archive) {
-    archive (cereal::base_class<street_environment::EnvironmentObject>(this),
-                cereal::base_class<lms::math::polyLine2f>(this),
-              m_type, polarDarstellung, polarPartLength);
-}
 
 namespace cereal {
 

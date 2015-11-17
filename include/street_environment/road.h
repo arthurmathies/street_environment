@@ -30,6 +30,11 @@ namespace street_environment {
     {
         RoadLaneType m_type;
     public:
+        bool isSubType(size_t hashcode) const override{
+            return lms::Impl<EnvironmentObject,lms::math::polyLine2f>::isSubType(hashcode,this);
+        }
+
+        RoadLane(){}
 
         virtual bool match(const RoadLane &obj) const{
             //doesn't handle subclasses
@@ -63,21 +68,20 @@ namespace street_environment {
             m_type = type;
         }
 
+        // member cereal serialize method
         template <class Archive>
         void serialize( Archive & archive) {
             archive (cereal::base_class<street_environment::EnvironmentObject>(this),
                         cereal::base_class<lms::math::polyLine2f>(this),
                       m_type, polarDarstellung, polarPartLength);
         }
-
-        bool isSubType(size_t hashcode) override{
-            return lms::Inheritance::isSubType<lms::math::polyLine2f,street_environment::EnvironmentObject>(hashcode);
-        }
     };
 
 
     typedef std::shared_ptr<RoadLane> RoadLanePtr;
 }  // namespace street_environment
+
+#ifdef USE_CEREAL
 
 namespace cereal {
 
@@ -87,7 +91,7 @@ struct specialize<Archive, street_environment::RoadLane, cereal::specialization:
 
 }  // namespace cereal
 
-#ifdef USE_CEREAL
+
 //CEREAL_REGISTER_TYPE(street_environment::RoadLane)
 //CEREAL_REGISTER_DYNAMIC_INIT(street_environment)
 #endif

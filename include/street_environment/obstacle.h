@@ -108,12 +108,12 @@ public:
 
 #ifdef USE_CEREAL
 //CEREAL_REGISTER_TYPE(street_environment::Obstacle)
-#endif
 
 namespace cereal {
     template <class Archive>
     struct specialize<Archive, street_environment::Obstacle, cereal::specialization::member_serialize> {};
       // cereal no longer has any ambiguity when serializing street_environment::Obstacle
 }  // namespace cereal
+#endif
 
 #endif /* OBSTACLE_H */

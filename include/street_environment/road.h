@@ -26,12 +26,12 @@ namespace street_environment {
         LEFT, MIDDLE, RIGHT
     };
 
-    class RoadLane : public EnvironmentObject, public lms::math::polyLine2f,public lms::Inheritance
+    class RoadLane : public/*virtual*/ EnvironmentObject,public /*virtual*/ lms::math::polyLine2f
     {
         RoadLaneType m_type;
     public:
         bool isSubType(size_t hashcode) const override{
-            return lms::Impl<EnvironmentObject,lms::math::polyLine2f>::isSubType(hashcode,this);
+            return lms::Impl<lms::math::polyLine2f>::isSubType(hashcode,this);
         }
 
         RoadLane(){}

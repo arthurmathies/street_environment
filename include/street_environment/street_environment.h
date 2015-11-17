@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 
+#include "lms/inheritance.h"
 #ifdef USE_CEREAL
 #include "lms/serializable.h"
 #include "cereal/cerealizable.h"
@@ -17,13 +18,18 @@ CEREAL_FORCE_DYNAMIC_INIT(street_environment)
 #endif
 
 namespace street_environment {
-class EnvironmentObject
+class EnvironmentObject //TODO :public lms::Inheritance
 {
 private:
     std::string m_name;
 public:
     virtual ~EnvironmentObject() {}
-
+    /*
+    virtual bool isSubType(size_t hashcode) const override{
+        (void)hashcode;
+        return false;
+    }
+    */
     template <typename T>
     std::shared_ptr<T> getCopyAsPtr() const{
         return std::shared_ptr<T>(new T(*static_cast<const T*>(this)));

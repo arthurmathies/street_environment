@@ -26,7 +26,7 @@ namespace street_environment {
         LEFT, MIDDLE, RIGHT
     };
 
-    class RoadLane : public EnvironmentObject, public lms::Inheritance, public lms::math::polyLine2f
+    class RoadLane : public EnvironmentObject, public lms::math::polyLine2f,public lms::Inheritance
     {
         RoadLaneType m_type;
     public:
@@ -71,11 +71,7 @@ namespace street_environment {
         }
 
         bool isSubType(size_t hashcode) override{
-            if(hashcode == typeid(EnvironmentObject).hash_code()){//as it doesn't handle abstract classes am
-                //is subtype
-                return true;
-            }
-            return lms::Inheritance::isSubType<lms::math::vertex2f>(hashcode);
+            return lms::Inheritance::isSubType<lms::math::polyLine2f,street_environment::EnvironmentObject>(hashcode);
         }
     };
 

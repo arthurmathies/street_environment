@@ -26,7 +26,7 @@ namespace street_environment {
         LEFT, MIDDLE, RIGHT
     };
 
-    class RoadLane : public/*virtual*/ EnvironmentObject,public /*virtual*/ lms::math::polyLine2f
+    class RoadLane : public EnvironmentObject,public lms::math::polyLine2f
     {
         RoadLaneType m_type;
     public:

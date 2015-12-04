@@ -15,7 +15,7 @@ Obstacle::Obstacle() : m_tmpPosition(0, 0){
     stateCovariance[15] = 1;
     m_init = true;
     fistRun = true;
-    m_timesFound = 0;
+    m_trust = 0;
 }
 
 bool Obstacle::validKalman() const{
@@ -26,8 +26,19 @@ bool Obstacle::match(const Obstacle &obj) const{
     if(!EnvironmentObject::match(obj)){
         return false;
     }
+    //TODO use boundingBox
+    if(validKalman()){
+        //check if they are both on the same line
+        if(lms::math::sgn(getStreetDistanceOrthogonal()) == lms::math::sgn(obj.getStreetDistanceOrthogonal())){
+            if(fabs(getStreetDistanceTangential()-obj.getStreetDistanceTangential()) < 0.3){//TODO magic number
+                return true;
+            }
+        }
+    }else{
     //TODO use measurement accuracy
-    return (position().distance(obj.position())<0.2);
+        return (position().distance(obj.position())<0.2);
+    }
+    return false;
 }
 
 lms::math::vertex2f Obstacle::position() const{
@@ -48,12 +59,12 @@ void Obstacle::simple(float distanceMoved){
     m_tmpPosition = m_tmpPosition +tmp;
 }
 
-void Obstacle::found(){
-    found(1);
+void Obstacle::trustIt(){
+    trustIt(1);
 }
 
-void Obstacle::found(int count){
-    m_timesFound+=count;
+void Obstacle::trustIt(int count){
+    m_trust+=count;
 }
 
 void Obstacle::kalman(const street_environment::RoadLane &middle, float distanceMoved){

@@ -25,7 +25,7 @@ class Obstacle:public EnvironmentObject
 {
 
     bool fistRun;
-    int m_timesFound;
+    int m_trust;
 
     //Kalman stuff
     double state[4];
@@ -37,6 +37,7 @@ class Obstacle:public EnvironmentObject
      * @brief stores the position before the kalman!
      */
     lms::math::vertex2f m_tmpPosition;
+    lms::math::Rect boundingBox; //TODO
     bool m_validKalman;
 
 public:
@@ -52,13 +53,16 @@ public:
     bool validKalman() const;
     void simple(float distanceMoved);
 
-    void found();
-    void found(int count);
+    void trustIt();
+    void trustIt(int count);
 
     virtual bool match(const Obstacle &obj) const;
-
-    int timesFound(){
-        return m_timesFound;
+    /**
+     * @brief trust
+     * @return trust you have in the obstacle
+     */
+    int trust() const{
+        return m_trust;
     }
 
     Obstacle();

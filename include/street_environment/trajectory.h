@@ -4,13 +4,13 @@
 
 namespace street_environment {
     class Trajectory: public lms::math::polyLine2f{
+    public:
         struct RoadChange{
             RoadChange(){}
             RoadChange(int index, bool left):changeRoadIndex(index),changeToLeft(left){}
             int changeRoadIndex;
             bool changeToLeft;
         };
-    public:
         std::vector<RoadChange> changes;
         virtual void lmsSerialize(std::ostream &os) const override{
             (void)os;

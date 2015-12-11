@@ -68,6 +68,7 @@ namespace street_environment {
             m_type = type;
         }
 
+        #ifdef USE_CEREAL
         // member cereal serialize method
         template <class Archive>
         void serialize( Archive & archive) {
@@ -75,6 +76,7 @@ namespace street_environment {
                         cereal::base_class<lms::math::polyLine2f>(this),
                       m_type, polarDarstellung, polarPartLength);
         }
+        #endif
     };
 
 

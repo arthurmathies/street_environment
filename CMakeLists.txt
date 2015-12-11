@@ -9,6 +9,7 @@ set (HEADERS
     "include/street_environment/road.h"
     "include/street_environment/crossing.h"
     "include/street_environment/trajectory.h"
+    "include/street_environment/start_line.h"
 
 )
 

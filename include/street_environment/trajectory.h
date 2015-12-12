@@ -32,6 +32,7 @@ namespace street_environment {
     struct TrajectoryPoint{
         lms::math::vertex2f position;
         lms::math::vertex2f directory;
+        float velocity;
     };
 
 }

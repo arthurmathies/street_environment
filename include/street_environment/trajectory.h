@@ -2,6 +2,11 @@
 #define STREET_ENVIRONMENT_TRAJECTORY_H
 #include "lms/math/polyline.h"
 
+#ifdef USE_CEREAL
+#include <cereal/types/base_class.hpp>
+#include <cereal/types/vector.hpp>
+#endif
+
 namespace street_environment {
     class Trajectory: public lms::math::polyLine2f{
     public:
@@ -10,16 +15,20 @@ namespace street_environment {
             RoadChange(int index, bool left):changeRoadIndex(index),changeToLeft(left){}
             int changeRoadIndex;
             bool changeToLeft;
+
+            template<class Archive>
+            void serialize(Archive &archive) {
+                archive(changeRoadIndex, changeToLeft);
+            }
         };
         std::vector<RoadChange> changes;
-        virtual void lmsSerialize(std::ostream &os) const override{
-            (void)os;
-            //TODO
+
+        template<class Archive>
+        void serialize(Archive &archive) {
+            archive(cereal::base_class<lms::math::polyLine2f>(this), changes);
         }
-        virtual void lmsDeserialize(std::istream &is) override{
-            (void)is;
-            //TODO
-        }
+
+        CEREAL_SERIALIZATION()
 
         virtual bool isSubType(size_t hashcode) const override{
             return hashcode == typeid(lms::math::polyLine2f).hash_code();

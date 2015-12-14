@@ -22,7 +22,40 @@ class EnvironmentObject :public virtual lms::Inheritance
 {
 private:
     std::string m_name;
+    float m_trust;
+    float m_trustLast;
 public:
+    EnvironmentObject():m_trust(0){
+
+    }
+    /**
+     * @brief setTrust
+     * @param trust value between 0 and 1
+     */
+    void setTrust(float trust){
+        if(trust < 0 || trust > 1){
+            throw "invalid trust: "+std::to_string(trust);
+        }
+        m_trustLast = m_trust;
+        m_trust = trust;
+    }
+
+    float getLastTrust(){
+        return m_trustLast;
+    }
+
+    float getDeltaTrust(){
+        return m_trust - m_trustLast;
+    }
+
+    /**
+     * @brief trust
+     * @return trust you have in the obstacle
+     */
+    int trust() const{
+        return m_trust;
+    }
+
     virtual ~EnvironmentObject() {}
 
     virtual bool isSubType(size_t hashcode) const override{

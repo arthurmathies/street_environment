@@ -15,7 +15,6 @@ Obstacle::Obstacle() : m_tmpPosition(0, 0){
     stateCovariance[15] = 1;
     m_init = true;
     fistRun = true;
-    m_trust = 0;
 }
 
 bool Obstacle::validKalman() const{
@@ -57,14 +56,6 @@ void Obstacle::simple(float distanceMoved){
         tmp = tmp.negate();
     }
     m_tmpPosition = m_tmpPosition +tmp;
-}
-
-void Obstacle::trustIt(){
-    trustIt(1);
-}
-
-void Obstacle::trustIt(int count){
-    m_trust+=count;
 }
 
 void Obstacle::kalman(const street_environment::RoadLane &middle, float distanceMoved){

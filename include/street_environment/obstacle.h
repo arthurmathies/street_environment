@@ -25,7 +25,6 @@ class Obstacle:public EnvironmentObject
 {
 
     bool fistRun;
-    int m_trust;
 
     //Kalman stuff
     double state[4];
@@ -53,18 +52,7 @@ public:
     bool validKalman() const;
     void simple(float distanceMoved);
 
-    void trustIt();
-    void trustIt(int count);
-
     virtual bool match(const Obstacle &obj) const;
-    /**
-     * @brief trust
-     * @return trust you have in the obstacle
-     */
-    int trust() const{
-        return m_trust;
-    }
-
     Obstacle();
     /**
      * @brief init used to init the kalman!

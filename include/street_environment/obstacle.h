@@ -95,6 +95,7 @@ public:
     #endif
 
 };
+typedef std::shared_ptr<Obstacle> ObstaclePtr;
 
 } //street_environment
 

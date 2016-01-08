@@ -2,6 +2,7 @@
 #define SENSOR_ENVIRONMENT_H
 #include <vector>
 #include <memory>
+#include "lms/deprecated.h"
 
 #include "lms/inheritance.h"
 #ifdef USE_CEREAL
@@ -64,12 +65,13 @@ public:
     }
 
     template <typename T>
-    std::shared_ptr<T> getCopyAsPtr() const{
+    DEPRECATED std::shared_ptr<T> getCopyAsPtr() const{
         return std::shared_ptr<T>(new T(*static_cast<const T*>(this)));
     }
 
+
     template <typename T>
-    T& getAsReference() const{
+    DEPRECATED T& getAsReference() const{
         return *static_cast<T*>(this);
     }
     virtual int getType() const = 0;

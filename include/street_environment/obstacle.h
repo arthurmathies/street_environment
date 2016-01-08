@@ -31,12 +31,25 @@ class Obstacle:public EnvironmentObject
     double oldState[4];
     double stateCovariance[16];
 
-    //TODO die Delta-Werte passen beim 1. Aufrufen nicht!
+    //TODO move arcLength orthLength pos view to super-class
     /**
-     * @brief stores the position before the kalman!
+     * @brief arcLength length along the road
      */
-    lms::math::vertex2f m_tmpPosition;
-    lms::math::Rect boundingBox; //TODO
+    double arcLength;
+    /**
+     * @brief orthLength orth distance to the middle lane
+     */
+    double orthLength;
+
+    /**
+     * @brief stores the position kalman!
+     */
+    lms::math::vertex2f m_position;
+    lms::math::vertex2f m_viewDirection;
+    /**
+     * @brief m_width of the obstacle orth to view_dir
+     */
+    float m_width;
     bool m_validKalman;
 
 public:
@@ -67,6 +80,10 @@ public:
     void updatePosition(const lms::math::vertex2f &position);
 
     lms::math::vertex2f position() const;
+    lms::math::vertex2f viewDirection() const;
+    void viewDirection(const lms::math::vertex2f &v);
+    float width();
+    void width(float w);
 
     void kalman(const street_environment::RoadLane &middle,float distanceMoved);
 
@@ -90,7 +107,7 @@ public:
         void serialize(Archive & archive) {
             archive (
                 cereal::base_class<street_environment::EnvironmentObject>(this),
-                m_tmpPosition);
+                m_position);
         }
     #endif
 

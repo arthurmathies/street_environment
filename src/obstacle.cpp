@@ -4,7 +4,7 @@
 #include "lib/objectTracker/objectTracker_emxAPI.h"
 
 namespace street_environment{
-Obstacle::Obstacle() : m_tmpPosition(0, 0){
+Obstacle::Obstacle() : m_position(0, 0){
 
     for(int i = 0; i < 16; i++){
         stateCovariance[i] = 0;
@@ -41,21 +41,37 @@ bool Obstacle::match(const Obstacle &obj) const{
 }
 
 lms::math::vertex2f Obstacle::position() const{
-    return m_tmpPosition;
+    return m_position;
+}
+
+lms::math::vertex2f Obstacle::viewDirection() const{
+    return m_viewDirection;
+}
+
+void Obstacle::viewDirection(const lms::math::vertex2f &v){
+    m_viewDirection = v;
+}
+
+float Obstacle::width(){
+    return m_width;
+}
+
+void Obstacle::width(float w){
+    m_width = w;
 }
 
 void Obstacle::updatePosition(const lms::math::vertex2f &position) {
-    this->m_tmpPosition = position;
+    this->m_position = position;
     m_validKalman = false;
 }
 
 void Obstacle::simple(float distanceMoved){
-    lms::math::vertex2f tmp = m_tmpPosition;
+    lms::math::vertex2f tmp = m_position;
     tmp = tmp.normalize()*distanceMoved;
     if(tmp.x > 0){
         tmp = tmp.negate();
     }
-    m_tmpPosition = m_tmpPosition +tmp;
+    m_position = m_position +tmp;
 }
 
 void Obstacle::kalman(const street_environment::RoadLane &middle, float distanceMoved){
@@ -76,9 +92,8 @@ void Obstacle::kalman(const street_environment::RoadLane &middle, float distance
         laneModel->data[i] = middle.polarDarstellung[i];
     }
     //TODO
-    float measureX =m_tmpPosition.x;
-    float measureY =m_tmpPosition.y;
-    //std::cout<<"DATA INPUT: "<< distanceMoved <<" oldPos: "<< m_tmpPosition.x<<" "<<m_tmpPosition.y<<std::endl;
+    float measureX =m_position.x;
+    float measureY =m_position.y;
     //kalman it
     //1 for init
     if(fistRun)
@@ -88,8 +103,8 @@ void Obstacle::kalman(const street_environment::RoadLane &middle, float distance
     fistRun = false;
 
     //Convert the kalman-result
-    double arcLength = state[0];
-    double orthLength = state[2];
+    arcLength = state[0];
+    orthLength = state[2];
     //std::cout <<"KALMAN-vals: " <<"arcLength: "<<  arcLength << " orthLength: "<< orthLength<<std::endl;
     double currentLength = 0;
 
@@ -101,37 +116,23 @@ void Obstacle::kalman(const street_environment::RoadLane &middle, float distance
             //Bis jetzt nur tangential
             lms::math::vertex2f tang = d*(arcLength-currentLength);
             lms::math::vertex2f orth = d.rotateAntiClockwise90deg()*orthLength;
-            this->m_tmpPosition = middle.points()[i-1]+tang+orth;
+            this->m_position = middle.points()[i-1]+tang+orth;
+
             //Addiere den orthogonalen anteil
             break;
         }else{
             currentLength += dd;
         }
     }
-    //std::cout<<"DATA OUTPUT 2: "<< m_tmpPosition.x<<" "<<m_tmpPosition.y<<std::endl;
-
-
-    /*
-    //TODO
-    std::cout<<"PRINT stateCovariance"<<std::endl;
-    for(int i = 0; i < 9; i++){
-        std::cout << std::to_string(stateCovariance[i])<<" ; ";
-        if(i == 2 || i == 5 || i == 8){
-            std::cout <<std::endl;
-        }
-    }
-    */
     m_validKalman = true;
     m_init = false;
 }
 
 float Obstacle::getStreetDistanceOrthogonal() const{
-    //TODO
-    return 0;
+    return orthLength;
 }
 float Obstacle::getStreetDistanceTangential() const{
-    //TODO
-    return 0;
+    return arcLength;
 }
 
 } //street_environment

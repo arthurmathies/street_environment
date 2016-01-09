@@ -27,19 +27,16 @@ class Obstacle:public EnvironmentObject
     bool fistRun;
 
     //Kalman stuff
+    /**
+     * @brief state
+     * s0 = pos tang //arcLength
+     * s1 = vel tang
+     * s2 = pos orth //orthLength
+     * s3 = vel orth
+     */
     double state[4];
     double oldState[4];
     double stateCovariance[16];
-
-    //TODO move arcLength orthLength pos view to super-class
-    /**
-     * @brief arcLength length along the road
-     */
-    double arcLength;
-    /**
-     * @brief orthLength orth distance to the middle lane
-     */
-    double orthLength;
 
     /**
      * @brief stores the position kalman!
@@ -63,7 +60,6 @@ public:
      * @return true if the last m_tmpPosition was used in the kalman
      */
     bool validKalman() const;
-    void simple(float distanceMoved);
 
     virtual bool match(const Obstacle &obj) const;
     Obstacle();
@@ -88,15 +84,25 @@ public:
     void kalman(const street_environment::RoadLane &middle,float distanceMoved);
 
     /**
-     * @brief getStreetDistanceTangential
-     * @return the length to the object tangential
+     * @brief distanceTang
+     * @return the length to the object tangential to the road
      */
-    float getStreetDistanceTangential() const;
+    float distanceTang() const;
     /**
-     * @brief getStreetDistanceOrthogonal
-     * @return  the length to the object orthogonal
+     * @brief distanceOrth
+     * @return  the length to the object orthogonal to the road
      */
-    float getStreetDistanceOrthogonal() const;
+    float distanceOrth() const;
+    /**
+     * @brief velocityTang
+     * @return the velocity tang to the road
+     */
+    float velocityTang() const;
+    /**
+     * @brief velocityOrth
+     * @return the velocity orth to the road
+     */
+    float velocityOrth() const;
 
     // cereal implementation
     #ifdef USE_CEREAL

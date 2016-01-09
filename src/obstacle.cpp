@@ -28,8 +28,8 @@ bool Obstacle::match(const Obstacle &obj) const{
     //TODO use boundingBox
     if(validKalman()){
         //check if they are both on the same line
-        if(lms::math::sgn(getStreetDistanceOrthogonal()) == lms::math::sgn(obj.getStreetDistanceOrthogonal())){
-            if(fabs(getStreetDistanceTangential()-obj.getStreetDistanceTangential()) < 0.3){//TODO magic number
+        if(lms::math::sgn(distanceOrth()) == lms::math::sgn(obj.distanceOrth())){
+            if(fabs(distanceTang()-obj.distanceTang()) < 0.3){//TODO magic number
                 return true;
             }
         }
@@ -65,15 +65,6 @@ void Obstacle::updatePosition(const lms::math::vertex2f &position) {
     m_validKalman = false;
 }
 
-void Obstacle::simple(float distanceMoved){
-    lms::math::vertex2f tmp = m_position;
-    tmp = tmp.normalize()*distanceMoved;
-    if(tmp.x > 0){
-        tmp = tmp.negate();
-    }
-    m_position = m_position +tmp;
-}
-
 void Obstacle::kalman(const street_environment::RoadLane &middle, float distanceMoved){
     //simple(distanceMoved);
 
@@ -96,26 +87,23 @@ void Obstacle::kalman(const street_environment::RoadLane &middle, float distance
     float measureY =m_position.y;
     //kalman it
     //1 for init
-    if(fistRun)
+    //if(fistRun)
         objectTracker(1,laneModel, middle.polarPartLength, state, stateCovariance, trustModel, trustMeasure,trustMeasure, measureX, measureY, distanceMoved,true);
     //else
     //    objectTracker(0,laneModel, middle.polarPartLength, state, stateCovariance, trustModel, trustMeasure,trustMeasure, measureX, measureY, distanceMoved,true);
     fistRun = false;
 
-    //Convert the kalman-result
-    arcLength = state[0];
-    orthLength = state[2];
     //std::cout <<"KALMAN-vals: " <<"arcLength: "<<  arcLength << " orthLength: "<< orthLength<<std::endl;
     double currentLength = 0;
 
     for(int i = 1; i < (int)middle.points().size(); i++){
         double dd = middle.points()[i-1].distance(middle.points()[i]);
-        if(currentLength +dd > arcLength){
+        if(currentLength +dd > distanceTang()){
             lms::math::vertex2f d = (middle.points()[i] -middle.points()[i-1]).normalize();
             //setzen der position
             //Bis jetzt nur tangential
-            lms::math::vertex2f tang = d*(arcLength-currentLength);
-            lms::math::vertex2f orth = d.rotateAntiClockwise90deg()*orthLength;
+            lms::math::vertex2f tang = d*(distanceTang()-currentLength);
+            lms::math::vertex2f orth = d.rotateAntiClockwise90deg()*distanceOrth();
             this->m_position = middle.points()[i-1]+tang+orth;
 
             //Addiere den orthogonalen anteil
@@ -128,11 +116,17 @@ void Obstacle::kalman(const street_environment::RoadLane &middle, float distance
     m_init = false;
 }
 
-float Obstacle::getStreetDistanceOrthogonal() const{
-    return orthLength;
+float Obstacle::distanceTang() const{
+    return state[0];
 }
-float Obstacle::getStreetDistanceTangential() const{
-    return arcLength;
+float Obstacle::velocityTang() const{
+    return state[1];
+}
+float Obstacle::distanceOrth() const{
+    return state[2];
+}
+float Obstacle::velocityOrth() const{
+    return state[3];
 }
 
 } //street_environment

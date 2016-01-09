@@ -13,6 +13,10 @@ private:
     bool m_blocked;
 
 public:
+    Crossing():m_blocked(true){
+
+    }
+
     static constexpr int TYPE = 2;
 
     virtual bool match(const Crossing &obj) const{
@@ -33,7 +37,7 @@ public:
         m_blocked = blocked;
     }
 
-    bool blocked(){
+    bool blocked() const{
         return m_blocked;
     }
 

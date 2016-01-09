@@ -1,6 +1,7 @@
 #ifndef LMS_STREET_ENVIRONMENT_CROSSING_H
 #define LMS_STREET_ENVIRONMENT_CROSSING_H
 #include "obstacle.h"
+#include "lms/time.h"
 
 namespace street_environment{
 /**
@@ -11,9 +12,27 @@ class Crossing:public Obstacle
 {
 private:
     bool m_blocked;
+    lms::Time m_startStop;
 
 public:
-    Crossing():m_blocked(true){
+
+    void startStop(){
+        if(m_startStop != lms::Time::ZERO){
+            m_startStop = lms::Time::now();
+        }
+    }
+    bool hasToStop() const{
+        if(m_startStop != lms::Time::ZERO){
+            if(m_startStop.since().toFloat() < 3){ //Time that we have to wait for an obstacle magic number
+                return false;
+            }else{
+                return true;
+            }
+        }
+        return true;
+    }
+
+    Crossing():m_blocked(true),m_startStop(lms::Time::ZERO){
 
     }
 

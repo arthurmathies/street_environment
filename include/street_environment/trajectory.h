@@ -38,10 +38,18 @@ namespace street_environment {
         }
     };
 
-    struct TrajectoryPoint{
+    struct TrajectoryPoint:public lms::Serializable{
         lms::math::vertex2f position;
         lms::math::vertex2f directory;
         float velocity;
+#ifdef USE_CEREAL
+        CEREAL_SERIALIZATION()
+
+        template<class Archive>
+        void serialize(Archive &ar) {
+            ar(position, directory, velocity);
+        }
+#endif
     };
 
 }

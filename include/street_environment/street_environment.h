@@ -26,7 +26,7 @@ private:
     float m_trust;
     float m_trustLast;
 public:
-    EnvironmentObject():m_trust(0){
+    EnvironmentObject():m_trust(0),m_trustLast(0){
 
     }
     /**
@@ -51,9 +51,9 @@ public:
 
     /**
      * @brief trust
-     * @return trust you have in the obstacle
+     * @return
      */
-    int trust() const{
+    float trust() const{
         return m_trust;
     }
 

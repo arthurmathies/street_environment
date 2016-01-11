@@ -78,7 +78,7 @@ public:
     lms::math::vertex2f position() const;
     lms::math::vertex2f viewDirection() const;
     void viewDirection(const lms::math::vertex2f &v);
-    float width();
+    float width() const;
     void width(float w);
 
     void kalman(const street_environment::RoadLane &middle,float distanceMoved);

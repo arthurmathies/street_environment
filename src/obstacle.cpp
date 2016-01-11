@@ -49,10 +49,10 @@ lms::math::vertex2f Obstacle::viewDirection() const{
 }
 
 void Obstacle::viewDirection(const lms::math::vertex2f &v){
-    m_viewDirection = v;
+    m_viewDirection = v.normalize();
 }
 
-float Obstacle::width(){
+float Obstacle::width() const{
     return m_width;
 }
 

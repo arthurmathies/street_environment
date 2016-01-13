@@ -81,6 +81,11 @@ public:
     float width() const;
     void width(float w);
 
+    /**
+     * @brief kalman
+     * @param middle
+     * @param distanceMoved Distance that the obstacle will be translated
+     */
     void kalman(const street_environment::RoadLane &middle,float distanceMoved);
 
     /**

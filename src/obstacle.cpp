@@ -82,20 +82,20 @@ void Obstacle::kalman(const street_environment::RoadLane &middle, float distance
     for(uint i = 0; i < middle.polarDarstellung.size(); i++){
         laneModel->data[i] = middle.polarDarstellung[i];
     }
-    //TODO
+
     float measureX =m_position.x;
     float measureY =m_position.y;
     //kalman it
-    //1 for init
-    //if(fistRun)
-        objectTracker(1,laneModel, middle.polarPartLength, state, stateCovariance, trustModel, trustMeasure,trustMeasure, measureX, measureY, distanceMoved,true);
-    //else
-    //    objectTracker(0,laneModel, middle.polarPartLength, state, stateCovariance, trustModel, trustMeasure,trustMeasure, measureX, measureY, distanceMoved,true);
-    fistRun = false;
+    //HACK As the kalman doesn't work atm
+    //1 for init as we abuse the kalman to calculate distanceOrth() and distanceTang()
+    objectTracker(1,laneModel, middle.polarPartLength, state, stateCovariance, trustModel, trustMeasure,trustMeasure, measureX, measureY, distanceMoved,true);
+    // we move it by hand
+    state[0] = state[0]-distanceMoved;
 
     //std::cout <<"KALMAN-vals: " <<"arcLength: "<<  arcLength << " orthLength: "<< orthLength<<std::endl;
-    double currentLength = 0;
 
+    //Calculate the new x-y
+    double currentLength = 0;
     for(int i = 1; i < (int)middle.points().size(); i++){
         double dd = middle.points()[i-1].distance(middle.points()[i]);
         if(currentLength +dd > distanceTang()){

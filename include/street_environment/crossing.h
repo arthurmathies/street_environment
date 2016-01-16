@@ -69,7 +69,7 @@ public:
         void serialize(Archive & archive) {
             archive (
                 cereal::base_class<street_environment::Obstacle>(this),
-                m_blocked);
+                m_blocked, m_startStop);
         }
     #endif
 

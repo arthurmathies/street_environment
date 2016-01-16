@@ -85,7 +85,7 @@ public:
 
     template <class Archive>
     void serialize( Archive & ar ) {
-        ar(m_name);
+        ar(m_name, m_trust, m_trustLast);
     }
 
     virtual bool match(const EnvironmentObject &obj) const{

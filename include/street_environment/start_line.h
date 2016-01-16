@@ -9,6 +9,18 @@ public:
     int getType() const override{
        return TYPE;
     }
+
+
+#ifdef USE_CEREAL
+    //get default interface for datamanager
+    CEREAL_SERIALIZATION()
+
+    template<class Archive>
+    void serialize(Archive & archive) {
+        archive (
+                cereal::base_class<street_environment::Obstacle>(this));
+    }
+#endif
 };
 } //namespace street_environment
 

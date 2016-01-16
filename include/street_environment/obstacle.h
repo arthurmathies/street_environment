@@ -115,7 +115,7 @@ public:
         void serialize(Archive & archive) {
             archive (
                 cereal::base_class<street_environment::EnvironmentObject>(this),
-                m_position);
+                m_position, m_viewDirection, m_width);
         }
     #endif
 

@@ -42,6 +42,9 @@ namespace street_environment {
         lms::math::vertex2f position;
         lms::math::vertex2f directory;
         float velocity;
+        TrajectoryPoint():position(0,0),directory(1,0),velocity(0){
+
+        }
 #ifdef USE_CEREAL
         CEREAL_SERIALIZATION()
 

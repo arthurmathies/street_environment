@@ -74,6 +74,8 @@ public:
     #endif
 
 };
+
+typedef std::shared_ptr<Crossing> CrossingPtr;
 }//street_environment
 
 //TODO CEREAL

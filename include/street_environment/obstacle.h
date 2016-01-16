@@ -23,9 +23,6 @@ class Obstacle:public EnvironmentObject
     , public lms::Serializable
 #endif
 {
-
-    bool fistRun;
-
     //Kalman stuff
     /**
      * @brief state

@@ -13,8 +13,11 @@ Obstacle::Obstacle() : m_position(0, 0){
     stateCovariance[5] = 1;
     stateCovariance[10] = 1;
     stateCovariance[15] = 1;
+    for(int i = 0; i < 4; i++){
+        state[i] = 0;
+        oldState[i] = 0;
+    }
     m_init = true;
-    fistRun = true;
 }
 
 bool Obstacle::validKalman() const{
@@ -28,14 +31,14 @@ bool Obstacle::match(const Obstacle &obj) const{
     //TODO use boundingBox
     if(validKalman()){
         //check if they are both on the same line
-        if(lms::math::sgn(distanceOrth()) == lms::math::sgn(obj.distanceOrth())){
+        //if(lms::math::sgn(distanceOrth()) == lms::math::sgn(obj.distanceOrth())){
             if(fabs(distanceTang()-obj.distanceTang()) < 0.3){//TODO magic number
                 return true;
-            }
+          //  }
         }
     }else{
     //TODO use measurement accuracy
-        return (position().distance(obj.position())<0.2);
+        return (position().distance(obj.position())<0.3);
     }
     return false;
 }
@@ -75,8 +78,9 @@ void Obstacle::kalman(const street_environment::RoadLane &middle, float distance
         oldState[i] = state[i];
     }
 
+    bool useKalman = (m_position.x > 0) && (distanceTang() >= 0) || m_init;
     //Kalman doesn't like values < 0
-    if(m_position.x > 0){
+    if(useKalman){
         //get new values for kalman
         double trustModel = 0.001;
         double trustMeasure = 0.001;
@@ -98,7 +102,7 @@ void Obstacle::kalman(const street_environment::RoadLane &middle, float distance
 
     //if the tang distance is smaller than 0 we move it manually backwards.  Becuase of the geometry of the road it should be fine
     //TODO I am not sure what the kalman does is m_position.x is smaller then 0
-    if(state[0] < 0){
+    if(!useKalman){
         this->m_position.x -= distanceMoved;
     }else{
     //Calculate the new x-y
@@ -122,6 +126,12 @@ void Obstacle::kalman(const street_environment::RoadLane &middle, float distance
     }
     m_validKalman = true;
     m_init = false;
+
+    if(position().x != position().x){
+        std::cout<<"WELL DONE"<<std::endl;
+        std::cout<<distanceMoved<<std::endl;
+        exit(0);
+    }
 }
 
 float Obstacle::distanceTang() const{

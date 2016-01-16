@@ -20,14 +20,13 @@ add_library (street_environment SHARED ${SOURCES} ${HEADERS} ${matlab})
 target_link_libraries (street_environment PRIVATE math_lib lmscore)
 
 
-#set (TESTS
-#    "src/test/serialization.cpp"
-#)
+set (TESTS
+    "src/test/serialization.cpp"
+)
 
-#if(USE_GOOGLETEST)
-#doesn't work atm
-#    message("Compile street_environment testing executable")
-#    add_executable(street_environment_test ${TESTS})
-#    target_link_libraries(street_environment_test PRIVATE street_environment math_lib gtest gtest_main)
-#    add_test(StreetEnvironment street_environment_test)
-#endif()
+if(USE_GOOGLETEST)
+    message("Compile street_environment testing executable")
+    add_executable(street_environment_test ${TESTS})
+    target_link_libraries(street_environment_test PRIVATE street_environment math_lib gtest gtest_main)
+    add_test(StreetEnvironment street_environment_test)
+endif()

@@ -77,16 +77,4 @@ public:
 
 typedef std::shared_ptr<Crossing> CrossingPtr;
 }//street_environment
-
-//TODO CEREAL
-#ifdef USE_CEREAL
-//CEREAL_REGISTER_TYPE(street_environment::Obstacle)
-#endif
-
-namespace cereal {
-    template <class Archive>
-    struct specialize<Archive, street_environment::Crossing, cereal::specialization::member_serialize> {};
-      // cereal no longer has any ambiguity when serializing street_environment::Obstacle
-}  // namespace cereal
-
 #endif //LMS_STREET_ENVIRONMENT_CROSSING_H

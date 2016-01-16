@@ -22,6 +22,7 @@ public:
     }
 #endif
 };
+typedef std::shared_ptr<StartLine> StartLinePtr;
 } //namespace street_environment
 
 #endif //STREET_ENVIRONMENT_START_LINE_H

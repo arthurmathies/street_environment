@@ -27,6 +27,6 @@ set (TESTS
 if(USE_GOOGLETEST)
     message("Compile street_environment testing executable")
     add_executable(street_environment_test ${TESTS})
-    target_link_libraries(street_environment_test PRIVATE street_environment math_lib gtest gtest_main)
+    target_link_libraries(street_environment_test PRIVATE street_environment math_lib gtest gtest_main lmscore)
     add_test(StreetEnvironment street_environment_test)
 endif()

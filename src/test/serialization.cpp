@@ -2,6 +2,8 @@
 
 #include "street_environment/road.h"
 #include "street_environment/obstacle.h"
+#include "street_environment/crossing.h"
+#include "street_environment/start_line.h"
 #include "street_environment/street_environment.h"
 
 #include <string>
@@ -130,8 +132,19 @@ TEST(Serialization, Environment) {
         std::shared_ptr<Obstacle> obstacle = std::make_shared<Obstacle>();
         obstacle->name("obstacle");
 
+        StartLinePtr startLine = std::make_shared<StartLine>();
+        startLine->name("startline");
+
+        CrossingPtr crossing = std::make_shared<Crossing>();
+        crossing->blocked(true);
+        crossing->name("crossing");
+        crossing->setTrust(1);
+
         env.objects.push_back(lane);
         env.objects.push_back(obstacle);
+        env.objects.push_back(startLine);
+        env.objects.push_back(crossing);
+
 
         oarchive(env); // Write the data to the archive
     }
@@ -142,7 +155,7 @@ TEST(Serialization, Environment) {
         EnvironmentObjects env;
         iarchive(env); // Read the data from the archive
 
-        ASSERT_EQ(2, env.objects.size());
+        ASSERT_EQ(4, env.objects.size());
 
         ASSERT_EQ(std::string("my lane"), env.objects[0]->name());
 

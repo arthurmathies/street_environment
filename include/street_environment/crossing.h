@@ -13,27 +13,28 @@ class Crossing:public Obstacle
 private:
     bool m_blocked;
     lms::Time m_startStop;
+    float m_stopTime;
 
 public:
-
-    void startStop(){
-        if(m_startStop != lms::Time::ZERO){
+    bool startStop(){
+        if(m_startStop == lms::Time::ZERO){
             m_startStop = lms::Time::now();
+            return true;
         }
+        return false;
     }
     bool hasToStop() const{
         if(m_startStop != lms::Time::ZERO){
-            if(m_startStop.since().toFloat() < 3){ //Time that we have to wait for an obstacle magic number
-                return false;
-            }else{
-                return true;
-            }
+            return m_startStop.since().toFloat() < m_stopTime; //Time that we have to wait for an obstacle magic number
         }
         return true;
     }
 
-    Crossing():m_blocked(true),m_startStop(lms::Time::ZERO){
+    lms::Time stopTime(){
+        return m_startStop;
+    }
 
+    Crossing():m_blocked(true),m_startStop(lms::Time::ZERO),m_stopTime(2){
     }
 
     static constexpr int TYPE = 2;

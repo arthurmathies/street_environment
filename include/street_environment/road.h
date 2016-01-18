@@ -69,6 +69,7 @@ namespace street_environment {
         }
 
         #ifdef USE_CEREAL
+        CEREAL_SERIALIZATION()
         // member cereal serialize method
         template <class Archive>
         void serialize( Archive & archive) {

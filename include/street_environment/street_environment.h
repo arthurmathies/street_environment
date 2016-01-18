@@ -93,6 +93,8 @@ public:
     }
 };
 
+typedef std::shared_ptr<EnvironmentObject> EnvironmentObjectPtr;
+
 template<typename T>
 class Environment
 #ifdef USE_CEREAL

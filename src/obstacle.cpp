@@ -78,7 +78,7 @@ void Obstacle::kalman(const street_environment::RoadLane &middle, float distance
         oldState[i] = state[i];
     }
 
-    bool useKalman = (m_position.x > 0) && (distanceTang() >= 0) || m_init;
+    bool useKalman = ((m_position.x > 0) && (distanceTang() >= 0)) || m_init;
     //Kalman doesn't like values < 0
     if(useKalman){
         //get new values for kalman

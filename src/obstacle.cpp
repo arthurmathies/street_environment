@@ -70,7 +70,9 @@ void Obstacle::updatePosition(const lms::math::vertex2f &position) {
 
 void Obstacle::kalman(const street_environment::RoadLane &middle, float distanceMoved){
     //simple(distanceMoved);
-
+    if(distanceMoved != distanceMoved){
+        throw std::runtime_error("NAN DISTANCE YOU IDIOT");
+    }
     static_assert(sizeof(state)/sizeof(double) == 4,"Obstacle::kalman: Size doesn't match idiot!");
 
     //Set old state
@@ -126,12 +128,6 @@ void Obstacle::kalman(const street_environment::RoadLane &middle, float distance
     }
     m_validKalman = true;
     m_init = false;
-
-    if(position().x != position().x){
-        std::cout<<"WELL DONE"<<std::endl;
-        std::cout<<distanceMoved<<std::endl;
-        exit(0);
-    }
 }
 
 float Obstacle::distanceTang() const{

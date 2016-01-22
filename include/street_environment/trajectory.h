@@ -22,6 +22,7 @@ namespace street_environment {
             }
         };
         std::vector<RoadChange> changes;
+        std::vector<float> velocity;
 
         template<class Archive>
         void serialize(Archive &archive) {

@@ -22,7 +22,7 @@ namespace street_environment {
             }
         };
         std::vector<RoadChange> changes;
-        polyLine2f viewDirs;
+        lms::math::polyLine2f viewDirs;
 
         template<class Archive>
         void serialize(Archive &archive) {

@@ -11,7 +11,7 @@ namespace street_environment{
 class Crossing:public Obstacle
 {
 private:
-    bool m_blocked;
+    int m_blockCounter;
     lms::Time m_startStop;
     float m_stopTime;
 
@@ -34,7 +34,7 @@ public:
         return m_startStop;
     }
 
-    Crossing():m_blocked(true),m_startStop(lms::Time::ZERO),m_stopTime(2){
+    Crossing():m_blockCounter(0),m_startStop(lms::Time::ZERO),m_stopTime(2){
     }
 
     static constexpr int TYPE = 2;
@@ -54,11 +54,20 @@ public:
 
 
     void blocked(bool blocked){
-        m_blocked = blocked;
+        if(blocked){
+            m_blockCounter++;
+            if(m_blockCounter < 2) //TODO HACK
+                m_blockCounter = 2;
+            if(m_blockCounter > 10){
+                m_blockCounter = 10;
+            }
+        }else{
+            m_blockCounter--;
+        }
     }
 
     bool blocked() const{
-        return m_blocked;
+        return m_blockCounter <= 0;
     }
 
     // cereal implementation
@@ -70,7 +79,7 @@ public:
         void serialize(Archive & archive) {
             archive (
                 cereal::base_class<street_environment::Obstacle>(this),
-                m_blocked, m_startStop);
+                m_blockCounter, m_startStop);
         }
     #endif
 

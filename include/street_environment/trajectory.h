@@ -38,7 +38,7 @@ namespace street_environment {
     #endif
     };
 
-    class Trajectory: public std::vector<TrajectoryPoint>, public lms::Inheritance/* TODO , public lms::Serializable*/{
+    class Trajectory: public std::vector<TrajectoryPoint>, public lms::Inheritance/* TODO #IMPORTANT , public lms::Serializable*/{
     public:
         template<class Archive>
         void serialize(Archive &archive) {
@@ -46,7 +46,7 @@ namespace street_environment {
         }
 /* TODO
 #ifdef USE_CEREAL
-        CEREAL_SERIALIZATION()
+        CEREAL_SERIALIZATION() //TODO #IMPORTANT
 #endif
 */
         virtual bool isSubType(size_t hashcode) const override{

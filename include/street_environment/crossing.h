@@ -16,6 +16,7 @@ private:
     float m_stopTime;
 
 public:
+    bool foundOppositeStopLine; //not that nice
     bool startStop(){
         if(m_startStop == lms::Time::ZERO){
             m_startStop = lms::Time::now();
@@ -34,7 +35,7 @@ public:
         return m_startStop;
     }
 
-    Crossing():m_blockCounter(0),m_startStop(lms::Time::ZERO),m_stopTime(2){
+    Crossing():m_blockCounter(0),m_startStop(lms::Time::ZERO),m_stopTime(2),foundOppositeStopLine(0){
     }
 
     static constexpr int TYPE = 2;

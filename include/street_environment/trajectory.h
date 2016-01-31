@@ -38,21 +38,19 @@ namespace street_environment {
     #endif
     };
 
-    class Trajectory: public std::vector<TrajectoryPoint>, public lms::Inheritance/* TODO #IMPORTANT , public lms::Serializable*/{
+    class Trajectory: public std::vector<TrajectoryPoint>, public lms::Inheritance, public lms::Serializable {
     public:
-        template<class Archive>
-        void serialize(Archive &archive) {
-            archive(std::vector<TrajectoryPoint>(this));
-        }
-/* TODO
+
+        // Hint: serialize() function is inherited from std::vector base
+
 #ifdef USE_CEREAL
-        CEREAL_SERIALIZATION() //TODO #IMPORTANT
+        CEREAL_SERIALIZATION()
 #endif
-*/
+
         virtual bool isSubType(size_t hashcode) const override{
             return hashcode == typeid(std::vector<TrajectoryPoint>).hash_code();
         }
     };
-
 }
 #endif //STREET_ENVIRONMENT_TRAJECTORY_H
+

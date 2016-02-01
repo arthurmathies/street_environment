@@ -5,6 +5,7 @@
 #ifdef USE_CEREAL
 #include <cereal/types/base_class.hpp>
 #include <cereal/types/vector.hpp>
+#include <cereal/access.hpp>
 #endif
 
 namespace street_environment {
@@ -41,7 +42,10 @@ namespace street_environment {
     class Trajectory: public std::vector<TrajectoryPoint>, public lms::Inheritance, public lms::Serializable {
     public:
 
-        // Hint: serialize() function is inherited from std::vector base
+        template<class Archive>
+        void serialize(Archive &archive) {
+            archive(cereal::base_class<std::vector<TrajectoryPoint>>( this ));
+        }
 
 #ifdef USE_CEREAL
         CEREAL_SERIALIZATION()
@@ -52,5 +56,8 @@ namespace street_environment {
         }
     };
 }
+
+CEREAL_SPECIALIZE_FOR_ALL_ARCHIVES(street_environment::Trajectory, cereal::specialization::member_serialize )
+
 #endif //STREET_ENVIRONMENT_TRAJECTORY_H
 

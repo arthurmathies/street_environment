@@ -21,6 +21,36 @@
 #endif
 
 namespace street_environment {
+enum class RoadStateType{
+    UNKNOWN,STRAIGHT,STRAIGHT_CURVE,CURVE
+};
+struct RoadState{
+    RoadState():type(RoadStateType::UNKNOWN),startDistance(0),endDistance(0),probability(0),curvature(1){}
+    RoadStateType type;
+    /**
+     * @brief startDistance tangential distance to the start of the state
+     */
+    float startDistance;
+    /**
+     * @brief startDistance tangential distance to the end of the state
+     */
+    float endDistance;
+    float probability;
+    float curvature;
+};
+struct RoadStates{
+    std::vector<RoadState> states;
+    RoadState mostProbableState() const{
+        RoadState r;
+        r.type = RoadStateType::UNKNOWN;
+        r.probability = 0;
+        for(const RoadState &v:states){
+            if(v.probability < r.probability)
+                r = v;
+        }
+        return r;
+    }
+};
 
     enum class RoadLaneType {
         LEFT, MIDDLE, RIGHT

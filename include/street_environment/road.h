@@ -60,7 +60,7 @@ struct RoadStates{
     {
         RoadLaneType m_type;
     public:
-        static constexpr int TYPE = 10;
+        static constexpr int TYPE = 0;
         bool isSubType(size_t hashcode) const override{
             return lms::Impl<lms::math::polyLine2f>::isSubType(hashcode,this);
         }
@@ -80,7 +80,7 @@ struct RoadStates{
         virtual ~RoadLane() {}
 
         int getType()const override{
-           return 0;
+           return TYPE;
         }
 
         /**

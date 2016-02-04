@@ -45,7 +45,7 @@ struct RoadStates{
         r.type = RoadStateType::UNKNOWN;
         r.probability = 0;
         for(const RoadState &v:states){
-            if(v.probability < r.probability)
+            if(v.probability > r.probability)
                 r = v;
         }
         return r;

@@ -16,6 +16,10 @@ private:
     float m_stopTime;
 
 public:
+    static constexpr int TYPE = 2;
+    virtual int getType() const override{
+       return Crossing::TYPE;
+    }
     bool foundOppositeStopLine; //not that nice
     bool startStop(){
         if(m_startStop == lms::Time::ZERO){
@@ -38,8 +42,6 @@ public:
     Crossing():m_blockCounter(0),m_startStop(lms::Time::ZERO),m_stopTime(2),foundOppositeStopLine(0){
     }
 
-    static constexpr int TYPE = 2;
-
     virtual bool match(const Crossing &obj) const{
         if(!Obstacle::match(obj)){
             return false;
@@ -47,12 +49,6 @@ public:
         //TODO
         return false;
     }
-
-
-    int getType() const override{
-       return TYPE;
-    }
-
 
     void blocked(bool blocked){
         if(blocked){

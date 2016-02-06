@@ -19,7 +19,7 @@ namespace street_environment {
          * @brief isRight
          * @return true if the TrajectoryPoint is on the left side of the middle of the road
          */
-        bool isRight(){
+        bool isRight() const{
             return distanceToMiddleLane > 0;
         }
 

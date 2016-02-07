@@ -39,6 +39,10 @@ public:
         return m_startStop;
     }
 
+    bool hasWaited(){
+        return m_startStop != lms::Time::ZERO;
+    }
+
     Crossing():m_blockCounter(0),m_startStop(lms::Time::ZERO),m_stopTime(2),foundOppositeStopLine(0){
     }
 

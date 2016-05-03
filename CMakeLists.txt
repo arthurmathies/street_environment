@@ -10,6 +10,11 @@ set (HEADERS
     "include/street_environment/crossing.h"
     "include/street_environment/trajectory.h"
     "include/street_environment/start_line.h"
+    "include/street_environment/car.h"
+    "include/street_environment/dynamic_entity.h"
+
+    #Deprecated
+    "include/sensor_utils/car.h"
 
 )
 

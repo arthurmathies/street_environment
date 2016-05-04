@@ -28,7 +28,7 @@ public:
 #endif
     {
         State():priority(0),state(StateType::NOT_DEFINED),indicatorLeft(false),indicatorRight(false),startState(lms::Time::ZERO),
-            endState(lms::Time::ZERO),steering_front(0),steering_rear(0),targetSpeed(0){}
+            endState(lms::Time::ZERO),steering_front(0),steering_rear(0),targetSpeed(0),targetDistance(0){}
 
         /**
          * @brief priority of the state, for example StateType::DRIVING could have priority 1, PARKING could have 2 -> the car would par
@@ -49,6 +49,10 @@ public:
         lms::Time endState;
         float steering_front, steering_rear;
         float targetSpeed;
+        /**
+         * @brief targetDistance distance that should have the following speed, used to stop the car at crossings
+         */
+        float targetDistance;
         /**
          * @brief intime
          * @param currentTime

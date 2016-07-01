@@ -2,8 +2,53 @@
 #define STREET_ENVIRONMENT_DYNAMIC_ENTITY_H
 
 #include "lms/math/vertex.h"
-
+#include <eigen3/Eigen/Eigen>
+#include <vector>
 namespace street_environment {
+
+struct Pose2D{
+    Eigen::Vector3f m_position;
+    /**
+     * @brief update
+     * @param dx
+     * @param dy
+     * @param dphi drehung des Koordinatensystems
+     */
+    void update(float dx, float dy, float dphi){
+        Eigen::Matrix<float,3,3> transRot;
+        transRot(0,0)=cos(dphi);
+        transRot(0,1)=-sin(dphi);
+        transRot(0,2)=dx;
+        transRot(1,0)=sin(dphi);
+        transRot(1,1)=cos(dphi);
+        transRot(1,2)=dy;
+        transRot(2,0)=0;
+        transRot(2,1)=0;
+        transRot(2,2)=1;
+        m_position=transRot*m_position;
+    }
+};
+struct PoseEntity2D{
+
+    int posesMaxSize;
+    Pose2D currentPose;
+    std::vector<std::pair<int,Pose2D>> poses;
+    /**
+     * @brief update
+     * @param dx
+     * @param dy
+     * @param dphi drehung des Koordinatensystems
+     * @param time (can be abused as id) in ms
+     */
+    void update(float dx, float dy, float dphi, int time){
+        currentPose.update(dx,dy,dphi);
+        poses.push_back({time,currentPose});
+        if(posesMaxSize != -1 && (int)poses.size() > posesMaxSize){
+            //TODO don't use vectorposes.
+        }
+    }
+};
+
 /**
  * @brief A dynamic entity can be the vehicle itself but also every other
  * moving obstacle.
@@ -18,39 +63,28 @@ protected:
      * @brief Global position of the entity. x and y are given in meters.
      */
     lms::math::vertex2f m_position;
-    lms::math::vertex2f lastPositon;
 
     /**
      * @brief Direction vector that points to the direction the entity is
      * looking at.
      */
     lms::math::vertex2f m_viewDirection;
-    lms::math::vertex2f lastViewDirection;
 
     /**
      * @brief Velocity in m/s of the entity.
      */
     float m_velocity;
-    /**
-     * @brief Velocity of the entity in the last cycle.
-     */
-    float lastVelocity;
 
     /**
      * @brief Turn rate (rad/s) of the entity
      */
     float m_turnRate;
-    /**
-     * @brief Turn rate of the entity in the last cycle.
-     */
-    float lastTurnRate;
 
     /**
      * @brief Direction vector that points to the direction the entity is
      * driving to.
      */
     lms::math::vertex2f moveDirection;
-    lms::math::vertex2f lastMoveDirection;
 
 public:
     DynamicEntity();
@@ -124,7 +158,7 @@ public:
 
         template <class Archive>
         void serialize( Archive & archive) {
-            archive(m_position,lastPositon,m_velocity,lastVelocity,m_viewDirection,lastViewDirection);
+            archive(m_position,m_velocity,m_viewDirection);
         }
     #endif
 };

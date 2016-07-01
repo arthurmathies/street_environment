@@ -18,6 +18,17 @@ set (HEADERS
 
 )
 
+#eigen
+include_directories(
+        include
+        /usr/local/include
+        /usr/include
+        /usr/local/include/eigen3
+        /usr/include/eigen3
+)
+
+add_definitions(-DEIGEN_NO_DEBUG)
+
 include_directories("include" "codegen")
 file(GLOB matlab "codegen/lib/objectTracker/*.cpp" "codegen/lib/objectTracker/*.h")
 message(${matlab})

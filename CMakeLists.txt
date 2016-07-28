@@ -1,5 +1,6 @@
 set ( SOURCES 
     "src/street_environment.cpp"
+    "src/dynamic_entity.cpp"
     "src/obstacle.cpp"
 )
 
@@ -12,10 +13,7 @@ set (HEADERS
     "include/street_environment/start_line.h"
     "include/street_environment/car.h"
     "include/street_environment/dynamic_entity.h"
-
-    #Deprecated
-    "include/sensor_utils/car.h"
-
+    "include/street_environment/pose.h"
 )
 
 #eigen

@@ -1,6 +1,6 @@
 #ifndef STREET_ENVIRONMENT_CAR_H
 #define STREET_ENVIRONMENT_CAR_H
-#include "street_environment//dynamic_entity.h"
+#include "street_environment/dynamic_entity.h"
 #include "lms/time.h"
 
 #ifdef USE_CEREAL

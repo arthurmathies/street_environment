@@ -70,6 +70,8 @@ void Obstacle::updatePosition(const lms::math::vertex2f &position) {
 
 void Obstacle::kalman(const street_environment::RoadLane &middle, float distanceMoved){
     //simple(distanceMoved);
+    //TODO
+    return;
     if(distanceMoved != distanceMoved){
         throw std::runtime_error("NAN DISTANCE YOU IDIOT");
     }

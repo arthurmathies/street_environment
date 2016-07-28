@@ -89,8 +89,8 @@ struct RoadStates{
          * polarDarstellung[1] is the start-angle in rad
          * polarDarstellung[>1] Krümmungen relativ zum vorherigen stück
          */
-        std::vector<double> polarDarstellung; //TODO english name :)
-        float polarPartLength;
+        //std::vector<double> polarDarstellung; //TODO english name :)
+        //float polarPartLength;
         RoadLaneType type() const{
             return m_type;
         }
@@ -106,7 +106,7 @@ struct RoadStates{
         void serialize( Archive & archive) {
             archive (cereal::base_class<street_environment::EnvironmentObject>(this),
                         cereal::base_class<lms::math::polyLine2f>(this),
-                      m_type, polarDarstellung, polarPartLength);
+                      m_type);
         }
         #endif
     };

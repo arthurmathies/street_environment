@@ -71,65 +71,6 @@ void Obstacle::updatePosition(const lms::math::vertex2f &position) {
 void Obstacle::kalman(const street_environment::RoadLane &middle, float distanceMoved){
     //simple(distanceMoved);
     //TODO
-    return;
-    if(distanceMoved != distanceMoved){
-        throw std::runtime_error("NAN DISTANCE YOU IDIOT");
-    }
-    static_assert(sizeof(state)/sizeof(double) == 4,"Obstacle::kalman: Size doesn't match idiot!");
-
-    //Set old state
-    for(uint i = 0; i < sizeof(state)/sizeof(double); i++){
-        oldState[i] = state[i];
-    }
-
-    bool useKalman = ((m_position.x > 0) && (distanceTang() >= 0)) || m_init;
-    //Kalman doesn't like values < 0
-    if(useKalman){
-        //get new values for kalman
-        double trustModel = 0.001;
-        double trustMeasure = 0.001;
-        const emxArray_real_T *laneModel = emxCreate_real_T(middle.polarDarstellung.size(),1);
-        for(uint i = 0; i < middle.polarDarstellung.size(); i++){
-            laneModel->data[i] = middle.polarDarstellung[i];
-        }
-
-        float measureX =m_position.x;
-        float measureY =m_position.y;
-        //kalman it
-        //HACK As the kalman doesn't work atm
-        //1 for init as we abuse the kalman to calculate distanceOrth() and distanceTang()
-        objectTracker(1,laneModel, middle.polarPartLength, state, stateCovariance, trustModel, trustMeasure,trustMeasure, measureX, measureY, distanceMoved,true);
-    }
-
-    // we move it by hand
-    state[0] = state[0]-distanceMoved;
-
-    //if the tang distance is smaller than 0 we move it manually backwards.  Becuase of the geometry of the road it should be fine
-    //TODO I am not sure what the kalman does is m_position.x is smaller then 0
-    if(!useKalman){
-        this->m_position.x -= distanceMoved;
-    }else{
-    //Calculate the new x-y
-        double currentLength = 0;
-        for(int i = 1; i < (int)middle.points().size(); i++){
-            double dd = middle.points()[i-1].distance(middle.points()[i]);
-            if(currentLength +dd > distanceTang()){
-                lms::math::vertex2f d = (middle.points()[i] -middle.points()[i-1]).normalize();
-                //setzen der position
-                //Bis jetzt nur tangential
-                lms::math::vertex2f tang = d*(distanceTang()-currentLength);
-                lms::math::vertex2f orth = d.rotateAntiClockwise90deg()*distanceOrth();
-                this->m_position = middle.points()[i-1]+tang+orth;
-
-                //Addiere den orthogonalen anteil
-                break;
-            }else{
-                currentLength += dd;
-            }
-        }
-    }
-    m_validKalman = true;
-    m_init = false;
 }
 
 float Obstacle::distanceTang() const{

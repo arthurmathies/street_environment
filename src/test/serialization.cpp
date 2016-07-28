@@ -32,10 +32,10 @@ TEST(Serialization, RoadLane) {
         cereal::PortableBinaryOutputArchive oarchive(ss); // Create an output archive
 
         RoadLane lane;
-        lane.polarDarstellung.push_back(1);
-        lane.polarDarstellung.push_back(2);
-        lane.polarDarstellung.push_back(3);
-        lane.polarPartLength = 20;
+        //lane.polarDarstellung.push_back(1);
+       // lane.polarDarstellung.push_back(2);
+        //lane.polarDarstellung.push_back(3);
+        //lane.polarPartLength = 20;
         lane.points().push_back(lms::math::vertex2f(4,5));
         lane.points().push_back(lms::math::vertex2f(6,7));
         lane.type(RoadLaneType::MIDDLE);
@@ -49,9 +49,9 @@ TEST(Serialization, RoadLane) {
         RoadLane lane;
         iarchive(lane); // Read the data from the archive
 
-        ASSERT_EQ(3, lane.polarDarstellung.size());
-        EXPECT_DOUBLE_EQ(1, lane.polarDarstellung[0]);
-        ASSERT_EQ(20, lane.polarPartLength);
+        //ASSERT_EQ(3, lane.polarDarstellung.size());
+        //EXPECT_DOUBLE_EQ(1, lane.polarDarstellung[0]);
+        //ASSERT_EQ(20, lane.polarPartLength);
 
         ASSERT_EQ(2, lane.points().size());
         EXPECT_EQ(lms::math::vertex2f(4,5), lane.points()[0]);

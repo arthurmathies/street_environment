@@ -61,8 +61,8 @@ struct RoadStates{
         RoadLaneType m_type;
     public:
         static constexpr int TYPE = 0;
-        bool isSubType(size_t hashcode) const override{
-            return lms::Impl<lms::math::polyLine2f>::isSubType(hashcode,this);
+        bool isSubType(std::type_index tIndex) const override{
+            return lms::Extends<lms::math::polyLine2f>::isSubType(this,tIndex);
         }
 
         RoadLane(){}

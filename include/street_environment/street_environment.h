@@ -59,19 +59,19 @@ public:
 
     virtual ~EnvironmentObject() {}
 
-    virtual bool isSubType(size_t hashcode) const override{
-        (void)hashcode;
+    virtual bool isSubType(std::type_index tIndex) const override{
+        (void)tIndex;
         return false;
     }
 
     template <typename T>
-    DEPRECATED std::shared_ptr<T> getCopyAsPtr() const{
+    LMS_DEPRECATED std::shared_ptr<T> getCopyAsPtr() const{
         return std::shared_ptr<T>(new T(*static_cast<const T*>(this)));
     }
 
 
     template <typename T>
-    DEPRECATED T& getAsReference() const{
+    LMS_DEPRECATED T& getAsReference() const{
         return *static_cast<T*>(this);
     }
     virtual int getType() const = 0;

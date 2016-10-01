@@ -72,7 +72,6 @@ public:
     }
 
     // cereal implementation
-    #ifdef USE_CEREAL
         //get default interface for datamanager
         CEREAL_SERIALIZATION()
 
@@ -82,7 +81,6 @@ public:
                 cereal::base_class<street_environment::Obstacle>(this),
                 m_blockCounter, m_startStop);
         }
-    #endif
 
 };
 

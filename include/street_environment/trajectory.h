@@ -2,11 +2,9 @@
 #define STREET_ENVIRONMENT_TRAJECTORY_H
 #include "lms/math/polyline.h"
 
-#ifdef USE_CEREAL
 #include <cereal/types/base_class.hpp>
 #include <cereal/types/vector.hpp>
 #include <cereal/access.hpp>
-#endif
 
 namespace street_environment {
 
@@ -29,14 +27,12 @@ namespace street_environment {
         TrajectoryPoint(lms::math::vertex2f pos,lms::math::vertex2f viewDir, float velocity_, float distanceToMiddleLane_):position(pos),directory(viewDir),velocity(velocity_),distanceToMiddleLane(distanceToMiddleLane_){
 
         }
-    #ifdef USE_CEREAL
         CEREAL_SERIALIZATION()
 
         template<class Archive>
         void serialize(Archive &ar) {
             ar(position, directory, velocity,distanceToMiddleLane);
         }
-    #endif
     };
 
     class Trajectory: public std::vector<TrajectoryPoint>, public lms::Inheritance, public lms::Serializable {
@@ -47,9 +43,7 @@ namespace street_environment {
             archive(cereal::base_class<std::vector<TrajectoryPoint>>( this ));
         }
 
-#ifdef USE_CEREAL
         CEREAL_SERIALIZATION()
-#endif
 
         virtual bool isSubType(size_t hashcode) const override{
             return hashcode == typeid(std::vector<TrajectoryPoint>).hash_code();

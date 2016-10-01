@@ -4,24 +4,19 @@
 #include "lms/math/vertex.h"
 #include "street_environment/road.h"
 
-#ifdef USE_CEREAL
 #include "lms/serializable.h"
 #include "cereal/cerealizable.h"
 #include "cereal/cereal.hpp"
 #include "cereal/types/polymorphic.hpp"
 #include "cereal/archives/portable_binary.hpp"
 #include "cereal/types/base_class.hpp"
-#endif
 
 namespace street_environment{
 /**
  * @brief A dynamic entity can be the vehicle itself but also every other
  * moving obstacle.
  */
-class Obstacle:public EnvironmentObject
-#ifdef USE_CEREAL
-    , public lms::Serializable
-#endif
+class Obstacle:public EnvironmentObject, public lms::Serializable
 {
     //Kalman stuff
     /**
@@ -107,24 +102,21 @@ public:
     float velocityOrth() const;
 
     // cereal implementation
-    #ifdef USE_CEREAL
-        //get default interface for datamanager
-        CEREAL_SERIALIZATION()
+    //get default interface for datamanager
+    CEREAL_SERIALIZATION()
 
-        template<class Archive>
-        void serialize(Archive & archive) {
-            archive (
-                cereal::base_class<street_environment::EnvironmentObject>(this),
-                m_position, m_viewDirection, m_width);
-        }
-    #endif
+    template<class Archive>
+    void serialize(Archive & archive) {
+        archive (
+            cereal::base_class<street_environment::EnvironmentObject>(this),
+            m_position, m_viewDirection, m_width);
+    }
 
 };
 typedef std::shared_ptr<Obstacle> ObstaclePtr;
 
 } //street_environment
 
-#ifdef USE_CEREAL
 //CEREAL_REGISTER_TYPE(street_environment::Obstacle)
 
 namespace cereal {
@@ -132,6 +124,5 @@ namespace cereal {
     struct specialize<Archive, street_environment::Obstacle, cereal::specialization::member_serialize> {};
       // cereal no longer has any ambiguity when serializing street_environment::Obstacle
 }  // namespace cereal
-#endif
 
 #endif /* OBSTACLE_H */

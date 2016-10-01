@@ -5,7 +5,6 @@
 #include "lms/deprecated.h"
 
 #include "lms/inheritance.h"
-#ifdef USE_CEREAL
 #include "lms/serializable.h"
 #include "cereal/cerealizable.h"
 #include "cereal/cereal.hpp"
@@ -16,7 +15,6 @@
 #include "cereal/types/polymorphic.hpp"
 
 CEREAL_FORCE_DYNAMIC_INIT(street_environment)
-#endif
 
 namespace street_environment {
 class EnvironmentObject :public virtual lms::Inheritance
@@ -96,11 +94,7 @@ public:
 typedef std::shared_ptr<EnvironmentObject> EnvironmentObjectPtr;
 
 template<typename T>
-class Environment
-#ifdef USE_CEREAL
-    : public lms::Serializable
-#endif
-{
+class Environment: public lms::Serializable{
 public:
     virtual ~Environment() {}
 
@@ -114,7 +108,6 @@ public:
     }
     std::vector<std::shared_ptr<T>> objects;
 
-    #ifdef USE_CEREAL
         //get default interface for datamanager
         CEREAL_SERIALIZATION()
 
@@ -122,7 +115,6 @@ public:
         void serialize(Archive &archive) {
             archive(objects);
         }
-    #endif
 };
 class RoadLane;
 class Obstacle;
@@ -131,7 +123,6 @@ typedef Environment<RoadLane> EnvironmentRoadLane;
 typedef Environment<Obstacle> EnvironmentObstacles;
 }  // namespace street_environment
 
-#ifdef USE_CEREAL
 namespace cereal {
 
 template <class Archive, typename T>
@@ -139,8 +130,6 @@ struct specialize<Archive, street_environment::Environment<T>, cereal::specializ
   // cereal no longer has any ambiguity when serializing street_environment::Environment
 
 }  // namespace cereal
-#endif // USE_CEREAL
-
-#endif /* SENSOR_ENVIRONMENT_H */
 
 
+#endif //SENSOR_ENVIRONMENT_H

@@ -7,10 +7,7 @@ namespace street_environment {
  * @brief A dynamic entity can be the vehicle itself but also every other
  * moving obstacle.
  */
-class DynamicEntity
-        #ifdef USE_CEREAL
-            : public lms::Serializable
-        #endif
+class DynamicEntity : public lms::Serializable
 {
 protected:
     /**
@@ -102,7 +99,6 @@ public:
 
 
     // cereal implementation
-    #ifdef USE_CEREAL
         //get default interface for datamanager
         CEREAL_SERIALIZATION()
 
@@ -110,7 +106,6 @@ public:
         void serialize( Archive & archive) {
             archive(m_position,m_velocity,m_viewDirection);
         }
-    #endif
 };
 }//sensor_utils
 

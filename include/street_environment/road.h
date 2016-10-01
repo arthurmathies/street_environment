@@ -8,7 +8,6 @@
 #include "street_environment/street_environment.h"
 
 
-#ifdef USE_CEREAL
 #include "lms/serializable.h"
 #include "cereal/cerealizable.h"
 #include "cereal/cereal.hpp"
@@ -18,7 +17,6 @@
 #include "cereal/types/vector.hpp"
 #include "cereal/archives/portable_binary.hpp"
 #include "cereal/types/base_class.hpp"
-#endif
 
 namespace street_environment {
 enum class RoadStateType{

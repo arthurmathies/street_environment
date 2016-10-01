@@ -3,12 +3,10 @@
 #include "street_environment/dynamic_entity.h"
 #include "lms/time.h"
 
-#ifdef USE_CEREAL
 #include "cereal/types/vector.hpp"
 #include "cereal/types/string.hpp"
 #include "cereal/types/base_class.hpp"
-#include "cereal/cerealizable.h"
-#endif
+//#include "cereal/cerealizable.h"
 
 namespace street_environment {
 /**
@@ -23,9 +21,7 @@ public:
         NOT_DEFINED,IDLE,DRIVING,PARKING,RACE
     };
     struct State
-#ifdef USE_CEREAL
         : public lms::Serializable
-#endif
     {
         State():priority(0),state(StateType::NOT_DEFINED),indicatorLeft(false),indicatorRight(false),startState(lms::Time::ZERO),
             endState(lms::Time::ZERO),steering_front(0),steering_rear(0),targetSpeed(0),targetDistance(0){}
@@ -65,7 +61,6 @@ public:
             return startState < currentTime && currentTime < endState;
         }
 
-#ifdef USE_CEREAL
     CEREAL_SERIALIZATION()
 
         template <class Archive>
@@ -73,7 +68,6 @@ public:
             archive(priority, name, state, startState, endState, steering_front,
                     steering_rear, targetSpeed);
         }
-#endif
     };
 private:
     std::vector<State> states; //TODO not sure if it should be public
@@ -155,7 +149,6 @@ public:
     }
 
     // cereal implementation
-#ifdef USE_CEREAL
     //get default interface for datamanager
     CEREAL_SERIALIZATION()
 
@@ -165,7 +158,6 @@ public:
         archive(states,m_localDx,m_localDy);
         archive(cereal::base_class<DynamicEntity>(this));
     }
-#endif
 };
 }//street_environment
 

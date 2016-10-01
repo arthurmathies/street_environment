@@ -11,7 +11,6 @@ public:
     }
 
 
-#ifdef USE_CEREAL
     //get default interface for datamanager
     CEREAL_SERIALIZATION()
 
@@ -20,7 +19,6 @@ public:
         archive (
                 cereal::base_class<street_environment::Obstacle>(this));
     }
-#endif
 };
 typedef std::shared_ptr<StartLine> StartLinePtr;
 } //namespace street_environment

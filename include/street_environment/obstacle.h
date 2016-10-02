@@ -101,16 +101,16 @@ public:
      */
     float velocityOrth() const;
 
-    // cereal implementation
-    //get default interface for datamanager
-    CEREAL_SERIALIZATION()
-
     template<class Archive>
     void serialize(Archive & archive) {
         archive (
             cereal::base_class<street_environment::EnvironmentObject>(this),
             m_position, m_viewDirection, m_width);
     }
+
+    // cereal implementation
+    //get default interface for datamanager
+    CEREAL_SERIALIZATION()
 
 };
 typedef std::shared_ptr<Obstacle> ObstaclePtr;

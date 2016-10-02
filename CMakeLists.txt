@@ -27,6 +27,7 @@ if((${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang") OR (${CMAKE_CXX_COMPILER_ID} STRE
 endif()
 
 #add_definitions(-DEIGEN_NO_DEBUG)
+add_definitions(-DUSE_CEREAL)
 
 include_directories("include" "codegen")
 file(GLOB matlab "codegen/lib/objectTracker/*.cpp" "codegen/lib/objectTracker/*.h")
@@ -42,5 +43,5 @@ set (TESTS
 
 message("Compile street_environment testing executable")
 add_executable(street_environment_test ${TESTS})
-target_link_libraries(street_environment_test PRIVATE ${CONAN_LIBS})
+target_link_libraries(street_environment_test PRIVATE street_environment ${CONAN_LIBS})
 add_test(StreetEnvironment street_environment_test)

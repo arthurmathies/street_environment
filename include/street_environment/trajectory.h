@@ -46,8 +46,8 @@ namespace street_environment {
 
         CEREAL_SERIALIZATION()
 
-        virtual bool isSubType(size_t hashcode) const override{
-            return hashcode == typeid(std::vector<TrajectoryPoint>).hash_code();
+        virtual bool isSubType(std::type_index tIndex) const override{
+            return tIndex == typeid(std::vector<TrajectoryPoint>);
         }
     };
 }

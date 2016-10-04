@@ -5,6 +5,7 @@
 #include <cereal/types/base_class.hpp>
 #include <cereal/types/vector.hpp>
 #include <cereal/access.hpp>
+#include <cereal/cerealizable.h>
 
 namespace street_environment {
 

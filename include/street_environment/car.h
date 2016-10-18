@@ -156,7 +156,7 @@ public:
     void serialize( Archive & archive) {
         //TODO
         archive(states,m_localDx,m_localDy);
-        archive(cereal::base_class<DynamicEntity>(this));
+        //archive(cereal::base_class<DynamicEntity>(this)); //TODO warum geht das nicht?o
     }
 };
 }//street_environment

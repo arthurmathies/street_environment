@@ -2,11 +2,15 @@
 #include "street_environment/road.h"
 #include "street_environment/crossing.h"
 #include "street_environment/start_line.h"
+#include "street_environment/dynamic_entity.h"
+#include "street_environment/car.h"
 
 
 #include "cereal/archives/portable_binary.hpp"
 #include "cereal/types/polymorphic.hpp"
 
+CEREAL_REGISTER_TYPE(street_environment::Car)
+CEREAL_REGISTER_TYPE(street_environment::DynamicEntity)
 CEREAL_REGISTER_TYPE(street_environment::RoadLane)
 CEREAL_REGISTER_TYPE(street_environment::Obstacle)
 CEREAL_REGISTER_TYPE(street_environment::Crossing)

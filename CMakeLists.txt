@@ -1,8 +1,9 @@
+if(USE_CONAN)
 cmake_minimum_required(VERSION 2.8.12)
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
-
+endif(USE_CONAN)
 set ( SOURCES 
     "src/street_environment.cpp"
     "src/dynamic_entity.cpp"
@@ -26,22 +27,24 @@ if((${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang") OR (${CMAKE_CXX_COMPILER_ID} STRE
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wreturn-type -Wpedantic ")
 endif()
 
-#add_definitions(-DEIGEN_NO_DEBUG)
-add_definitions(-DUSE_CEREAL)
 
 include_directories("include" "codegen")
 file(GLOB matlab "codegen/lib/objectTracker/*.cpp" "codegen/lib/objectTracker/*.h")
 message(${matlab})
 add_library (street_environment SHARED ${SOURCES} ${HEADERS} ${matlab})
-target_link_libraries (street_environment PRIVATE ${CONAN_LIBS})
 
+if(USE_CONAN)
+target_link_libraries (street_environment PRIVATE ${CONAN_LIBS})
+message("Compile street_environment testing executable")
 
 set (TESTS
     "src/test/serialization.cpp"
     "src/test/compiles.cpp"
 )
-
-message("Compile street_environment testing executable")
 add_executable(street_environment_test ${TESTS})
 target_link_libraries(street_environment_test PRIVATE street_environment ${CONAN_LIBS})
 add_test(StreetEnvironment street_environment_test)
+else()
+target_link_libraries (street_environment PRIVATE lms_math lmscore)
+
+endif(USE_CONAN)

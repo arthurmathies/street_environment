@@ -99,13 +99,13 @@ public:
 
 
     // cereal implementation
-        //get default interface for datamanager
-        CEREAL_SERIALIZATION()
+    //get default interface for datamanager
+    CEREAL_SERIALIZATION()
 
-        template <class Archive>
-        void serialize( Archive & archive) {
-            archive(m_position,m_velocity,m_viewDirection);
-        }
+    template <class Archive>
+    void serialize( Archive & archive) {
+        archive(m_position,m_velocity,m_viewDirection);
+    }
 };
 }//sensor_utils
 

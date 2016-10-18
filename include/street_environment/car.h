@@ -6,7 +6,13 @@
 #include "cereal/types/vector.hpp"
 #include "cereal/types/string.hpp"
 #include "cereal/types/base_class.hpp"
-//#include "cereal/cerealizable.h"
+#include "cereal/cerealizable.h"
+#include "lms/serializable.h"
+#include "cereal/cerealizable.h"
+#include "cereal/cereal.hpp"
+#include "cereal/types/polymorphic.hpp"
+#include "cereal/archives/portable_binary.hpp"
+#include "cereal/types/base_class.hpp"
 
 namespace street_environment {
 /**
@@ -156,7 +162,7 @@ public:
     void serialize( Archive & archive) {
         //TODO
         archive(states,m_localDx,m_localDy);
-        //archive(cereal::base_class<DynamicEntity>(this)); //TODO warum geht das nicht?o
+        archive(cereal::base_class<DynamicEntity>(this)); //TODO warum geht das nicht?o
     }
 };
 }//street_environment

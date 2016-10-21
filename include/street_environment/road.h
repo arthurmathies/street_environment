@@ -97,7 +97,6 @@ struct RoadStates{
             m_type = type;
         }
 
-        #ifdef USE_CEREAL
         CEREAL_SERIALIZATION()
         // member cereal serialize method
         template <class Archive>
@@ -106,14 +105,11 @@ struct RoadStates{
                         cereal::base_class<lms::math::polyLine2f>(this),
                       m_type);
         }
-        #endif
     };
 
 
     typedef std::shared_ptr<RoadLane> RoadLanePtr;
 }  // namespace street_environment
-
-#ifdef USE_CEREAL
 
 namespace cereal {
 
@@ -122,10 +118,5 @@ struct specialize<Archive, street_environment::RoadLane, cereal::specialization:
   // cereal no longer has any ambiguity when serializing street_environment::RoadLane
 
 }  // namespace cereal
-
-
-//CEREAL_REGISTER_TYPE(street_environment::RoadLane)
-//CEREAL_REGISTER_DYNAMIC_INIT(street_environment)
-#endif
 
 #endif /* ENVIRONMENT_H */

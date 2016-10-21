@@ -16,30 +16,32 @@ namespace street_environment{
  * @brief A dynamic entity can be the vehicle itself but also every other
  * moving obstacle.
  */
-class Obstacle:public EnvironmentObject, public lms::Serializable
-{
-    //Kalman stuff
-    /**
-     * @brief state
-     * s0 = pos tang //arcLength
-     * s1 = vel tang
-     * s2 = pos orth //orthLength
-     * s3 = vel orth
-     */
-    double state[4];
-    double oldState[4];
-    double stateCovariance[16];
+class Obstacle:public EnvironmentObject, public lms::Serializable{
+
+    std::vector<lms::math::vertex2f> points;
 
     /**
      * @brief stores the position kalman!
      */
     lms::math::vertex2f m_position;
-    lms::math::vertex2f m_viewDirection;
-    /**
-     * @brief m_width of the obstacle orth to view_dir
-     */
-    float m_width;
-    bool m_validKalman;
+    bool valid;
+
+    void myValidate(){
+        calculatePosition();
+    }
+
+    void calculatePosition(){
+        m_position.x = 0;
+        m_position.y = 0;
+        if(points.size() == 0){
+            return;
+        }
+        for(const lms::math::vertex2f &v:points){
+            m_position +=v;
+        }
+        m_position = m_position/points.size();
+    }
+
 
 public:
     static constexpr int TYPE = 1;
@@ -47,11 +49,6 @@ public:
        return TYPE;
     }
     virtual ~Obstacle() {}
-    /**
-     * @brief validKalman
-     * @return true if the last m_tmpPosition was used in the kalman
-     */
-    bool validKalman() const;
 
     virtual bool match(const Obstacle &obj) const;
     Obstacle();
@@ -60,25 +57,47 @@ public:
      */
     bool m_init;
 
+    void invalid(){
+        valid = false;
+    }
+    bool isvalid(){
+        return valid;
+    }
+    void validate(){
+        if(!valid){
+            myValidate();
+            valid = true;
+        }
+    }
 
-    /**
-     * @brief updatePosition
-     * @param position
-     */
-    void updatePosition(const lms::math::vertex2f &position);
+    lms::math::vertex2f viewDirection() const{
+        return lms::math::vertex2f(1,0);//TODO
+    }
+
+    void addPoint(const lms::math::vertex2f &v){
+        points.push_back(v);
+    }
+    void clearPoints(){
+        points.clear();
+    }
+
 
     lms::math::vertex2f position() const;
-    lms::math::vertex2f viewDirection() const;
-    void viewDirection(const lms::math::vertex2f &v);
-    float width() const;
-    void width(float w);
+    float width() const{
+        return 0.3; //TODO
+    }
+    void width(float w){
+        (void)w;
+        //TODO
+    }
 
-    /**
-     * @brief kalman
-     * @param middle
-     * @param distanceMoved Distance that the obstacle will be translated
-     */
-    void kalman(const street_environment::RoadLane &middle,float distanceMoved);
+    void translate(float dx, float dy){
+        invalid();
+        lms::math::vertex2f delta(dx,dy);
+        for(int i = 0; i < (int) points.size(); i++){
+            points[i] = points[i]-delta;
+        }
+    }
 
     /**
      * @brief distanceTang
@@ -105,7 +124,7 @@ public:
     void serialize(Archive & archive) {
         archive (
             cereal::base_class<street_environment::EnvironmentObject>(this),
-            m_position, m_viewDirection, m_width);
+            m_position);
     }
 
     // cereal implementation

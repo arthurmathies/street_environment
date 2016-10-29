@@ -18,7 +18,7 @@ namespace street_environment{
  */
 class Obstacle:public EnvironmentObject, public lms::Serializable{
 
-    std::vector<lms::math::vertex2f> points;
+    std::vector<lms::math::vertex2f> m_points;
 
     /**
      * @brief stores the position kalman!
@@ -33,13 +33,13 @@ class Obstacle:public EnvironmentObject, public lms::Serializable{
     void calculatePosition(){
         m_position.x = 0;
         m_position.y = 0;
-        if(points.size() == 0){
+        if(m_points.size() == 0){
             return;
         }
-        for(const lms::math::vertex2f &v:points){
+        for(const lms::math::vertex2f &v:m_points){
             m_position +=v;
         }
-        m_position = m_position/points.size();
+        m_position = m_position/m_points.size();
     }
 
 
@@ -69,16 +69,19 @@ public:
             valid = true;
         }
     }
+    std::vector<lms::math::vertex2f> points() const{
+        return m_points;
+    }
 
     lms::math::vertex2f viewDirection() const{
         return lms::math::vertex2f(1,0);//TODO
     }
 
     void addPoint(const lms::math::vertex2f &v){
-        points.push_back(v);
+        m_points.push_back(v);
     }
     void clearPoints(){
-        points.clear();
+        m_points.clear();
     }
 
 
@@ -94,8 +97,8 @@ public:
     void translate(float dx, float dy){
         invalid();
         lms::math::vertex2f delta(dx,dy);
-        for(int i = 0; i < (int) points.size(); i++){
-            points[i] = points[i]-delta;
+        for(int i = 0; i < (int) m_points.size(); i++){
+            m_points[i] = m_points[i]-delta;
         }
     }
 

@@ -18,6 +18,9 @@
 #include "cereal/archives/portable_binary.hpp"
 #include "cereal/types/base_class.hpp"
 
+#include "lms/exception.h"
+#include "lms/logger.h"
+
 namespace street_environment {
 enum class RoadStateType{
     UNKNOWN,STRAIGHT,STRAIGHT_CURVE,CURVE
@@ -106,9 +109,141 @@ struct RoadStates{
                       m_type);
         }
     };
-
-
     typedef std::shared_ptr<RoadLane> RoadLanePtr;
+
+//from http://stackoverflow.com/questions/2049582/how-to-determine-if-a-point-is-in-a-2d-triangle
+struct RoadMatrixCell{
+private:
+    float m_badness;
+public:
+    lms::math::vertex2f points[4];
+    /**
+     * @brief badness value between 0 and 1
+     */
+    RoadMatrixCell():m_badness(0){}
+    bool contains(lms::math::vertex2f p) const{
+
+        return lms::math::pointInTriangle(p,points[0],points[1],points[2]) || pointInTriangle(p,points[0],points[2],points[3]);
+    }
+
+    float badness() const{
+        return m_badness;
+    }
+
+    void badness(float badness){
+        if(badness < 0 || badness > 1){
+            LMS_EXCEPTION("Invalid badness: " + std::to_string(badness));
+        }
+        m_badness = badness;
+    }
+};
+
+/**
+ * @brief The RoadMatrix struct 0,0 is on the left at the start of the road
+ */
+class RoadMatrix{
+    int m_width;
+    int m_length;
+
+    /**
+     * @brief m_points points row by row
+     */
+    std::vector<lms::math::vertex2f> m_points;
+    std::vector<std::vector<RoadMatrixCell>> m_cells;
+
+    RoadMatrixCell getCell(int x, int y) const{
+        if(x < 0 || x >= m_length){
+            LMS_EXCEPTION("x does not fit");
+        }else if(y < 0 || y >= m_width){
+            LMS_EXCEPTION("y does not fit");
+        }
+        RoadMatrixCell c;
+        int arrayLength = m_length +1;
+        c.points[0]=m_points[x+arrayLength*y];
+        c.points[1]=m_points[x+1+arrayLength*y];
+        c.points[2]=m_points[x+1+arrayLength*(y+1)];
+        c.points[3]=m_points[x+arrayLength*(y+1)];
+        return c;
+    }
+    void createCells(){
+        m_cells.clear();
+        std::vector<RoadMatrixCell> tmp;
+        tmp.resize(width());
+        m_cells.resize(length(),tmp);
+        for(int x = 0; x < m_length; x++){
+            for(int y = 0; y < m_width; y++){
+                m_cells[x][y] = getCell(x,y);
+            }
+        }
+    }
+
+public:
+
+    const RoadMatrixCell &cell(int x,int y) const{
+        //if(x < 0 || x > m_cells.size())
+        return m_cells[x][y];
+    }
+    RoadMatrixCell &cell(int x,int y){
+        //if(x < 0 || x > m_cells.size())
+        return m_cells[x][y];
+    }
+
+    int width() const{
+        return m_width;
+    }
+    int length() const{
+        return m_length;
+    }
+
+    void aroundRoad(const lms::math::polyLine2f &l, int widthSteps, float stepWidth, float stepLength){
+        //get new line with points in the right distance
+        lms::math::polyLine2f lp = l.getWithDistanceBetweenPoints(stepLength);
+        m_width = widthSteps*2;
+        m_length = lp.points().size()-1;
+        //clear old points
+        m_points.clear();
+        //create new points
+        for(int i = -widthSteps; i <= widthSteps; i++){
+            lms::math::polyLine2f top = lp.moveOrthogonal(stepWidth*i);
+            m_points.insert(std::end(m_points), std::begin(top.points()), std::end(top.points()));
+        }
+        /*
+        lms::logging::Logger logger("MYLOGGER");
+        logger.error("POINTS")<<m_points.size();
+        for(lms::math::vertex2f v:m_points){
+            logger.error("POINT")<<v.x << " " << v.y;
+        }
+        */
+        createCells();
+    }
+
+    bool checkBadPosition(lms::math::vertex2f v, float deltaBadness){
+        int x;
+        int y;
+        return checkBadPosition(v,x,y,deltaBadness);
+    }
+    bool checkBadPosition(lms::math::vertex2f v,int &ix, int &iy,float deltaBadness){
+        for(int x = 0; x < m_length; x++){
+            for(int y = 0; y < m_width; y++){
+                RoadMatrixCell &rmc = m_cells[x][y];
+                if(rmc.contains(v)){
+                    float currentBadness = rmc.badness();
+                    //TODO useful deltaBadness value
+                    currentBadness += deltaBadness;
+                    if(currentBadness > 1)
+                        currentBadness = 1;
+                    rmc.badness(currentBadness);
+                    ix = x;
+                    iy = y;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+};
+
 }  // namespace street_environment
 
 namespace cereal {

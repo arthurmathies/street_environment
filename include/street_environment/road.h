@@ -139,8 +139,9 @@ struct RoadMatrixCell {
     }
 };
 
+
 /**
- * @brief The RoadMatrix struct 0,0 is on the left at the start of the road
+ * @brief RoadMatrix stores a Cell representation of the road.
  */
 class RoadMatrix {
     int m_width;
@@ -166,6 +167,7 @@ class RoadMatrix {
         c.points[3] = m_points[x + arrayLength * (y + 1)];
         return c;
     }
+
     void createCells() {
         m_cells.clear();
         std::vector<RoadMatrixCell> tmp;
@@ -179,7 +181,6 @@ class RoadMatrix {
     }
 
   public:
-
     const RoadMatrixCell &cell(int x, int y) const {
         //if(x < 0 || x > m_cells.size())
         return m_cells[x][y];
@@ -205,7 +206,8 @@ class RoadMatrix {
 
         m_points.clear();
         for (int i = -cellsPerLane; i <= cellsPerLane; i++) {
-            lms::math::polyLine2f top = scaledLine.moveOrthogonal(cellWidth * i);
+            lms::math::polyLine2f top =
+                scaledLine.moveOrthogonal(cellWidth * i);
             m_points.insert(std::end(m_points), std::begin(top.points()),
                             std::end(top.points()));
         }
@@ -238,7 +240,6 @@ class RoadMatrix {
         }
         return false;
     }
-
 };
 
 }  // namespace street_environment
@@ -246,7 +247,8 @@ class RoadMatrix {
 namespace cereal {
 
 template <class Archive>
-struct specialize<Archive, street_environment::RoadLane, cereal::specialization::member_serialize> {};
+struct specialize<Archive, street_environment::RoadLane,
+                  cereal::specialization::member_serialize> {};
 // cereal no longer has any ambiguity when serializing street_environment::RoadLane
 
 }  // namespace cereal

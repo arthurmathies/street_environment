@@ -117,12 +117,11 @@ struct RoadMatrixCell {
     float m_badness;
   public:
     lms::math::vertex2f points[4];
-    /**
-     * @brief badness value between 0 and 1
-     */
+    static int maxBadness() {
+        return 10;
+    }
     RoadMatrixCell(): m_badness(0) {}
     bool contains(lms::math::vertex2f p) const {
-
         return lms::math::pointInTriangle(p, points[0], points[1], points[2])
                || lms::math::pointInTriangle(p, points[0], points[2], points[3]);
     }
@@ -147,13 +146,10 @@ class RoadMatrix {
     int m_width;
     int m_length;
 
-    /**
-     * @brief m_points points row by row
-     */
     std::vector<lms::math::vertex2f> m_points;
     std::vector<std::vector<RoadMatrixCell>> m_cells;
 
-    RoadMatrixCell getCell(int x, int y) const {
+    RoadMatrixCell initCell(int x, int y) const {
         if (x < 0 || x >= m_length) {
             LMS_EXCEPTION("x does not fit");
         } else if (y < 0 || y >= m_width) {
@@ -168,14 +164,14 @@ class RoadMatrix {
         return c;
     }
 
-    void createCells() {
+    void initCells() {
         m_cells.clear();
         std::vector<RoadMatrixCell> tmp;
         tmp.resize(width());
         m_cells.resize(length(), tmp);
         for (int x = 0; x < m_length; x++) {
             for (int y = 0; y < m_width; y++) {
-                m_cells[x][y] = getCell(x, y);
+                m_cells[x][y] = initCell(x, y);
             }
         }
     }
@@ -212,27 +208,15 @@ class RoadMatrix {
                             std::end(top.points()));
         }
 
-        createCells();
+        initCells();
     }
 
-    bool checkBadPosition(lms::math::vertex2f v, float deltaBadness) {
-        int x;
-        int y;
-        return checkBadPosition(v, x, y, deltaBadness);
-    }
-    bool checkBadPosition(lms::math::vertex2f v, int &ix, int &iy,
-                          float deltaBadness) {
+    bool markBadPosition(lms::math::vertex2f v) {
         for (int x = 0; x < m_length; x++) {
             for (int y = 0; y < m_width; y++) {
                 RoadMatrixCell &rmc = m_cells[x][y];
                 if (rmc.contains(v)) {
-                    float currentBadness = rmc.badness();
-                    currentBadness += deltaBadness;
-                    if (currentBadness > 1)
-                        currentBadness = 1;
-                    rmc.badness(currentBadness);
-                    ix = x;
-                    iy = y;
+                    rmc.badness(RoadMatrixCell::maxBadness());
                     return true;
                 }
             }

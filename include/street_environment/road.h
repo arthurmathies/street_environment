@@ -117,9 +117,7 @@ struct RoadMatrixCell {
     float m_badness;
   public:
     lms::math::vertex2f points[4];
-    static int maxBadness() {
-        return 10;
-    }
+
     RoadMatrixCell(): m_badness(0) {}
     bool contains(lms::math::vertex2f p) const {
         return lms::math::pointInTriangle(p, points[0], points[1], points[2])
@@ -131,9 +129,6 @@ struct RoadMatrixCell {
     }
 
     void badness(float badness) {
-        if (badness < 0 || badness > 1) {
-            LMS_EXCEPTION("Invalid badness: " + std::to_string(badness));
-        }
         m_badness = badness;
     }
 };
@@ -150,11 +145,6 @@ class RoadMatrix {
     std::vector<std::vector<RoadMatrixCell>> m_cells;
 
     RoadMatrixCell initCell(int x, int y) const {
-        if (x < 0 || x >= m_length) {
-            LMS_EXCEPTION("x does not fit");
-        } else if (y < 0 || y >= m_width) {
-            LMS_EXCEPTION("y does not fit");
-        }
         RoadMatrixCell c;
         int arrayLength = m_length + 1;
         c.points[0] = m_points[x + arrayLength * y];
@@ -178,11 +168,9 @@ class RoadMatrix {
 
   public:
     const RoadMatrixCell &cell(int x, int y) const {
-        //if(x < 0 || x > m_cells.size())
         return m_cells[x][y];
     }
     RoadMatrixCell &cell(int x, int y) {
-        //if(x < 0 || x > m_cells.size())
         return m_cells[x][y];
     }
 
@@ -209,19 +197,6 @@ class RoadMatrix {
         }
 
         initCells();
-    }
-
-    bool markBadPosition(lms::math::vertex2f v) {
-        for (int x = 0; x < m_length; x++) {
-            for (int y = 0; y < m_width; y++) {
-                RoadMatrixCell &rmc = m_cells[x][y];
-                if (rmc.contains(v)) {
-                    rmc.badness(RoadMatrixCell::maxBadness());
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 };
 

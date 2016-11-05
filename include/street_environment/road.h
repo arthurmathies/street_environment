@@ -227,7 +227,6 @@ class RoadMatrix {
                 RoadMatrixCell &rmc = m_cells[x][y];
                 if (rmc.contains(v)) {
                     float currentBadness = rmc.badness();
-                    //TODO useful deltaBadness value
                     currentBadness += deltaBadness;
                     if (currentBadness > 1)
                         currentBadness = 1;

@@ -181,8 +181,10 @@ class RoadMatrix {
         return m_length;
     }
 
-    void aroundLine(const lms::math::polyLine2f &line, int cellsPerLane,
-                    float cellWidth, float cellLength) {
+    void aroundLine(const lms::math::polyLine2f &line, float laneWidth,
+                    int cellsPerLane) {
+        float cellWidth = laneWidth / cellsPerLane;
+        float cellLength = cellWidth;
         lms::math::polyLine2f scaledLine =
             line.getWithDistanceBetweenPoints(cellLength);
         m_width = cellsPerLane * 2;

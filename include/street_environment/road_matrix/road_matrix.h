@@ -10,23 +10,14 @@ namespace street_environment {
 
 //from http://stackoverflow.com/questions/2049582/how-to-determine-if-a-point-is-in-a-2d-triangle
 struct RoadMatrixCell {
-  private:
-    float m_badness;
-  public:
+    bool hasObstacle;
     lms::math::vertex2f points[4];
 
-    RoadMatrixCell(): m_badness(0) {}
+    RoadMatrixCell(): hasObstacle(false) {}
+
     bool contains(lms::math::vertex2f p) const {
         return lms::math::pointInTriangle(p, points[0], points[1], points[2])
                || lms::math::pointInTriangle(p, points[0], points[2], points[3]);
-    }
-
-    float badness() const {
-        return m_badness;
-    }
-
-    void badness(float badness) {
-        m_badness = badness;
     }
 };
 

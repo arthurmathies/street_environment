@@ -4,13 +4,14 @@ cmake_minimum_required(VERSION 2.8.12)
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 endif(USE_CONAN)
-set ( SOURCES 
+set (SOURCES
     "src/street_environment.cpp"
     "src/dynamic_entity.cpp"
     "src/obstacle.cpp"
+    "src/road_matrix/road_matrix_to_trajectory.cpp"
 )
 
-set (HEADERS 
+set (HEADERS
     "include/street_environment/street_environment.h"
     "include/street_environment/obstacle.h"
     "include/street_environment/road.h"
@@ -20,6 +21,8 @@ set (HEADERS
     "include/street_environment/car.h"
     "include/street_environment/dynamic_entity.h"
     "include/street_environment/pose.h"
+    "include/street_environment/road_matrix/road_matrix.h"
+    "include/street_environment/road_matrix/road_matrix_to_trajectory.h"
 )
 
 #set compiler flags

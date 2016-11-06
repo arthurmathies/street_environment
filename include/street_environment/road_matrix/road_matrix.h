@@ -27,6 +27,8 @@ struct RoadMatrixCell {
 class RoadMatrix {
     int m_width;
     int m_length;
+    float m_cellWidth;
+    float m_cellLength;
 
     std::vector<lms::math::vertex2f> m_points;
     std::vector<std::vector<RoadMatrixCell>> m_cells;
@@ -68,19 +70,25 @@ class RoadMatrix {
         return m_length;
     }
 
+    float cellWidth() const {
+        return m_cellWidth;
+    }
+    float cellLength() const {
+        return m_cellLength;
+    }
+
     void aroundLine(const lms::math::polyLine2f &line, float laneWidth,
                     int cellsPerLane) {
-        float cellWidth = laneWidth / cellsPerLane;
-        float cellLength = cellWidth;
+        m_cellWidth = m_cellLength = laneWidth / cellsPerLane;
         lms::math::polyLine2f scaledLine =
-            line.getWithDistanceBetweenPoints(cellLength);
+            line.getWithDistanceBetweenPoints(m_cellLength);
         m_width = cellsPerLane * 2;
         m_length = scaledLine.points().size() - 1;
 
         m_points.clear();
         for (int i = -cellsPerLane; i <= cellsPerLane; i++) {
             lms::math::polyLine2f top =
-                scaledLine.moveOrthogonal(cellWidth * i);
+                scaledLine.moveOrthogonal(m_cellWidth * i);
             m_points.insert(std::end(m_points), std::begin(top.points()),
                             std::end(top.points()));
         }

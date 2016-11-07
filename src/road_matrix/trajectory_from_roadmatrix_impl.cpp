@@ -7,8 +7,8 @@ int TrajectoryFromRoadmatrixImpl::valueFunction(
     const street_environment::RoadMatrixCell& cell,
     const street_environment::RoadMatrix& roadMatrix) {
     int perfectTrajectory = roadMatrix.width() * (3 / 4);
-    int step = 100 / perfectTrajectory;
-    int value = 100 - (abs(perfectTrajectory - cell.y) * step);
+    int laneValueStep = 100 / perfectTrajectory;
+    int value = 100 - (abs(perfectTrajectory - cell.y) * laneValueStep);
     int obstacleClearanceCells =
         m_obstacleClearanceMeter / roadMatrix.cellLength();
     for (int x = 1; x <= obstacleClearanceCells; x++) {
@@ -33,7 +33,7 @@ TrajectoryFromRoadmatrixImpl::createLanePieceMatrix(
 
     std::unique_ptr<LanePieceMatrix> lanePieceMatrix(new LanePieceMatrix);
     for (int x = 0; x < roadMatrix.length(); x++) {
-        for (int y = 0; y < roadMatrix.width() - carWidthCells; y++) {
+        for (int y = 0; y < roadMatrix.width() - carWidthCells + 1; y++) {
             int value = 0;
             LanePiece lanePiece;
             for (int i = 0; i < carWidthCells; i++) {
@@ -52,7 +52,7 @@ TrajectoryFromRoadmatrixImpl::createLanePieceMatrix(
 std::unique_ptr<LanePieceTrajectory>
 TrajectoryFromRoadmatrixImpl::getOptimalLanePieceTrajectory(
     const LanePieceMatrix& lanePieceMatrix) {
-    std::unique_ptr<LanePieceTrajectory> cellLane(new LanePieceTrajectory());
+    std::unique_ptr<LanePieceTrajectory> cellLane(new LanePieceTrajectory);
     for (const auto& pieces : lanePieceMatrix) {
         if (pieces.size() > 0) {
             const LanePiece * a = &pieces[0];

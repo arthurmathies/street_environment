@@ -19,7 +19,7 @@ struct TrajectoryFromRoadmatrixImpl {
     int valueFunction(const street_environment::RoadMatrixCell& cell);
 
     std::unique_ptr<LanePieceMatrix> createLanePieceMatrix(
-        int carWidth, const street_environment::RoadMatrix& roadMatrix);
+        const street_environment::RoadMatrix& roadMatrix);
 
     std::unique_ptr<LanePieceTrajectory> getOptimalLanePieceTrajectory(
         const LanePieceMatrix& lanePieceMatrix);
@@ -27,6 +27,13 @@ struct TrajectoryFromRoadmatrixImpl {
     bool fillTrajectory(const LanePieceTrajectory&
                         lanePieceTrajectory,
                         street_environment::Trajectory& trajectory);
+
+    void setCarWidthMeter(float carWidthMeter) {
+        m_carWidthMeter = carWidthMeter;
+    }
+
+  private:
+    float m_carWidthMeter;
 };
 
 #endif // STREET_ENVIRONMENT_TRAJECTORY_FROM_ROADMATRIX_IMPL_H_

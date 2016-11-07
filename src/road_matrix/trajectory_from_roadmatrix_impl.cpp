@@ -1,6 +1,7 @@
 #include "street_environment/road_matrix/trajectory_from_roadmatrix_impl.h"
 
 #include <stdlib.h>
+#include <math.h>
 
 int TrajectoryFromRoadmatrixImpl::valueFunction(
     const street_environment::RoadMatrixCell& cell) {
@@ -10,13 +11,15 @@ int TrajectoryFromRoadmatrixImpl::valueFunction(
 
 std::unique_ptr<LanePieceMatrix>
 TrajectoryFromRoadmatrixImpl::createLanePieceMatrix(
-    int carWidth, const street_environment::RoadMatrix& roadMatrix) {
-    std::unique_ptr<LanePieceMatrix> lanePieceMatrix(new LanePieceMatrix());
+    const street_environment::RoadMatrix& roadMatrix) {
+    int carWidthCells = ceil(m_carWidthMeter / roadMatrix.cellWidth());
+
+    std::unique_ptr<LanePieceMatrix> lanePieceMatrix(new LanePieceMatrix);
     for (int x = 0; x < roadMatrix.length(); x++) {
-        for (int y = 0; y < roadMatrix.width() - carWidth; y++) {
+        for (int y = 0; y < roadMatrix.width() - carWidthCells; y++) {
             int value = 0;
             LanePiece lanePiece;
-            for (int i = 0; i < carWidth; i++) {
+            for (int i = 0; i < carWidthCells; i++) {
                 street_environment::RoadMatrixCell cell =
                     roadMatrix.cell(x, y + i);
                 value += valueFunction(cell);

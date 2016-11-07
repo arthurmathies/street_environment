@@ -4,8 +4,25 @@
 #include <math.h>
 
 int TrajectoryFromRoadmatrixImpl::valueFunction(
-    const street_environment::RoadMatrixCell& cell) {
-    int value = 0;
+    const street_environment::RoadMatrixCell& cell,
+    const street_environment::RoadMatrix& roadMatrix) {
+    int perfectTrajectory = roadMatrix.width() * (3 / 4);
+    int step = 100 / perfectTrajectory;
+    int value = 100 - (abs(perfectTrajectory - cell.y) * step);
+    int obstacleClearanceCells =
+        m_obstacleClearanceMeter / roadMatrix.cellLength();
+    for (int x = 1; x <= obstacleClearanceCells; x++) {
+        if ((cell.x + x < roadMatrix.length()) &&
+                (roadMatrix.cell(cell.x + x, cell.y).hasObstacle)) {
+            return value;
+        }
+        if ((cell.x - x >= 0) &&
+                (roadMatrix.cell(cell.x - x, cell.y).hasObstacle)) {
+            return value;
+        }
+    }
+    int carWidthCells = ceil(m_carWidthMeter / roadMatrix.cellWidth());
+    value += carWidthCells * 100;
     return value;
 }
 
@@ -22,7 +39,7 @@ TrajectoryFromRoadmatrixImpl::createLanePieceMatrix(
             for (int i = 0; i < carWidthCells; i++) {
                 street_environment::RoadMatrixCell cell =
                     roadMatrix.cell(x, y + i);
-                value += valueFunction(cell);
+                value += valueFunction(cell, roadMatrix);
                 lanePiece.cells.push_back(cell);
             }
             lanePiece.value = value;

@@ -10,6 +10,7 @@ namespace street_environment {
 
 //from http://stackoverflow.com/questions/2049582/how-to-determine-if-a-point-is-in-a-2d-triangle
 struct RoadMatrixCell {
+    int x, y;
     bool hasObstacle;
     lms::math::vertex2f points[4];
 
@@ -35,6 +36,8 @@ class RoadMatrix {
 
     RoadMatrixCell initCell(int x, int y) const {
         RoadMatrixCell c;
+        c.x = x;
+        c.y = y;
         int arrayLength = m_length + 1;
         c.points[0] = m_points[x + arrayLength * y];
         c.points[1] = m_points[x + 1 + arrayLength * y];

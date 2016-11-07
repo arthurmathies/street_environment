@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "street_environment/road_matrix/road_matrix.h"
+#include "street_environment/trajectory.h"
 
 struct LanePiece {
     std::vector<street_environment::RoadMatrixCell> cells;
@@ -22,6 +23,10 @@ struct TrajectoryFromRoadmatrixImpl {
 
     std::unique_ptr<LanePieceTrajectory> getOptimalLanePieceTrajectory(
         const LanePieceMatrix& lanePieceMatrix);
+
+    bool fillTrajectory(const LanePieceTrajectory&
+                        lanePieceTrajectory,
+                        street_environment::Trajectory& trajectory);
 };
 
 #endif // STREET_ENVIRONMENT_TRAJECTORY_FROM_ROADMATRIX_IMPL_H_

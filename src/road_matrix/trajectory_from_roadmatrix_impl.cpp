@@ -46,3 +46,18 @@ TrajectoryFromRoadmatrixImpl::getOptimalLanePieceTrajectory(
     }
     return cellLane;
 }
+
+bool TrajectoryFromRoadmatrixImpl::fillTrajectory(const LanePieceTrajectory&
+        lanePieceTrajectory, street_environment::Trajectory& trajectory) {
+    street_environment::TrajectoryPoint tp;
+    tp.velocity = 1;
+    for (const auto& piece : lanePieceTrajectory) {
+        float tp_x = (piece.cells.front().points[1].x +
+                      piece.cells.back().points[2].x) / 2;
+        float tp_y = (piece.cells.front().points[1].y +
+                      piece.cells.back().points[2].y) / 2;
+        tp.position = lms::math::vertex2f(tp_x, tp_y);
+        trajectory.push_back(tp);
+    }
+    return true;
+}

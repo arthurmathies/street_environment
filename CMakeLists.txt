@@ -8,7 +8,7 @@ set (SOURCES
     "src/street_environment.cpp"
     "src/dynamic_entity.cpp"
     "src/obstacle.cpp"
-    "src/road_matrix/road_matrix_to_trajectory.cpp"
+    "src/road_matrix/trajectory_from_roadmatrix_impl.cpp"
 )
 
 set (HEADERS
@@ -22,7 +22,7 @@ set (HEADERS
     "include/street_environment/dynamic_entity.h"
     "include/street_environment/pose.h"
     "include/street_environment/road_matrix/road_matrix.h"
-    "include/street_environment/road_matrix/road_matrix_to_trajectory.h"
+    "include/street_environment/road_matrix/trajectory_from_roadmatrix_impl.h"
 )
 
 #set compiler flags

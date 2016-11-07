@@ -1,15 +1,15 @@
-#include "street_environment/road_matrix/road_matrix_to_trajectory.h"
+#include "street_environment/road_matrix/trajectory_from_roadmatrix_impl.h"
 
-namespace road_matrix_to_trajectory {
+#include <stdlib.h>
 
-int valueFunction(const street_environment::RoadMatrixCell& cell) {
-    if (cell.hasObstacle) {
-        return 0;
-    }
-    return 1;
+int TrajectoryFromRoadmatrixImpl::valueFunction(
+    const street_environment::RoadMatrixCell& cell) {
+    int value = 0;
+    return value;
 }
 
-std::unique_ptr<LanePieceMatrix> createLanePieceMatrix(
+std::unique_ptr<LanePieceMatrix>
+TrajectoryFromRoadmatrixImpl::createLanePieceMatrix(
     int carWidth, const street_environment::RoadMatrix& roadMatrix) {
     std::unique_ptr<LanePieceMatrix> lanePieceMatrix(new LanePieceMatrix());
     for (int x = 0; x < roadMatrix.length(); x++) {
@@ -29,7 +29,8 @@ std::unique_ptr<LanePieceMatrix> createLanePieceMatrix(
     return lanePieceMatrix;
 }
 
-std::unique_ptr<LanePieceTrajectory> getOptimalLanePieceTrajectory(
+std::unique_ptr<LanePieceTrajectory>
+TrajectoryFromRoadmatrixImpl::getOptimalLanePieceTrajectory(
     const LanePieceMatrix& lanePieceMatrix) {
     std::unique_ptr<LanePieceTrajectory> cellLane(new LanePieceTrajectory());
     for (const auto& pieces : lanePieceMatrix) {
@@ -45,5 +46,3 @@ std::unique_ptr<LanePieceTrajectory> getOptimalLanePieceTrajectory(
     }
     return cellLane;
 }
-
-} // namespace road_matrix_to_trajectory

@@ -13,11 +13,11 @@ int TrajectoryFromRoadmatrixImpl::valueFunction(
         m_obstacleClearanceMeter / roadMatrix.cellLength();
     for (int x = 1; x <= obstacleClearanceCells; x++) {
         if ((cell.x + x < roadMatrix.length()) &&
-                (roadMatrix.cell(cell.x + x, cell.y).hasObstacle)) {
+                (roadMatrix.cell(cell.x + x, cell.y).hasObstacle())) {
             return value;
         }
         if ((cell.x - x >= 0) &&
-                (roadMatrix.cell(cell.x - x, cell.y).hasObstacle)) {
+                (roadMatrix.cell(cell.x - x, cell.y).hasObstacle())) {
             return value;
         }
     }

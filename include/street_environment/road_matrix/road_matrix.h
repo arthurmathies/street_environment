@@ -11,10 +11,15 @@ namespace street_environment {
 //from http://stackoverflow.com/questions/2049582/how-to-determine-if-a-point-is-in-a-2d-triangle
 struct RoadMatrixCell {
     int x, y;
-    bool hasObstacle;
+    //value between 0 and 1
+    float badness;
     lms::math::vertex2f points[4];
 
-    RoadMatrixCell(): hasObstacle(false) {}
+    RoadMatrixCell(): badness(0) {}
+
+    bool hasObstacle() const{
+        return badness > 0;
+    }
 
     bool contains(lms::math::vertex2f p) const {
         return lms::math::pointInTriangle(p, points[0], points[1], points[2])
@@ -82,7 +87,7 @@ class RoadMatrix {
 
     void aroundLine(const lms::math::polyLine2f &line, float laneWidth,
                     int cellsPerLane) {
-         //TODO das ist nicht sehr sinnvoll, unnötig viele Elemente
+         //TODO zellenlänge angeben
         m_cellWidth = m_cellLength = laneWidth / cellsPerLane;
         lms::math::polyLine2f scaledLine =
             line.getWithDistanceBetweenPoints(m_cellLength);

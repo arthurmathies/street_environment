@@ -82,6 +82,7 @@ class RoadMatrix {
 
     void aroundLine(const lms::math::polyLine2f &line, float laneWidth,
                     int cellsPerLane) {
+         //TODO das ist nicht sehr sinnvoll, unnötig viele Elemente
         m_cellWidth = m_cellLength = laneWidth / cellsPerLane;
         lms::math::polyLine2f scaledLine =
             line.getWithDistanceBetweenPoints(m_cellLength);

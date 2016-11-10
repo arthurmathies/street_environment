@@ -86,6 +86,7 @@ public:
 
 
     lms::math::vertex2f position() const;
+    //TODO add BoundingBox methods
     float width() const{
         return 0.3; //TODO
     }

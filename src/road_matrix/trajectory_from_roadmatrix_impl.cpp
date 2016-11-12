@@ -33,7 +33,7 @@ TrajectoryFromRoadmatrixImpl::createLanePieceMatrix(
 
     std::unique_ptr<LanePieceMatrix> lanePieceMatrix(new LanePieceMatrix);
     for (int x = 0; x < roadMatrix.length(); x++) {
-        for (int y = 0; y < roadMatrix.width() - carWidthCells + 1; y++) {
+        for (int y = 0; y < roadMatrix.width() - carWidthCells; y++) {
             int value = 0;
             LanePiece lanePiece;
             for (int i = 0; i < carWidthCells; i++) {

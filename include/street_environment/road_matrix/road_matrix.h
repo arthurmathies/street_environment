@@ -3,27 +3,27 @@
 
 #include <vector>
 
-#include "lms/math/vertex.h"
 #include "lms/math/polyline.h"
+#include "lms/math/vertex.h"
 
 namespace street_environment {
 
-//from http://stackoverflow.com/questions/2049582/how-to-determine-if-a-point-is-in-a-2d-triangle
 struct RoadMatrixCell {
+    // X and y coordinates of the cell in a RoadMatrix representation.
     int x, y;
-    //value between 0 and 1
+    // value between 0 and 1
     float badness;
     lms::math::vertex2f points[4];
 
-    RoadMatrixCell(): badness(0) {}
+    RoadMatrixCell() : badness(0) {}
 
-    bool hasObstacle() const{
-        return badness > 0;
-    }
+    bool hasObstacle() const { return badness > 0; }
 
+    // See
+    // http://stackoverflow.com/questions/2049582/how-to-determine-if-a-point-is-in-a-2d-triangle
     bool contains(lms::math::vertex2f p) const {
-        return lms::math::pointInTriangle(p, points[0], points[1], points[2])
-               || lms::math::pointInTriangle(p, points[0], points[2], points[3]);
+        return lms::math::pointInTriangle(p, points[0], points[1], points[2]) ||
+               lms::math::pointInTriangle(p, points[0], points[2], points[3]);
     }
 };
 
@@ -33,6 +33,7 @@ struct RoadMatrixCell {
 class RoadMatrix {
     int m_width;
     int m_length;
+    // The number of RoadMatrixCell's per Row and Column.
     float m_cellWidth;
     float m_cellLength;
 
@@ -63,31 +64,19 @@ class RoadMatrix {
         }
     }
 
-  public:
-    const RoadMatrixCell &cell(int x, int y) const {
-        return m_cells[x][y];
-    }
-    RoadMatrixCell &cell(int x, int y) {
-        return m_cells[x][y];
-    }
+   public:
+    const RoadMatrixCell &cell(int x, int y) const { return m_cells[x][y]; }
+    RoadMatrixCell &cell(int x, int y) { return m_cells[x][y]; }
 
-    int width() const {
-        return m_width;
-    }
-    int length() const {
-        return m_length;
-    }
+    int width() const { return m_width; }
+    int length() const { return m_length; }
 
-    float cellWidth() const {
-        return m_cellWidth;
-    }
-    float cellLength() const {
-        return m_cellLength;
-    }
+    float cellWidth() const { return m_cellWidth; }
+    float cellLength() const { return m_cellLength; }
 
     void aroundLine(const lms::math::polyLine2f &line, float laneWidth,
                     int cellsPerLane) {
-         //TODO zellenlänge angeben
+        // TODO zellenlänge angeben
         m_cellWidth = m_cellLength = laneWidth / cellsPerLane;
         lms::math::polyLine2f scaledLine =
             line.getWithDistanceBetweenPoints(m_cellLength);
@@ -106,6 +95,6 @@ class RoadMatrix {
     }
 };
 
-} // namespace street_environment
+}  // namespace street_environment
 
-#endif // STREET_ENVIRONMENT_ROAD_MATRIX_H_
+#endif  // STREET_ENVIRONMENT_ROAD_MATRIX_H_

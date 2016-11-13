@@ -45,10 +45,19 @@ set(TESTS
     "src/test/serialization.cpp"
     "src/test/compiles.cpp"
 )
-
 add_executable(street_environment_test ${TESTS})
 target_link_libraries(street_environment_test PRIVATE street_environment ${CONAN_LIBS})
 add_test(StreetEnvironment street_environment_test)
 else()
 target_link_libraries(street_environment PRIVATE lms_math lmscore)
+
+if(LOCAL_GMOCK)
+set(TESTS
+    "src/test/road_matrix_test.cpp"
+)
+add_executable(street_environment_test ${TESTS})
+target_link_libraries(street_environment_test PRIVATE
+    gtest gmock gmock_main street_environment lms_math)
+endif(LOCAL_GMOCK)
+
 endif(USE_CONAN)

@@ -13,13 +13,13 @@ protected:
     /**
      * @brief Global position of the entity. x and y are given in meters.
      */
-    lms::math::vertex2f m_position;
+    lms::math::vertex2f m_position, m_lastposition;
 
     /**
      * @brief Direction vector that points to the direction the entity is
      * looking at.
      */
-    lms::math::vertex2f m_viewDirection;
+    lms::math::vertex2f m_viewDirection,m_lastviewDirection;
 
     /**
      * @brief Velocity in m/s of the entity.

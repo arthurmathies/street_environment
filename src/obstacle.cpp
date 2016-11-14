@@ -18,6 +18,7 @@ bool Obstacle::match(const Obstacle &obj) const{
 }
 
 lms::math::vertex2f Obstacle::position() const{
+    validate();
     return m_position;
 }
 

@@ -28,6 +28,7 @@ class Obstacle:public EnvironmentObject, public lms::Serializable{
 
     void myValidate(){
         calculatePosition();
+        valid = true;
     }
 
     void calculatePosition(){
@@ -63,21 +64,25 @@ public:
     bool isvalid(){
         return valid;
     }
-    void validate(){
+    void validate() const{
         if(!valid){
-            myValidate();
-            valid = true;
+            const_cast<Obstacle*>(this)->myValidate();
         }
     }
     std::vector<lms::math::vertex2f> points() const{
         return m_points;
     }
+    lms::math::vertex2f m_viewDirection = lms::math::vertex2f(1,0); //TODO
+    void viewDirection(lms::math::vertex2f &v){
+        m_viewDirection = v;
+    }
 
     lms::math::vertex2f viewDirection() const{
-        return lms::math::vertex2f(1,0);//TODO
+        return m_viewDirection;//TODO
     }
 
     void addPoint(const lms::math::vertex2f &v){
+        invalid();
         m_points.push_back(v);
     }
     void clearPoints(){
@@ -87,12 +92,12 @@ public:
 
     lms::math::vertex2f position() const;
     //TODO add BoundingBox methods
+    float m_width;
     float width() const{
-        return 0.3; //TODO
+        return m_width; //TODO
     }
     void width(float w){
-        (void)w;
-        //TODO
+        m_width = w;
     }
 
     void translate(float dx, float dy){

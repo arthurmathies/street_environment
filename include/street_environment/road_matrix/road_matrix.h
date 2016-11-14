@@ -22,8 +22,8 @@ struct RoadMatrixCell {
     // See
     // http://stackoverflow.com/questions/2049582/how-to-determine-if-a-point-is-in-a-2d-triangle
     bool contains(lms::math::vertex2f p) const {
-        return lms::math::pointInTriangle(p, points[0], points[1], points[2]) ||
-               lms::math::pointInTriangle(p, points[0], points[2], points[3]);
+        return lms::math::pointInTriangle(p, points[3], points[1], points[0]) ||
+               lms::math::pointInTriangle(p, points[3], points[2], points[1]);
     }
 };
 
@@ -75,9 +75,9 @@ class RoadMatrix {
     float cellLength() const { return m_cellLength; }
 
     void aroundLine(const lms::math::polyLine2f &line, float laneWidth,
-                    int cellsPerLane) {
-        // TODO zellenlänge angeben
-        m_cellWidth = m_cellLength = laneWidth / cellsPerLane;
+                    int cellsPerLane, float cellLength) {
+        m_cellWidth = laneWidth / cellsPerLane;
+        m_cellLength = cellLength;
         lms::math::polyLine2f scaledLine =
             line.getWithDistanceBetweenPoints(m_cellLength);
         m_width = cellsPerLane * 2;

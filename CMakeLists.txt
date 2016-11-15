@@ -55,6 +55,7 @@ target_link_libraries(street_environment PRIVATE lms_math lmscore)
 if(LOCAL_GMOCK)
 set(TESTS
     "src/test/road_matrix_test.cpp"
+    "src/test/trajectory_from_roadmatrix_test.cpp"
 )
 add_executable(street_environment_test ${TESTS})
 target_link_libraries(street_environment_test PRIVATE

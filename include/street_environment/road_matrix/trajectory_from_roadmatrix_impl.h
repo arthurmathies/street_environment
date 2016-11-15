@@ -1,8 +1,8 @@
 #ifndef STREET_ENVIRONMENT_TRAJECTORY_FROM_ROADMATRIX_IMPL_H_
 #define STREET_ENVIRONMENT_TRAJECTORY_FROM_ROADMATRIX_IMPL_H_
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 #include "street_environment/road_matrix/road_matrix.h"
 #include "street_environment/trajectory.h"
@@ -25,8 +25,7 @@ struct TrajectoryFromRoadmatrixImpl {
     std::unique_ptr<LanePieceTrajectory> getOptimalLanePieceTrajectory(
         const LanePieceMatrix& lanePieceMatrix);
 
-    bool fillTrajectory(const LanePieceTrajectory&
-                        lanePieceTrajectory,
+    bool fillTrajectory(const LanePieceTrajectory& lanePieceTrajectory,
                         street_environment::Trajectory& trajectory);
 
     void setCarWidthMeter(float carWidthMeter) {
@@ -36,9 +35,9 @@ struct TrajectoryFromRoadmatrixImpl {
         m_obstacleClearanceMeter = obstacleClearanceMeter;
     }
 
-  private:
+   private:
     float m_carWidthMeter;
     float m_obstacleClearanceMeter;
 };
 
-#endif // STREET_ENVIRONMENT_TRAJECTORY_FROM_ROADMATRIX_IMPL_H_
+#endif  // STREET_ENVIRONMENT_TRAJECTORY_FROM_ROADMATRIX_IMPL_H_

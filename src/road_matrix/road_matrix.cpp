@@ -30,7 +30,14 @@ void RoadMatrix::initCells() {
     }
 }
 
-bool RoadMatrix::markBadPosition(const lms::math::vertex2f &v, float badness) {
+/**
+ * markBadPosition currently has an early return if a cell that contains the
+ * vertex v is found. That optimizes runtime but does not take into account
+ * that a point might be on the edge of more than one cell. With the current
+ * implementation this does not matter, but should be noted for future
+ * improvements on this function.
+ */
+void RoadMatrix::markBadPosition(const lms::math::vertex2f &v, float badness) {
     for (int x = 0; x < length(); x++) {
         for (int y = 0; y < width(); y++) {
             RoadMatrixCell &rmc = cell(x, y);
@@ -41,11 +48,10 @@ bool RoadMatrix::markBadPosition(const lms::math::vertex2f &v, float badness) {
                 } else if (rmc.badness > 1) {
                     rmc.badness = 1;
                 }
-                return true;
+                return;
             }
         }
     }
-    return false;
 }
 
 void RoadMatrix::aroundLine(const lms::math::polyLine2f &line, float laneWidth,
@@ -67,6 +73,8 @@ void RoadMatrix::aroundLine(const lms::math::polyLine2f &line, float laneWidth,
     initCells();
 }
 
+// TODO(arthurmathies): Make the marking of Obstacles more efficient by
+// narrowing down the search space (take into account curving of the street).
 void RoadMatrix::markEnvironmentObjects(
     const std::vector<EnvironmentObjectPtr> &envObjects) {
     for (EnvironmentObjectPtr ptr : envObjects) {

@@ -44,7 +44,7 @@ class RoadMatrix {
     RoadMatrixCell initCell(int x, int y) const;
     void initCells();
 
-    bool markBadPosition(const lms::math::vertex2f &v, float badness);
+    void markBadPosition(const lms::math::vertex2f &v, float badness);
 
    public:
     const RoadMatrixCell &cell(int x, int y) const { return m_cells[x][y]; }

@@ -10,6 +10,7 @@ set(SOURCES
     "src/dynamic_entity.cpp"
     "src/obstacle.cpp"
     "src/road_matrix/trajectory_from_roadmatrix_impl.cpp"
+    "src/road_matrix/road_matrix.cpp"
 )
 
 set(HEADERS

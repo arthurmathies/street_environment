@@ -5,6 +5,7 @@
 
 #include "lms/math/polyline.h"
 #include "lms/math/vertex.h"
+#include "street_environment/street_environment.h"
 
 namespace street_environment {
 
@@ -33,36 +34,17 @@ struct RoadMatrixCell {
 class RoadMatrix {
     int m_width;
     int m_length;
-    // The number of RoadMatrixCell's per Row and Column.
+
     float m_cellWidth;
     float m_cellLength;
 
     std::vector<lms::math::vertex2f> m_points;
     std::vector<std::vector<RoadMatrixCell>> m_cells;
 
-    RoadMatrixCell initCell(int x, int y) const {
-        RoadMatrixCell c;
-        c.x = x;
-        c.y = y;
-        int arrayLength = m_length + 1;
-        c.points[0] = m_points[x + arrayLength * y];
-        c.points[1] = m_points[x + 1 + arrayLength * y];
-        c.points[2] = m_points[x + 1 + arrayLength * (y + 1)];
-        c.points[3] = m_points[x + arrayLength * (y + 1)];
-        return c;
-    }
+    RoadMatrixCell initCell(int x, int y) const;
+    void initCells();
 
-    void initCells() {
-        m_cells.clear();
-        std::vector<RoadMatrixCell> tmp;
-        tmp.resize(width());
-        m_cells.resize(length(), tmp);
-        for (int x = 0; x < m_length; x++) {
-            for (int y = 0; y < m_width; y++) {
-                m_cells[x][y] = initCell(x, y);
-            }
-        }
-    }
+    bool markBadPosition(const lms::math::vertex2f &v, float badness);
 
    public:
     const RoadMatrixCell &cell(int x, int y) const { return m_cells[x][y]; }
@@ -75,24 +57,10 @@ class RoadMatrix {
     float cellLength() const { return m_cellLength; }
 
     void aroundLine(const lms::math::polyLine2f &line, float laneWidth,
-                    int cellsPerLane, float cellLength) {
-        m_cellWidth = laneWidth / cellsPerLane;
-        m_cellLength = cellLength;
-        lms::math::polyLine2f scaledLine =
-            line.getWithDistanceBetweenPoints(m_cellLength);
-        m_width = cellsPerLane * 2;
-        m_length = scaledLine.points().size() - 1;
+                    int cellsPerLane, float cellLength);
 
-        m_points.clear();
-        for (int i = -cellsPerLane; i <= cellsPerLane; i++) {
-            lms::math::polyLine2f top =
-                scaledLine.moveOrthogonal(m_cellWidth * i);
-            m_points.insert(std::end(m_points), std::begin(top.points()),
-                            std::end(top.points()));
-        }
-
-        initCells();
-    }
+    void markEnvironmentObjects(
+        const std::vector<EnvironmentObjectPtr> &envObjects);
 };
 
 }  // namespace street_environment

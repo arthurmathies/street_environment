@@ -6,10 +6,10 @@
 int TrajectoryFromRoadmatrixImpl::valueFunction(
     const street_environment::RoadMatrixCell& cell,
     const street_environment::RoadMatrix& roadMatrix) {
-    int perfectTrajectory = roadMatrix.width() * (3.0 / 4);
-    int laneValueStep = 100 / perfectTrajectory;
+    const int perfectTrajectory = roadMatrix.width() * (3.0 / 4);
+    const int laneValueStep = 100 / perfectTrajectory;
     int value = 100 - (abs(perfectTrajectory - cell.y) * laneValueStep);
-    int obstacleClearanceCells =
+    const int obstacleClearanceCells =
         ceil(m_obstacleClearanceMeter / roadMatrix.cellLength());
     for (int x = 0; x <= obstacleClearanceCells; x++) {
         if ((cell.x + x < roadMatrix.length()) &&
@@ -21,7 +21,7 @@ int TrajectoryFromRoadmatrixImpl::valueFunction(
             return value;
         }
     }
-    int carWidthCells = ceil(m_carWidthMeter / roadMatrix.cellWidth());
+    const int carWidthCells = ceil(m_carWidthMeter / roadMatrix.cellWidth());
     value += carWidthCells * 100;
     return value;
 }
@@ -29,9 +29,9 @@ int TrajectoryFromRoadmatrixImpl::valueFunction(
 std::unique_ptr<LanePieceMatrix>
 TrajectoryFromRoadmatrixImpl::createLanePieceMatrix(
     const street_environment::RoadMatrix& roadMatrix) {
-    int carWidthCells = ceil(m_carWidthMeter / roadMatrix.cellWidth());
+    const int carWidthCells = ceil(m_carWidthMeter / roadMatrix.cellWidth());
 
-    int numLanes = roadMatrix.width() - carWidthCells;
+    const int numLanes = roadMatrix.width() - carWidthCells;
     std::unique_ptr<LanePieceMatrix> lanePieceMatrix(new LanePieceMatrix(
         roadMatrix.length(), std::vector<LanePiece>(numLanes)));
     for (int x = 0; x < roadMatrix.length(); x++) {
@@ -39,7 +39,7 @@ TrajectoryFromRoadmatrixImpl::createLanePieceMatrix(
             int value = 0;
             LanePiece lanePiece;
             for (int i = 0; i < carWidthCells; i++) {
-                street_environment::RoadMatrixCell cell =
+                const street_environment::RoadMatrixCell& cell =
                     roadMatrix.cell(x, y + i);
                 value += valueFunction(cell, roadMatrix);
                 lanePiece.cells.push_back(cell);

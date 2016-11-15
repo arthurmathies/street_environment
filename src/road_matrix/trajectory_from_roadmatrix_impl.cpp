@@ -31,7 +31,7 @@ TrajectoryFromRoadmatrixImpl::createLanePieceMatrix(
     const street_environment::RoadMatrix& roadMatrix) {
     const int carWidthCells = ceil(m_carWidthMeter / roadMatrix.cellWidth());
 
-    const int numLanes = roadMatrix.width() - carWidthCells;
+    const int numLanes = roadMatrix.width() - carWidthCells + 1;
     std::unique_ptr<LanePieceMatrix> lanePieceMatrix(new LanePieceMatrix(
         roadMatrix.length(), std::vector<LanePiece>(numLanes)));
     for (int x = 0; x < roadMatrix.length(); x++) {

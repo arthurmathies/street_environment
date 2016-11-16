@@ -12,16 +12,11 @@ namespace street_environment {
 struct RoadMatrixCell {
     // X and y coordinates of the cell in a RoadMatrix representation.
     int x, y;
-    // value between 0 and 1
-    float badness;
+    bool hasObstacle;
     lms::math::vertex2f points[4];
 
-    RoadMatrixCell() : badness(0) {}
+    RoadMatrixCell() : hasObstacle(false) {}
 
-    bool hasObstacle() const { return badness > 0; }
-
-    // See
-    // http://stackoverflow.com/questions/2049582/how-to-determine-if-a-point-is-in-a-2d-triangle
     bool contains(lms::math::vertex2f p) const {
         return lms::math::pointInTriangle(p, points[3], points[1], points[0]) ||
                lms::math::pointInTriangle(p, points[3], points[2], points[1]);
@@ -44,7 +39,7 @@ class RoadMatrix {
     RoadMatrixCell initCell(int x, int y) const;
     void initCells();
 
-    void markBadPosition(const lms::math::vertex2f &v, float badness);
+    void markObstacle(const lms::math::vertex2f &v);
 
    public:
     const RoadMatrixCell &cell(int x, int y) const { return m_cells[x][y]; }

@@ -7,6 +7,7 @@
 
 namespace {
 const int laneValueStep = 1;
+const lms::math::vertex2f carPosition = lms::math::vertex2f(0, 0);
 }
 
 void TrajectoryFromRoadmatrixImpl::calculateCycleConstants(
@@ -64,9 +65,7 @@ bool TrajectoryFromRoadmatrixImpl::fillTrajectory(
     street_environment::Trajectory& trajectory) const {
     street_environment::TrajectoryPoint prevTp;
     street_environment::TrajectoryPoint curTp;
-    // (0,0) is the position of the car at point 0. This is used to get the
-    // direction of the first trajectory point.
-    prevTp.position = lms::math::vertex2f(0, 0);
+    prevTp.position = carPosition;
 
     for (const LanePiece& piece : lanePieceTrajectory) {
         curTp.position =

@@ -16,9 +16,6 @@ using LanePieceMatrix = std::vector<std::vector<LanePiece>>;
 using LanePieceTrajectory = std::vector<LanePiece>;
 
 struct TrajectoryFromRoadmatrixImpl {
-    int valueFunction(const street_environment::RoadMatrixCell& cell,
-                      const street_environment::RoadMatrix& roadMatrix);
-
     std::unique_ptr<LanePieceMatrix> createLanePieceMatrix(
         const street_environment::RoadMatrix& roadMatrix);
 
@@ -27,6 +24,9 @@ struct TrajectoryFromRoadmatrixImpl {
 
     bool fillTrajectory(const LanePieceTrajectory& lanePieceTrajectory,
                         street_environment::Trajectory& trajectory);
+
+    int valueFunction(const street_environment::RoadMatrixCell& cell,
+                      const street_environment::RoadMatrix& roadMatrix);
 
     void setCarWidthMeter(float carWidthMeter) {
         m_carWidthMeter = carWidthMeter;

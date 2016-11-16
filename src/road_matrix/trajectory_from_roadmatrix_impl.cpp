@@ -5,12 +5,18 @@
 
 #include "lms/math/vertex.h"
 
+namespace {
+    const int laneValueStep = 1;
+}
+
 int TrajectoryFromRoadmatrixImpl::valueFunction(
     const street_environment::RoadMatrixCell& cell,
     const street_environment::RoadMatrix& roadMatrix) {
     const int perfectTrajectory = roadMatrix.width() * (3.0 / 4);
-    const int laneValueStep = 100 / perfectTrajectory;
-    int value = 100 - (abs(perfectTrajectory - cell.y) * laneValueStep);
+    const int maxCellValue = perfectTrajectory * laneValueStep;
+    int value =
+        maxCellValue - (abs(perfectTrajectory - cell.y) * laneValueStep);
+
     const int obstacleClearanceCells =
         ceil(m_obstacleClearanceMeter / roadMatrix.cellLength());
     for (int x = 0; x <= obstacleClearanceCells; x++) {
@@ -23,8 +29,9 @@ int TrajectoryFromRoadmatrixImpl::valueFunction(
             return value;
         }
     }
+
     const int carWidthCells = ceil(m_carWidthMeter / roadMatrix.cellWidth());
-    value += carWidthCells * 100;
+    value += carWidthCells * maxCellValue;
     return value;
 }
 

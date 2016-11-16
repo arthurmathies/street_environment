@@ -39,8 +39,8 @@ TEST(TrajectoryFromRoadmatrix, valueFunction) {
     trajectory_creator.setCarWidthMeter(0.2);
     trajectory_creator.setObstacleClearanceMeter(0.5);
 
-    EXPECT_EQ(trajectory_creator.valueFunction(roadMatrix.cell(0,0), roadMatrix), 204);
-    EXPECT_EQ(trajectory_creator.valueFunction(roadMatrix.cell(0,5), roadMatrix), 84);
+    EXPECT_EQ(trajectory_creator.valueFunction(roadMatrix.cell(0,0), roadMatrix), 12);
+    EXPECT_EQ(trajectory_creator.valueFunction(roadMatrix.cell(0,5), roadMatrix), 5);
 }
 
 }  // namespace street_environment

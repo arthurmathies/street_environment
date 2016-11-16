@@ -74,15 +74,31 @@ bool TrajectoryFromRoadmatrixImpl::fillTrajectory(
     street_environment::Trajectory& trajectory) {
     street_environment::TrajectoryPoint tp;
     tp.velocity = 1;
+    float tp_x;
+    float tp_y;
+
     for (const auto& piece : lanePieceTrajectory) {
-        float tp_x =
-            (piece.cells.front().points[1].x + piece.cells.back().points[2].x) /
+        tp_x =
+            (piece.cells.front().points[0].x + piece.cells.back().points[3].x) /
             2;
-        float tp_y =
-            (piece.cells.front().points[1].y + piece.cells.back().points[2].y) /
+        tp_y =
+            (piece.cells.front().points[0].y + piece.cells.back().points[3].y) /
             2;
         tp.position = lms::math::vertex2f(tp_x, tp_y);
         trajectory.push_back(tp);
     }
+
+    if (lanePieceTrajectory.size() >= 1) {
+        const auto& lastPiece = lanePieceTrajectory.back();
+        tp_x = (lastPiece.cells.front().points[1].x +
+                lastPiece.cells.back().points[2].x) /
+               2;
+        tp_y = (lastPiece.cells.front().points[1].y +
+                lastPiece.cells.back().points[2].y) /
+               2;
+        tp.position = lms::math::vertex2f(tp_x, tp_y);
+        trajectory.push_back(tp);
+    }
+
     return true;
 }

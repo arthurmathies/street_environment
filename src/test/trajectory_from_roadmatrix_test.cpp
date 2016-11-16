@@ -5,9 +5,9 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include "lms/math/polyline.h"
+#include "street_environment/obstacle.h"
 #include "street_environment/road_matrix/road_matrix.h"
 #include "street_environment/street_environment.h"
-#include "street_environment/obstacle.h"
 
 using lms::math::polyLine2f;
 using lms::math::vertex2f;
@@ -38,9 +38,13 @@ TEST(TrajectoryFromRoadmatrix, valueFunction) {
     TrajectoryFromRoadmatrixImpl trajectory_creator;
     trajectory_creator.setCarWidthMeter(0.2);
     trajectory_creator.setObstacleClearanceMeter(0.5);
+    trajectory_creator.calculateCycleConstants(roadMatrix);
 
-    EXPECT_EQ(trajectory_creator.valueFunction(roadMatrix.cell(0,0), roadMatrix), 12);
-    EXPECT_EQ(trajectory_creator.valueFunction(roadMatrix.cell(0,5), roadMatrix), 5);
+    EXPECT_EQ(
+        trajectory_creator.valueFunction(roadMatrix.cell(0, 0), roadMatrix),
+        12);
+    EXPECT_EQ(
+        trajectory_creator.valueFunction(roadMatrix.cell(0, 5), roadMatrix), 5);
 }
 
 }  // namespace street_environment

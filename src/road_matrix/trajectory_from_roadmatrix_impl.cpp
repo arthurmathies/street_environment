@@ -9,18 +9,26 @@ namespace {
 const int laneValueStep = 1;
 }
 
+void TrajectoryFromRoadmatrixImpl::calculateCycleConstants(
+    const street_environment::RoadMatrix& roadMatrix) {
+    m_carWidthCells = ceil(m_carWidthMeter / roadMatrix.cellWidth());
+    m_perfectTrajectory = roadMatrix.width() * (3.0 / 4.0);
+    m_numLanes = roadMatrix.width() - m_carWidthCells + 1;
+    m_obstacleClearanceCells =
+        ceil(m_obstacleClearanceMeter / roadMatrix.cellLength());
+    m_maxCellValue = m_perfectTrajectory * laneValueStep;
+}
+
 std::unique_ptr<LanePieceMatrix>
 TrajectoryFromRoadmatrixImpl::createLanePieceMatrix(
     const street_environment::RoadMatrix& roadMatrix) const {
-    const int carWidthCells = ceil(m_carWidthMeter / roadMatrix.cellWidth());
-    const int numLanes = roadMatrix.width() - carWidthCells + 1;
     std::unique_ptr<LanePieceMatrix> lanePieceMatrix(new LanePieceMatrix(
-        roadMatrix.length(), std::vector<LanePiece>(numLanes)));
+        roadMatrix.length(), std::vector<LanePiece>(m_numLanes)));
     for (int x = 0; x < roadMatrix.length(); x++) {
-        for (int y = 0; y < numLanes; y++) {
+        for (int y = 0; y < m_numLanes; y++) {
             int value = 0;
             LanePiece lanePiece;
-            for (int i = 0; i < carWidthCells; i++) {
+            for (int i = 0; i < m_carWidthCells; i++) {
                 const street_environment::RoadMatrixCell& cell =
                     roadMatrix.cell(x, y + i);
                 value += valueFunction(cell, roadMatrix);
@@ -45,8 +53,6 @@ TrajectoryFromRoadmatrixImpl::getOptimalLanePieceTrajectory(
                     a = &piece;
                 }
             }
-
-            // if (a->value <)
             cellLane->push_back(*a);
         }
     }
@@ -77,14 +83,10 @@ bool TrajectoryFromRoadmatrixImpl::fillTrajectory(
 int TrajectoryFromRoadmatrixImpl::valueFunction(
     const street_environment::RoadMatrixCell& cell,
     const street_environment::RoadMatrix& roadMatrix) const {
-    const int perfectTrajectory = roadMatrix.width() * (3.0 / 4);
-    const int maxCellValue = perfectTrajectory * laneValueStep;
     int value =
-        maxCellValue - (abs(perfectTrajectory - cell.y) * laneValueStep);
+        m_maxCellValue - (abs(m_perfectTrajectory - cell.y) * laneValueStep);
 
-    const int obstacleClearanceCells =
-        ceil(m_obstacleClearanceMeter / roadMatrix.cellLength());
-    for (int x = 0; x <= obstacleClearanceCells; x++) {
+    for (int x = 0; x <= m_obstacleClearanceCells; x++) {
         if ((cell.x + x < roadMatrix.length()) &&
             (roadMatrix.cell(cell.x + x, cell.y).hasObstacle)) {
             return value;
@@ -95,7 +97,6 @@ int TrajectoryFromRoadmatrixImpl::valueFunction(
         }
     }
 
-    const int carWidthCells = ceil(m_carWidthMeter / roadMatrix.cellWidth());
-    value += carWidthCells * maxCellValue;
+    value += m_carWidthCells * m_maxCellValue;
     return value;
 }

@@ -16,6 +16,8 @@ using LanePieceMatrix = std::vector<std::vector<LanePiece>>;
 using LanePieceTrajectory = std::vector<LanePiece>;
 
 struct TrajectoryFromRoadmatrixImpl {
+    void calculateCycleConstants(const street_environment::RoadMatrix& roadMatrix);
+
     std::unique_ptr<LanePieceMatrix> createLanePieceMatrix(
         const street_environment::RoadMatrix& roadMatrix) const;
 
@@ -36,8 +38,15 @@ struct TrajectoryFromRoadmatrixImpl {
     }
 
    private:
+    //config values
     float m_carWidthMeter;
     float m_obstacleClearanceMeter;
+    // cycle constants
+    int m_carWidthCells;
+    int m_perfectTrajectory;
+    int m_numLanes;
+    int m_obstacleClearanceCells;
+    int m_maxCellValue;
 };
 
 #endif  // STREET_ENVIRONMENT_TRAJECTORY_FROM_ROADMATRIX_IMPL_H_

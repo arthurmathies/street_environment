@@ -11,7 +11,7 @@ const int laneValueStep = 1;
 
 std::unique_ptr<LanePieceMatrix>
 TrajectoryFromRoadmatrixImpl::createLanePieceMatrix(
-    const street_environment::RoadMatrix& roadMatrix) {
+    const street_environment::RoadMatrix& roadMatrix) const {
     const int carWidthCells = ceil(m_carWidthMeter / roadMatrix.cellWidth());
     const int numLanes = roadMatrix.width() - carWidthCells + 1;
     std::unique_ptr<LanePieceMatrix> lanePieceMatrix(new LanePieceMatrix(
@@ -35,7 +35,7 @@ TrajectoryFromRoadmatrixImpl::createLanePieceMatrix(
 
 std::unique_ptr<LanePieceTrajectory>
 TrajectoryFromRoadmatrixImpl::getOptimalLanePieceTrajectory(
-    const LanePieceMatrix& lanePieceMatrix) {
+    const LanePieceMatrix& lanePieceMatrix) const {
     std::unique_ptr<LanePieceTrajectory> cellLane(new LanePieceTrajectory);
     for (const auto& pieces : lanePieceMatrix) {
         if (pieces.size() > 0) {
@@ -55,7 +55,7 @@ TrajectoryFromRoadmatrixImpl::getOptimalLanePieceTrajectory(
 
 bool TrajectoryFromRoadmatrixImpl::fillTrajectory(
     const LanePieceTrajectory& lanePieceTrajectory,
-    street_environment::Trajectory& trajectory) {
+    street_environment::Trajectory& trajectory) const {
     street_environment::TrajectoryPoint prevTp;
     street_environment::TrajectoryPoint curTp;
     // (0,0) is the position of the car at point 0. This is used to get the
@@ -76,7 +76,7 @@ bool TrajectoryFromRoadmatrixImpl::fillTrajectory(
 
 int TrajectoryFromRoadmatrixImpl::valueFunction(
     const street_environment::RoadMatrixCell& cell,
-    const street_environment::RoadMatrix& roadMatrix) {
+    const street_environment::RoadMatrix& roadMatrix) const {
     const int perfectTrajectory = roadMatrix.width() * (3.0 / 4);
     const int maxCellValue = perfectTrajectory * laneValueStep;
     int value =

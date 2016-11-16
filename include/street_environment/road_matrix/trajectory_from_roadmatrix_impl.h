@@ -17,16 +17,16 @@ using LanePieceTrajectory = std::vector<LanePiece>;
 
 struct TrajectoryFromRoadmatrixImpl {
     std::unique_ptr<LanePieceMatrix> createLanePieceMatrix(
-        const street_environment::RoadMatrix& roadMatrix);
+        const street_environment::RoadMatrix& roadMatrix) const;
 
     std::unique_ptr<LanePieceTrajectory> getOptimalLanePieceTrajectory(
-        const LanePieceMatrix& lanePieceMatrix);
+        const LanePieceMatrix& lanePieceMatrix) const;
 
     bool fillTrajectory(const LanePieceTrajectory& lanePieceTrajectory,
-                        street_environment::Trajectory& trajectory);
+                        street_environment::Trajectory& trajectory) const;
 
     int valueFunction(const street_environment::RoadMatrixCell& cell,
-                      const street_environment::RoadMatrix& roadMatrix);
+                      const street_environment::RoadMatrix& roadMatrix) const;
 
     void setCarWidthMeter(float carWidthMeter) {
         m_carWidthMeter = carWidthMeter;

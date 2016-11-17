@@ -24,7 +24,7 @@ void TrajectoryFromRoadmatrixImpl::calculateCycleConstants(
     m_obstacleClearanceCells =
         ceil(m_obstacleClearanceMeter / roadMatrix.cellLength());
     m_maxCellValue = m_perfectTrajectory * kLaneValueStep;
-    m_maxLanePieceValue = m_maxCellValue * m_carWidthCells;
+    m_maxLanePieceValue = m_maxCellValue * m_carWidthCells + 1;
 }
 
 std::unique_ptr<LanePieceMatrix>
@@ -41,6 +41,15 @@ TrajectoryFromRoadmatrixImpl::createLanePieceMatrix(
                     roadMatrix.cell(x, y + i);
                 value += valueFunction(cell, roadMatrix);
                 lanePiece.cells.push_back(cell);
+            }
+
+            // TODO(arthurmathies) This needs some rethinking. Maybe there is a
+            // simpler way:
+            // Scale the whole lane piece back down so that lane pieces that are
+            // partially blocked and fully blocked are comparable.
+            if (value < m_carWidthCells * m_maxLanePieceValue) {
+                int free_cells = value / m_maxLanePieceValue;
+                value -= free_cells * m_maxLanePieceValue;
             }
             lanePiece.value = value;
             lanePieceMatrix->at(x).push_back(lanePiece);
@@ -63,7 +72,7 @@ TrajectoryFromRoadmatrixImpl::getOptimalLanePieceTrajectory(
             }
             // The road is blocked. No need to calculate the trajectory any
             // further.
-            if (a->value <= m_maxLanePieceValue) {
+            if (a->value <= m_maxLanePieceValue * m_carWidthCells) {
                 cellLane->push_back(*a);
                 cellLane->back().stop = true;
                 return cellLane;

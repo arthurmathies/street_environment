@@ -29,7 +29,6 @@ class TrajectoryFromRoadMatrixTest : public testing::Test {
                               cellLength);
 
         trajectory_creator.setCarWidthMeter(carWidthMeter);
-        trajectory_creator.setObstacleClearanceMeter(obstacleClearanceMeter);
         trajectory_creator.calculateCycleConstants(roadMatrix);
     }
 

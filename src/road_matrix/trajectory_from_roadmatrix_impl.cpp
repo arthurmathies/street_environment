@@ -21,10 +21,17 @@ void TrajectoryFromRoadmatrixImpl::calculateCycleConstants(
     m_carWidthCells = ceil(m_carWidthMeter / roadMatrix.cellWidth());
     m_perfectTrajectory = roadMatrix.width() * kPerfectTrajectoryFactor;
     m_numLanes = roadMatrix.width() - m_carWidthCells + 1;
-    m_obstacleClearanceCells =
-        ceil(m_obstacleClearanceMeter / roadMatrix.cellLength());
     m_maxCellValue = m_perfectTrajectory * kLaneValueStep;
     m_maxLanePieceValue = m_maxCellValue * m_carWidthCells + 1;
+
+    m_obstacleClearanceCellsFrontCurrentLane = ceil(
+        m_obstacleClearanceMeterFrontCurrentLane / roadMatrix.cellLength());
+    m_obstacleClearanceCellsFrontOtherLane =
+        ceil(m_obstacleClearanceMeterFrontOtherLane / roadMatrix.cellLength());
+    m_obstacleClearanceCellsBackCurrentLane =
+        ceil(m_obstacleClearanceMeterBackCurrentLane / roadMatrix.cellLength());
+    m_obstacleClearanceCellsBackOtherLane =
+        ceil(m_obstacleClearanceMeterBackOtherLane / roadMatrix.cellLength());
 }
 
 std::unique_ptr<LanePieceMatrix>
@@ -118,26 +125,26 @@ int TrajectoryFromRoadmatrixImpl::valueFunction(
     }
 
     if (cell.y < m_perfectTrajectory - m_carWidthCells/2) {
-        for (int x = 1; x <= kObstacleClearanceCellsFrontOtherLane; x++) {
+        for (int x = 1; x <= m_obstacleClearanceCellsFrontOtherLane; x++) {
             if ((cell.x + x < roadMatrix.length()) &&
                 (roadMatrix.cell(cell.x + x, cell.y).hasObstacle)) {
                 return value;
             }
         }
-        for (int x = 1; x <= kObstacleClearanceCellsBackOtherLane; x++) {
+        for (int x = 1; x <= m_obstacleClearanceCellsBackOtherLane; x++) {
             if ((cell.x - x >= 0) &&
                 (roadMatrix.cell(cell.x - x, cell.y).hasObstacle)) {
                 return value;
             }
         }
     } else {
-        for (int x = 1; x <= kObstacleClearanceCellsFrontCurrentLane; x++) {
+        for (int x = 1; x <= m_obstacleClearanceCellsFrontCurrentLane; x++) {
             if ((cell.x + x < roadMatrix.length()) &&
                 (roadMatrix.cell(cell.x + x, cell.y).hasObstacle)) {
                 return value;
             }
         }
-        for (int x = 1; x <= kObstacleClearanceCellsBackCurrentLane; x++) {
+        for (int x = 1; x <= m_obstacleClearanceCellsBackCurrentLane; x++) {
             if ((cell.x - x >= 0) &&
                 (roadMatrix.cell(cell.x - x, cell.y).hasObstacle)) {
                 return value;

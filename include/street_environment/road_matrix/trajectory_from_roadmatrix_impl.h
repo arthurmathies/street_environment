@@ -34,25 +34,44 @@ struct TrajectoryFromRoadmatrixImpl {
     void setCarWidthMeter(float carWidthMeter) {
         m_carWidthMeter = carWidthMeter;
     }
-    void setObstacleClearanceMeter(float obstacleClearanceMeter) {
-        m_obstacleClearanceMeter = obstacleClearanceMeter;
+
+    void setObstacleClearanceMeterFrontCurrentLane(
+        float obstacleClearanceMeter) {
+        m_obstacleClearanceMeterFrontCurrentLane = obstacleClearanceMeter;
+    }
+    void setObstacleClearanceMeterFrontOtherLane(float obstacleClearanceMeter) {
+        m_obstacleClearanceMeterFrontOtherLane = obstacleClearanceMeter;
+    }
+    void setObstacleClearanceMeterBackCurrentLane(
+        float obstacleClearanceMeter) {
+        m_obstacleClearanceMeterBackCurrentLane = obstacleClearanceMeter;
+    }
+    void setObstacleClearanceMeterBackOtherLane(float obstacleClearanceMeter) {
+        m_obstacleClearanceCellsBackOtherLane = obstacleClearanceMeter;
     }
 
    private:
     //config values
     float m_carWidthMeter;
-    float m_obstacleClearanceMeter;
     // cycle constants
     int m_cellsPerLane;
     int m_carWidthCells;
     int m_perfectTrajectory;
     int m_numLanes;
-    int m_obstacleClearanceCells;
     // Defines the maximum value a cell can have without the obstacle bonus.
     int m_maxCellValue;
     // Defines the maximum value a LanePiece can have without the obstacle
     // bonus.
     int m_maxLanePieceValue;
+
+    float m_obstacleClearanceMeterFrontCurrentLane;
+    int m_obstacleClearanceCellsFrontCurrentLane;
+    float m_obstacleClearanceMeterFrontOtherLane;
+    int m_obstacleClearanceCellsFrontOtherLane;
+    float m_obstacleClearanceMeterBackCurrentLane;
+    int m_obstacleClearanceCellsBackCurrentLane;
+    float m_obstacleClearanceMeterBackOtherLane;
+    int m_obstacleClearanceCellsBackOtherLane;
 };
 
 #endif  // STREET_ENVIRONMENT_TRAJECTORY_FROM_ROADMATRIX_IMPL_H_

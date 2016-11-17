@@ -39,6 +39,53 @@ namespace street_environment {
     class Trajectory: public std::vector<TrajectoryPoint>, public lms::Inheritance, public lms::Serializable {
     public:
 
+        Trajectory getWithDistanceBetweenPoints(const float distance)const {
+            Trajectory result;
+            if(distance <= 0){
+                LMS_EXCEPTION("invalid distance given: " + std::to_string(distance));
+            }
+            if(size() == 0){
+                return result;
+            }
+            int currentIndex = 1;
+            result.push_back((*this)[0]);//add first point
+            while(true){
+                TrajectoryPoint lastPoint = result[result.size()-1];
+                TrajectoryPoint next = (*this)[currentIndex];
+                //find valid next
+                //we increase the point number until we found a point that is further away from the last point then the distance
+                while(lastPoint.position.distance(next.position) < distance){
+                    currentIndex++;
+                    if(currentIndex >= (int)size()){
+                        break; //end first loop
+                    }
+                    next = (*this)[currentIndex];
+                }
+                //std::cout<<"numerOfNewPoints: "<<result.points().size()<<" currentIndex "<< currentIndex<<std::endl;
+                //std::cout<<"next point: "<<next.x << " "<<next.y<<std::endl;
+                //std::cout<<"lastPoint point: "<<lastPoint.x << " "<<lastPoint.y<<std::endl;
+                //found valid next
+                //add new point
+                lms::math::vertex2f diff = next.position-lastPoint.position;
+                if(diff.lengthSquared() != 0){
+                    TrajectoryPoint newT;
+                    newT.position = lastPoint.position+diff.normalize()*distance;
+                    newT.velocity = (lastPoint.velocity*newT.position.distance(lastPoint.position)+next.velocity*newT.position.distance(next.position))/diff.length();
+                    //TODO hack
+                    newT.distanceToMiddleLane = next.distanceToMiddleLane;
+                    newT.directory = next.directory;
+                    result.push_back(newT);
+                }else{
+                    currentIndex++;
+                }
+                //Not nice but ok
+                if(currentIndex >= (int)size()){
+                    break; //end bigger loop
+                }
+            }
+            return result;
+        }
+
         template<class Archive>
         void serialize(Archive &archive) {
             archive(cereal::base_class<std::vector<TrajectoryPoint>>( this ));

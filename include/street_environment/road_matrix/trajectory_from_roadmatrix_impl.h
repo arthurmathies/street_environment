@@ -10,6 +10,7 @@
 struct LanePiece {
     std::vector<street_environment::RoadMatrixCell> cells;
     int value;
+    bool stop;
 };
 
 using LanePieceMatrix = std::vector<std::vector<LanePiece>>;
@@ -42,11 +43,16 @@ struct TrajectoryFromRoadmatrixImpl {
     float m_carWidthMeter;
     float m_obstacleClearanceMeter;
     // cycle constants
+    int m_cellsPerLane;
     int m_carWidthCells;
     int m_perfectTrajectory;
     int m_numLanes;
     int m_obstacleClearanceCells;
+    // Defines the maximum value a cell can have without the obstacle bonus.
     int m_maxCellValue;
+    // Defines the maximum value a LanePiece can have without the obstacle
+    // bonus.
+    int m_maxLanePieceValue;
 };
 
 #endif  // STREET_ENVIRONMENT_TRAJECTORY_FROM_ROADMATRIX_IMPL_H_

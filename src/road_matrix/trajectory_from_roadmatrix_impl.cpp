@@ -99,7 +99,12 @@ int TrajectoryFromRoadmatrixImpl::valueFunction(
     int value =
         m_maxCellValue - (abs(m_perfectTrajectory - cell.y) * kLaneValueStep);
 
-    for (int x = 0; x <= m_obstacleClearanceCells; x++) {
+    if (cell.hasObstacle) {
+        value = -m_maxLanePieceValue - 1;
+        return value;
+    }
+
+    for (int x = 1; x <= m_obstacleClearanceCells; x++) {
         if ((cell.x + x < roadMatrix.length()) &&
             (roadMatrix.cell(cell.x + x, cell.y).hasObstacle)) {
             return value;

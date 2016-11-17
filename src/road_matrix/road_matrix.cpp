@@ -31,23 +31,18 @@ void RoadMatrix::initCells() {
 }
 
 /**
- * markBadPosition currently has an early return if a cell that contains the
+ * markObstacle currently has an early return if a cell that contains the
  * vertex v is found. That optimizes runtime but does not take into account
  * that a point might be on the edge of more than one cell. With the current
  * implementation this does not matter, but should be noted for future
  * improvements on this function.
  */
-void RoadMatrix::markBadPosition(const lms::math::vertex2f &v, float badness) {
+void RoadMatrix::markObstacle(const lms::math::vertex2f &v) {
     for (int x = 0; x < length(); x++) {
         for (int y = 0; y < width(); y++) {
             RoadMatrixCell &rmc = cell(x, y);
             if (rmc.contains(v)) {
-                rmc.badness += badness;
-                if (rmc.badness < 0) {
-                    rmc.badness = 0;
-                } else if (rmc.badness > 1) {
-                    rmc.badness = 1;
-                }
+                rmc.hasObstacle = true;
                 return;
             }
         }
@@ -82,7 +77,7 @@ void RoadMatrix::markEnvironmentObjects(
             std::shared_ptr<Obstacle> obst =
                 std::dynamic_pointer_cast<Obstacle>(ptr);
             for (const lms::math::vertex2f &v : obst->points()) {
-                markBadPosition(v, 1);
+                markObstacle(v);
             }
         }
     }

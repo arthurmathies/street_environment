@@ -59,7 +59,7 @@ TrajectoryFromRoadmatrixImpl::getOptimalLanePieceTrajectory(
             }
             // The road is blocked. No need to calculate the trajectory any
             // further.
-            if (a->value <= m_maxLanePieceValue) {
+            if (a->value <= m_maxLanePieceValue * 2) {
                 cellLane->push_back(*a);
                 cellLane->back().stop = true;
                 return cellLane;

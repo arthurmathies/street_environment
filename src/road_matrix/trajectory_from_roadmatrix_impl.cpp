@@ -9,6 +9,10 @@ namespace {
 const int kLaneValueStep = 1;
 const float kPerfectTrajectoryFactor = 0.75;
 const lms::math::vertex2f kCarPosition = lms::math::vertex2f(0, 0);
+const int kObstacleClearanceCellsFrontCurrentLane = 5;
+const int kObstacleClearanceCellsFrontOtherLane = 15;
+const int kObstacleClearanceCellsBackCurrentLane = 5;
+const int kObstacleClearanceCellsBackOtherLane = 5;
 }
 
 void TrajectoryFromRoadmatrixImpl::calculateCycleConstants(
@@ -101,16 +105,34 @@ int TrajectoryFromRoadmatrixImpl::valueFunction(
 
     if (cell.hasObstacle) {
         value = -m_maxLanePieceValue - 1;
+        return value;
     }
 
-    for (int x = 1; x <= m_obstacleClearanceCells; x++) {
-        if ((cell.x + x < roadMatrix.length()) &&
-            (roadMatrix.cell(cell.x + x, cell.y).hasObstacle)) {
-            return value;
+    if (cell.y < m_perfectTrajectory - m_carWidthCells/2) {
+        for (int x = 1; x <= kObstacleClearanceCellsFrontOtherLane; x++) {
+            if ((cell.x + x < roadMatrix.length()) &&
+                (roadMatrix.cell(cell.x + x, cell.y).hasObstacle)) {
+                return value;
+            }
         }
-        if ((cell.x - x >= 0) &&
-            (roadMatrix.cell(cell.x - x, cell.y).hasObstacle)) {
-            return value;
+        for (int x = 1; x <= kObstacleClearanceCellsBackOtherLane; x++) {
+            if ((cell.x - x >= 0) &&
+                (roadMatrix.cell(cell.x - x, cell.y).hasObstacle)) {
+                return value;
+            }
+        }
+    } else {
+        for (int x = 1; x <= kObstacleClearanceCellsFrontCurrentLane; x++) {
+            if ((cell.x + x < roadMatrix.length()) &&
+                (roadMatrix.cell(cell.x + x, cell.y).hasObstacle)) {
+                return value;
+            }
+        }
+        for (int x = 1; x <= kObstacleClearanceCellsBackCurrentLane; x++) {
+            if ((cell.x - x >= 0) &&
+                (roadMatrix.cell(cell.x - x, cell.y).hasObstacle)) {
+                return value;
+            }
         }
     }
 

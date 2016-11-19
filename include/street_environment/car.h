@@ -77,8 +77,6 @@ public:
     };
 private:
     std::vector<State> states; //TODO not sure if it should be public
-    float m_localDx;
-    float m_localDy;
 public:
 
     State getPrioState() const{
@@ -161,8 +159,8 @@ public:
     template <class Archive>
     void serialize( Archive & archive) {
         //TODO
-        archive(states,m_localDx,m_localDy);
-        archive(cereal::base_class<DynamicEntity>(this)); //TODO warum geht das nicht?o
+        archive(states);
+        archive(cereal::base_class<DynamicEntity>(this));
     }
 };
 }//street_environment

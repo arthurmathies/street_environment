@@ -17,7 +17,8 @@ using LanePieceMatrix = std::vector<std::vector<LanePiece>>;
 using LanePieceTrajectory = std::vector<LanePiece>;
 
 struct TrajectoryFromRoadmatrixImpl {
-    void calculateCycleConstants(const street_environment::RoadMatrix& roadMatrix);
+    void calculateCycleConstants(
+        const street_environment::RoadMatrix& roadMatrix);
 
     std::unique_ptr<LanePieceMatrix> createLanePieceMatrix(
         const street_environment::RoadMatrix& roadMatrix) const;
@@ -34,26 +35,29 @@ struct TrajectoryFromRoadmatrixImpl {
     void setCarWidthMeter(float carWidthMeter) {
         m_carWidthMeter = carWidthMeter;
     }
-
-    void setObstacleClearanceMeterFrontCurrentLane(
-        float obstacleClearanceMeter) {
-        m_obstacleClearanceMeterFrontCurrentLane = obstacleClearanceMeter;
+    void setObstacleClearanceLeftFrontMeter(float obstacleClearanceMeter) {
+        m_obstacleClearanceLeftFrontMeter = obstacleClearanceMeter;
     }
-    void setObstacleClearanceMeterFrontOtherLane(float obstacleClearanceMeter) {
-        m_obstacleClearanceMeterFrontOtherLane = obstacleClearanceMeter;
+    void setObstacleClearanceRightFrontMeter(float obstacleClearanceMeter) {
+        m_obstacleClearanceRightFrontMeter = obstacleClearanceMeter;
     }
-    void setObstacleClearanceMeterBackCurrentLane(
-        float obstacleClearanceMeter) {
-        m_obstacleClearanceMeterBackCurrentLane = obstacleClearanceMeter;
+    void setObstacleClearanceLeftBackMeter(float obstacleClearanceMeter) {
+        m_obstacleClearanceLeftBackMeter = obstacleClearanceMeter;
     }
-    void setObstacleClearanceMeterBackOtherLane(float obstacleClearanceMeter) {
-        m_obstacleClearanceCellsBackOtherLane = obstacleClearanceMeter;
+    void setObstacleClearanceRightBackMeter(float obstacleClearanceMeter) {
+        m_obstacleClearanceRightBackMeter = obstacleClearanceMeter;
     }
 
    private:
-    //config values
+    ////////////////////////////// Config Values ///////////////////////////////
     float m_carWidthMeter;
-    // cycle constants
+
+    float m_obstacleClearanceLeftFrontMeter;
+    float m_obstacleClearanceRightFrontMeter;
+    float m_obstacleClearanceLeftBackMeter;
+    float m_obstacleClearanceRightBackMeter;
+
+    ///////////////////////////// Cycle Constants //////////////////////////////
     int m_cellsPerLane;
     int m_carWidthCells;
     int m_perfectTrajectory;
@@ -64,14 +68,10 @@ struct TrajectoryFromRoadmatrixImpl {
     // bonus.
     int m_maxLanePieceValue;
 
-    float m_obstacleClearanceMeterFrontCurrentLane;
-    int m_obstacleClearanceCellsFrontCurrentLane;
-    float m_obstacleClearanceMeterFrontOtherLane;
-    int m_obstacleClearanceCellsFrontOtherLane;
-    float m_obstacleClearanceMeterBackCurrentLane;
-    int m_obstacleClearanceCellsBackCurrentLane;
-    float m_obstacleClearanceMeterBackOtherLane;
-    int m_obstacleClearanceCellsBackOtherLane;
+    int m_obstacleClearanceLeftFrontCells;
+    int m_obstacleClearanceRightFrontCells;
+    int m_obstacleClearanceLeftBackCells;
+    int m_obstacleClearanceRightBackCells;
 };
 
 #endif  // STREET_ENVIRONMENT_TRAJECTORY_FROM_ROADMATRIX_IMPL_H_

@@ -9,7 +9,6 @@ set(SOURCES
     "src/street_environment.cpp"
     "src/dynamic_entity.cpp"
     "src/obstacle.cpp"
-    "src/road_matrix/trajectory_from_roadmatrix_impl.cpp"
     "src/road_matrix/road_matrix.cpp"
 )
 
@@ -24,7 +23,6 @@ set(HEADERS
     "include/street_environment/dynamic_entity.h"
     "include/street_environment/pose.h"
     "include/street_environment/road_matrix/road_matrix.h"
-    "include/street_environment/road_matrix/trajectory_from_roadmatrix_impl.h"
 )
 
 #set compiler flags
@@ -55,7 +53,6 @@ target_link_libraries(street_environment PRIVATE lms_math lmscore)
 if(LOCAL_GMOCK)
 set(TESTS
     "src/test/road_matrix_test.cpp"
-    "src/test/trajectory_from_roadmatrix_test.cpp"
 )
 add_executable(street_environment_test ${TESTS})
 target_link_libraries(street_environment_test PRIVATE

@@ -1,4 +1,4 @@
-#include "street_environment/road_matrix/road_matrix.h"
+#include "street_environment/roadmatrix.h"
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"

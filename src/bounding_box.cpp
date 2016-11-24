@@ -1,5 +1,7 @@
 #include "street_environment/bounding_box.h"
 
+namespace street_environment {
+
 BoundingBox::BoundingBox(const std::vector<lms::math::vertex2f>& points) {
     float minX = points.at(0).x;
     float maxX = minX;
@@ -26,3 +28,5 @@ BoundingBox::BoundingBox(const std::vector<lms::math::vertex2f>& points) {
     m_corners[2] = lms::math::vertex2f(maxX, maxY);
     m_corners[3] = lms::math::vertex2f(minX, maxY);
 }
+
+}  // namespace street_environment

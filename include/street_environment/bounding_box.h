@@ -6,6 +6,8 @@
 
 #include <lms/math/vertex.h>
 
+namespace street_environment {
+
 class BoundingBox {
    public:
     BoundingBox(const std::vector<lms::math::vertex2f>& points);
@@ -15,5 +17,8 @@ class BoundingBox {
     std::array<lms::math::vertex2f, 4> m_corners;
 };
 
-#endif  // STREET_ENVIRONMENT_BOUNDING_BOX_H
+using BoundedObstacles = std::vector<BoundingBox>;
 
+}  // namespace street_environment
+
+#endif  // STREET_ENVIRONMENT_BOUNDING_BOX_H

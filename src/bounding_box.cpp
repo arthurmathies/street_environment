@@ -2,13 +2,13 @@
 
 namespace street_environment {
 
-BoundingBox::BoundingBox(const std::vector<lms::math::vertex2f>& points) {
-    float minX = points.at(0).x;
+BoundingBox::BoundingBox(const lms::math::PointCloud2f& pointCloud) {
+    float minX = pointCloud.points().at(0).x;
     float maxX = minX;
-    float minY = points.at(0).y;
+    float minY = pointCloud.points().at(0).y;
     float maxY = minY;
 
-    for (const auto& point : points) {
+    for (const auto& point : pointCloud.points()) {
         if (point.x < minX) {
             minX = point.x;
         }

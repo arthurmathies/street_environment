@@ -2,7 +2,8 @@
 
 namespace street_environment {
 
-BoundingBox::BoundingBox(const lms::math::PointCloud2f& pointCloud) {
+template <typename V>
+BoundingBox<V>::BoundingBox(const lms::math::PointCloud<V>& pointCloud) {
     float minX = pointCloud.points().at(0).x;
     float maxX = minX;
     float minY = pointCloud.points().at(0).y;
@@ -23,10 +24,12 @@ BoundingBox::BoundingBox(const lms::math::PointCloud2f& pointCloud) {
         }
     }
 
-    m_corners[0] = lms::math::vertex2f(minX, minY);
-    m_corners[1] = lms::math::vertex2f(maxX, minY);
-    m_corners[2] = lms::math::vertex2f(maxX, maxY);
-    m_corners[3] = lms::math::vertex2f(minX, maxY);
+    m_corners[0] = V(minX, minY);
+    m_corners[1] = V(maxX, minY);
+    m_corners[2] = V(maxX, maxY);
+    m_corners[3] = V(minX, maxY);
 }
+
+template class BoundingBox<lms::math::vertex2f>;
 
 }  // namespace street_environment

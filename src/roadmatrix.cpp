@@ -1,11 +1,5 @@
 #include "street_environment/roadmatrix.h"
 
-#include <memory>
-#include <vector>
-
-#include "street_environment/obstacle.h"
-#include "street_environment/street_environment.h"
-
 namespace street_environment {
 
 RoadMatrixCell RoadMatrix::initCell(int x, int y) const {
@@ -30,25 +24,6 @@ void RoadMatrix::initCells() {
     }
 }
 
-/**
- * markObstacle currently has an early return if a cell that contains the
- * vertex v is found. That optimizes runtime but does not take into account
- * that a point might be on the edge of more than one cell. With the current
- * implementation this does not matter, but should be noted for future
- * improvements on this function.
- */
-void RoadMatrix::markObstacle(const lms::math::vertex2f &v) {
-    for (int x = 0; x < length(); x++) {
-        for (int y = 0; y < width(); y++) {
-            RoadMatrixCell &rmc = cell(x, y);
-            if (rmc.contains(v)) {
-                rmc.hasObstacle = true;
-                return;
-            }
-        }
-    }
-}
-
 void RoadMatrix::aroundLine(const lms::math::polyLine2f &line, float laneWidth,
                             int cellsPerLane, float cellLength) {
     m_cellWidth = laneWidth / cellsPerLane;
@@ -68,19 +43,18 @@ void RoadMatrix::aroundLine(const lms::math::polyLine2f &line, float laneWidth,
     initCells();
 }
 
-// TODO(arthurmathies): Make the marking of Obstacles more efficient by
-// narrowing down the search space (take into account curving of the street).
-void RoadMatrix::markEnvironmentObjects(
-    const std::vector<EnvironmentObjectPtr> &envObjects) {
-    for (EnvironmentObjectPtr ptr : envObjects) {
-        if (ptr->getType() == Obstacle::TYPE) {
-            std::shared_ptr<Obstacle> obst =
-                std::dynamic_pointer_cast<Obstacle>(ptr);
-            for (const lms::math::vertex2f &v : obst->points()) {
-                markObstacle(v);
+bool RoadMatrix::findCell(const lms::math::vertex2f& v,
+                          street_environment::RoadMatrixCell* foundCell) {
+    for (int x = 0; x < length(); x++) {
+        for (int y = 0; y < width(); y++) {
+            const street_environment::RoadMatrixCell& rmc = cell(x, y);
+            if (rmc.contains(v)) {
+                *foundCell = rmc;
+                return true;
             }
         }
     }
+    return false;
 }
 
 }  // namespace street_environment

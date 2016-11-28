@@ -5,7 +5,6 @@
 
 #include "lms/math/polyline.h"
 #include "lms/math/vertex.h"
-#include "street_environment/street_environment.h"
 
 namespace street_environment {
 
@@ -27,20 +26,6 @@ struct RoadMatrixCell {
  * @brief RoadMatrix stores a Cell representation of the road.
  */
 class RoadMatrix {
-    int m_width;
-    int m_length;
-
-    float m_cellWidth;
-    float m_cellLength;
-
-    std::vector<lms::math::vertex2f> m_points;
-    std::vector<std::vector<RoadMatrixCell>> m_cells;
-
-    RoadMatrixCell initCell(int x, int y) const;
-    void initCells();
-
-    void markObstacle(const lms::math::vertex2f &v);
-
    public:
     const RoadMatrixCell &cell(int x, int y) const { return m_cells[x][y]; }
     RoadMatrixCell &cell(int x, int y) { return m_cells[x][y]; }
@@ -54,8 +39,18 @@ class RoadMatrix {
     void aroundLine(const lms::math::polyLine2f &line, float laneWidth,
                     int cellsPerLane, float cellLength);
 
-    void markEnvironmentObjects(
-        const std::vector<EnvironmentObjectPtr> &envObjects);
+   private:
+    int m_width;
+    int m_length;
+
+    float m_cellWidth;
+    float m_cellLength;
+
+    std::vector<lms::math::vertex2f> m_points;
+    std::vector<std::vector<RoadMatrixCell>> m_cells;
+
+    RoadMatrixCell initCell(int x, int y) const;
+    void initCells();
 };
 
 }  // namespace street_environment

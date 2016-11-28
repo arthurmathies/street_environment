@@ -39,6 +39,16 @@ class RoadMatrix {
     void aroundLine(const lms::math::polyLine2f &line, float laneWidth,
                     int cellsPerLane, float cellLength);
 
+    /**
+     * @brief Tries to find a cell that contains v.
+     * Returns false if no cell is found.
+     * Returns true and sets 'foundCell' to a copy of the found cell if a cell
+     * is found. If v is on the edge of two or more cells 'foundCell' will be the first
+     * first(smallest x, smallest y) of those cells.
+     */
+    bool findCell(const lms::math::vertex2f &v,
+                  street_environment::RoadMatrixCell *foundCell);
+
    private:
     int m_width;
     int m_length;

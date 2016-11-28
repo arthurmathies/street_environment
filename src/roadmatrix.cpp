@@ -43,4 +43,18 @@ void RoadMatrix::aroundLine(const lms::math::polyLine2f &line, float laneWidth,
     initCells();
 }
 
+bool RoadMatrix::findCell(const lms::math::vertex2f& v,
+                          street_environment::RoadMatrixCell* foundCell) {
+    for (int x = 0; x < length(); x++) {
+        for (int y = 0; y < width(); y++) {
+            const street_environment::RoadMatrixCell& rmc = cell(x, y);
+            if (rmc.contains(v)) {
+                *foundCell = rmc;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 }  // namespace street_environment

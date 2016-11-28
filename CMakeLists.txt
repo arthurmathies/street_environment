@@ -23,6 +23,7 @@ set(HEADERS
     "include/street_environment/dynamic_entity.h"
     "include/street_environment/pose.h"
     "include/street_environment/roadmatrix.h"
+    "include/street_environment/ego_motion.h"
 )
 
 #set compiler flags

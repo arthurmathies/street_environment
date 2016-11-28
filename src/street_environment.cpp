@@ -4,6 +4,7 @@
 #include "street_environment/start_line.h"
 #include "street_environment/dynamic_entity.h"
 #include "street_environment/car.h"
+#include "street_environment/ego_motion.h"
 
 
 #include "cereal/archives/portable_binary.hpp"

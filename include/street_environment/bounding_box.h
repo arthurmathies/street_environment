@@ -20,7 +20,7 @@ class BoundingBox {
     }
 
    private:
-    // clockwise starting at minimum y minimum x
+    // Anticlockwise starting at minimum x minimum y
     std::array<V, 4> m_corners;
 };
 

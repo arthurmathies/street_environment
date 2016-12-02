@@ -34,10 +34,11 @@ void RoadMatrix::aroundLine(const lms::math::polyLine2f &line, float laneWidth,
     m_length = scaledLine.points().size() - 1;
 
     m_points.clear();
-    for (int i = -cellsPerLane; i <= cellsPerLane; i++) {
-        lms::math::polyLine2f top = scaledLine.moveOrthogonal(m_cellWidth * i);
-        m_points.insert(std::end(m_points), std::begin(top.points()),
-                        std::end(top.points()));
+    for (int i = cellsPerLane; i >= -cellsPerLane; i--) {
+        lms::math::polyLine2f movedLine =
+            scaledLine.moveOrthogonal(m_cellWidth * i);
+        m_points.insert(std::end(m_points), std::begin(movedLine.points()),
+                        std::end(movedLine.points()));
     }
 
     initCells();

@@ -17,8 +17,8 @@ struct RoadMatrixCell {
     RoadMatrixCell() : hasObstacle(false) {}
 
     bool contains(lms::math::vertex2f p) const {
-        return lms::math::pointInTriangle(p, points[3], points[1], points[0]) ||
-               lms::math::pointInTriangle(p, points[3], points[2], points[1]);
+        return lms::math::pointInTriangle(p, points[0], points[1], points[2]) ||
+               lms::math::pointInTriangle(p, points[0], points[2], points[3]);
     }
 };
 

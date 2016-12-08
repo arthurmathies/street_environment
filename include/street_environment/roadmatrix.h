@@ -71,6 +71,9 @@ class RoadMatrix {
     float cellWidth() const { return m_cellWidth; }
     float cellLength() const { return m_cellLength; }
 
+    int zeroColumn() const { return m_translation; }
+    int lengthAhead() const { return length() - m_translation; }
+
     friend std::ostream& operator<<(std::ostream& stream,
                                     const RoadMatrix& matrix);
 

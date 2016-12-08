@@ -5,12 +5,17 @@
 #include <ostream>
 #include <vector>
 
+#include <cereal/cerealizable.h>
+#include <lms/serializable.h>
+#include <cereal/types/array.hpp>
+#include <cereal/types/vector.hpp>
+
 #include "lms/math/polyline.h"
 #include "lms/math/vertex.h"
 
 namespace street_environment {
 
-struct RoadMatrixCell {
+struct RoadMatrixCell : lms::Serializable {
     bool contains(const lms::math::vertex2f& p) const {
         return lms::math::pointInTriangle(p, points[0], points[1], points[2]) ||
                lms::math::pointInTriangle(p, points[0], points[2], points[3]);
@@ -21,12 +26,19 @@ struct RoadMatrixCell {
     // counterclockwise
     std::array<lms::math::vertex2f, 4> points;
     bool hasObstacle = false;
+
+    CEREAL_SERIALIZATION()
+
+    template <class Archive>
+    void serialize(Archive& archive) {
+        archive(x, y, points, hasObstacle);
+    }
 };
 
 /**
  * @brief RoadMatrix stores a cell representation of the road.
  */
-class RoadMatrix {
+class RoadMatrix : public lms::Serializable {
    public:
     /**
      * @brief Initializes the RoadMatrix with config values.
@@ -76,6 +88,12 @@ class RoadMatrix {
 
     friend std::ostream& operator<<(std::ostream& stream,
                                     const RoadMatrix& matrix);
+    CEREAL_SERIALIZATION()
+
+    template <class Archive>
+    void serialize( Archive & archive) {
+        archive(m_cells, m_width, m_length, m_translation);
+    }
 
    private:
     void translate(const lms::math::vertex2f& deltaPosition);

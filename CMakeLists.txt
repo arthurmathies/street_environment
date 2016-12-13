@@ -11,6 +11,8 @@ set(SOURCES
     "src/obstacle.cpp"
     "src/roadmatrix.cpp"
     "src/bounding_box.cpp"
+
+    "test/src.cpp"
 )
 
 set(HEADERS
@@ -22,10 +24,13 @@ set(HEADERS
     "include/street_environment/start_line.h"
     "include/street_environment/car.h"
     "include/street_environment/dynamic_entity.h"
-    "include/street_environment/pose.h"
     "include/street_environment/roadmatrix.h"
     "include/street_environment/ego_motion.h"
     "include/street_environment/bounding_box.h"
+
+    "include/street_environment_clean/entity.h"
+    "include/street_environment_clean/bounding_box.h"
+    "include/street_environment_clean/world.h"
 )
 
 #set compiler flags

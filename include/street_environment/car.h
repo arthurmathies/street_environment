@@ -16,12 +16,12 @@
 
 namespace street_environment {
 /**
-  *TODO Add hasState()
- * @brief The Car class
+ * TODO Add hasState()
+ * @brief The Car command class
  */
-class Car:public DynamicEntity{
+class CarCommand:public DynamicEntity{
 public:
-    Car(){
+    CarCommand(){
     }
     enum class StateType{
         NOT_DEFINED,IDLE,DRIVING,PARKING,RACE

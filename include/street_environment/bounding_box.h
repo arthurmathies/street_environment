@@ -13,6 +13,8 @@ template <typename V>
 class BoundingBox {
    public:
     BoundingBox() : m_corners() {}
+    ~BoundingBox() {}
+    BoundingBox(const std::vector<V>& points);
     BoundingBox(const lms::math::PointCloud<V>& pointCloud);
 
     const std::array<V, 4>& corners() const { return m_corners; }

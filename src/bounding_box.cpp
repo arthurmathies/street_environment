@@ -34,20 +34,6 @@ template <typename V>
 BoundingBox<V>::BoundingBox(const lms::math::PointCloud<V>& pointCloud)
     : BoundingBox(pointCloud.points()) {}
 
-template <typename V>
-void BoundingBox<V>::move(const V& delta) {
-    for (auto& corner : m_corners) {
-        corner = corner - delta;
-    }
-}
-
-template <typename V>
-void BoundingBox<V>::rotate(float deltaAngle) {
-    for (auto& corner : m_corners) {
-        corner = corner.rotate(deltaAngle);
-    }
-}
-
 template class BoundingBox<lms::math::vertex2f>;
 
 }  // namespace street_environment

@@ -19,9 +19,6 @@ class BoundingBox {
 
     const std::array<V, 4>& corners() const { return m_corners; }
 
-    void move(const V& delta);
-    void rotate(float deltaAngle);
-
    private:
     // Anticlockwise starting at minimum x minimum y
     std::array<V, 4> m_corners;

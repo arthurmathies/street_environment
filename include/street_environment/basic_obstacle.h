@@ -5,6 +5,8 @@
 
 #include <lms/math/vertex.h>
 #include <lms/serializable.h>
+#include <street_environment/bounding_box.h>
+#include <cereal/types/vector.hpp>
 
 namespace street_environment {
 
@@ -21,6 +23,12 @@ class BasicObstacle : public lms::Serializable {
     BasicObstacle& operator=(BasicObstacle&&) = default;
 
     std::vector<lms::math::vertex2f>& points() { return m_points; }
+    const std::vector<lms::math::vertex2f>& points() const { return m_points; }
+
+    void translate(const lms::math::vertex2f& deltaPosition);
+    void rotate(float deltaAngle);
+
+    street_environment::BoundingBox2f boundingBox() const;
 
     /////////////////////////////// Serialization //////////////////////////////
     CEREAL_SERIALIZATION()
@@ -32,7 +40,7 @@ class BasicObstacle : public lms::Serializable {
 
    private:
     std::vector<lms::math::vertex2f> m_points;
-}
+};
 
 using BasicObstacleVector = std::vector<BasicObstacle>;
 

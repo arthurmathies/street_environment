@@ -11,6 +11,7 @@ set(SOURCES
     "src/obstacle.cpp"
     "src/roadmatrix.cpp"
     "src/bounding_box.cpp"
+    "src/basic_obstacle.cpp"
 
     "test/src.cpp"
 )

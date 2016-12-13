@@ -27,7 +27,7 @@ set(HEADERS
     "include/street_environment/roadmatrix.h"
     "include/street_environment/ego_motion.h"
     "include/street_environment/bounding_box.h"
-
+    "include/street_environment/basic_obstacle.h"
     "include/street_environment_clean/entity.h"
     "include/street_environment_clean/bounding_box.h"
     "include/street_environment_clean/world.h"

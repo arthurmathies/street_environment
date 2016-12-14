@@ -3,13 +3,13 @@
 namespace street_environment {
 
 template <typename V>
-BoundingBox<V>::BoundingBox(const lms::math::PointCloud<V>& pointCloud) {
-    float minX = pointCloud.points().at(0).x;
+BoundingBox<V>::BoundingBox(const std::vector<V>& points) {
+    float minX = points.at(0).x;
     float maxX = minX;
-    float minY = pointCloud.points().at(0).y;
+    float minY = points.at(0).y;
     float maxY = minY;
 
-    for (const auto& point : pointCloud.points()) {
+    for (const auto& point : points) {
         if (point.x < minX) {
             minX = point.x;
         }
@@ -31,18 +31,8 @@ BoundingBox<V>::BoundingBox(const lms::math::PointCloud<V>& pointCloud) {
 }
 
 template <typename V>
-void BoundingBox<V>::move(const V& delta) {
-    for (auto& corner : m_corners) {
-        corner = corner - delta;
-    }
-}
-
-template <typename V>
-void BoundingBox<V>::rotate(float deltaAngle) {
-    for (auto& corner : m_corners) {
-        corner = corner.rotate(deltaAngle);
-    }
-}
+BoundingBox<V>::BoundingBox(const lms::math::PointCloud<V>& pointCloud)
+    : BoundingBox(pointCloud.points()) {}
 
 template class BoundingBox<lms::math::vertex2f>;
 

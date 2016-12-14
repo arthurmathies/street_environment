@@ -57,7 +57,7 @@ class RoadMatrix : public lms::Serializable {
      * @param deltaPosition: The moved distance of the car in old car
      * coordinates.
      * @param deltaRotation: The rotation of the car from old to new
-     * orientation.
+     * orientation in radians.
      */
     void aroundLine(const lms::math::polyLine2f& line,
                     const lms::math::vertex2f& deltaPosition,

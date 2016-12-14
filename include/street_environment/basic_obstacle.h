@@ -25,8 +25,8 @@ class BasicObstacle : public lms::Serializable {
     std::vector<lms::math::vertex2f>& points() { return m_points; }
     const std::vector<lms::math::vertex2f>& points() const { return m_points; }
 
-    void translate(const lms::math::vertex2f& deltaPosition);
-    void rotate(float deltaAngle);
+    void translate(const lms::math::vertex2f& vector);
+    void rotate(float radians);
 
     street_environment::BoundingBox2f boundingBox() const;
 

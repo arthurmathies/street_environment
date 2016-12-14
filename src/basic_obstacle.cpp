@@ -2,15 +2,15 @@
 
 namespace street_environment {
 
-void BasicObstacle::translate(const lms::math::vertex2f& deltaPosition) {
+void BasicObstacle::translate(const lms::math::vertex2f& vector) {
     for (auto& point : m_points) {
-        point = point - deltaPosition;
+        point = point + vector;
     }
 }
 
-void BasicObstacle::rotate(float deltaAngle) {
+void BasicObstacle::rotate(float radians) {
     for (auto& point : m_points) {
-        point = point.rotate(deltaAngle);
+        point = point.rotate(radians);
     }
 }
 

@@ -73,7 +73,7 @@ public:
         return m_points;
     }
     lms::math::vertex2f m_viewDirection = lms::math::vertex2f(1,0); //TODO
-    void viewDirection(lms::math::vertex2f &v){
+    void viewDirection(const lms::math::vertex2f &v){
         m_viewDirection = v;
     }
 

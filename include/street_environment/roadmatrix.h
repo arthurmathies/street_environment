@@ -45,8 +45,7 @@ class RoadMatrix : public lms::Serializable {
      * A RoadMatrix instance can only be initialized once during its lifetime.
      * Any further calls to initialize are disregarded.
      */
-    bool initialize(float laneWidth, int cellsPerLane, float cellLength,
-                    int maxTranslation);
+    bool initialize(float laneWidth, int cellsPerLane, float cellLength);
 
     /**
      * @brief Creates a RoadMatrix representation around "line". Given
@@ -91,13 +90,21 @@ class RoadMatrix : public lms::Serializable {
     CEREAL_SERIALIZATION()
 
     template <class Archive>
-    void serialize( Archive & archive) {
+    void serialize(Archive& archive) {
         archive(m_cells, m_width, m_length, m_translation);
     }
 
+    lms::math::polyLine2f m_negativeCenterLine;
+
    private:
-    void translate(const lms::math::vertex2f& deltaPosition);
-    void rotate(float deltaRotation);
+    lms::math::polyLine2f prepCenterLine(
+        const lms::math::polyLine2f& line,
+        const lms::math::vertex2f& deltaPosition, float deltaRotation);
+    std::vector<lms::math::vertex2f> negativeCenterLinePoints(
+        const lms::math::vertex2f& deltaPosition, float deltaRotation);
+    lms::math::polyLine2f negativeCenterLine(
+        const std::vector<lms::math::vertex2f>& points);
+
     void aroundLine(const lms::math::polyLine2f& line);
 
     const lms::math::vertex2f& point(int x, int y) const;
@@ -113,7 +120,6 @@ class RoadMatrix : public lms::Serializable {
     int m_cellsPerLane = 0;
 
     int m_translation = 0;
-    int m_maxTranslation = 0;
 
     // Width and length of the cell matrix.
     int m_width = 0;
@@ -125,6 +131,8 @@ class RoadMatrix : public lms::Serializable {
 
     std::vector<RoadMatrixCell> m_cells;
     std::vector<lms::math::vertex2f> m_points;
+
+    lms::math::polyLine2f m_prevCenterLine;
 };
 
 }  // namespace street_environment

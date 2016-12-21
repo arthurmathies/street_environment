@@ -45,7 +45,8 @@ class RoadMatrix : public lms::Serializable {
      * A RoadMatrix instance can only be initialized once during its lifetime.
      * Any further calls to initialize are disregarded.
      */
-    bool initialize(float laneWidth, int cellsPerLane, float cellLength);
+    bool initialize(float laneWidth, int cellsPerLane, float cellLength,
+                    float maxTranslation);
 
     /**
      * @brief Creates a RoadMatrix representation around "line". Given
@@ -120,6 +121,7 @@ class RoadMatrix : public lms::Serializable {
     int m_cellsPerLane = 0;
 
     int m_translation = 0;
+    float m_maxTranslation = 0;
 
     // Width and length of the cell matrix.
     int m_width = 0;

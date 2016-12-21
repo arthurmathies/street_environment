@@ -4,18 +4,15 @@
 
 namespace street_environment {
 
-namespace {
-float m_maxTranslate = 0.5;
-}
-
-bool RoadMatrix::initialize(float laneWidth, int cellsPerLane,
-                            float cellLength) {
+bool RoadMatrix::initialize(float laneWidth, int cellsPerLane, float cellLength,
+                            float maxTranslation) {
     if (!m_initalized) {
         m_cellsPerLane = cellsPerLane;
         m_cellLength = cellLength;
         m_cellWidth = static_cast<float>(laneWidth / m_cellsPerLane);
         m_width = cellsPerLane * 2;
         m_pWidth = m_width + 1;
+        m_maxTranslation = maxTranslation;
         return true;
     }
     return false;
@@ -88,7 +85,7 @@ lms::math::polyLine2f RoadMatrix::negativeCenterLine(
     const std::vector<lms::math::vertex2f>& points) {
     lms::math::polyLine2f negativeCenterLineBackwards;
     for (auto it = points.crbegin(); it != points.crend(); it++) {
-        if (negativeCenterLineBackwards.length() < m_maxTranslate) {
+        if (negativeCenterLineBackwards.length() < m_maxTranslation) {
             negativeCenterLineBackwards.points().push_back(*it);
         } else {
             break;

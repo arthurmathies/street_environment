@@ -5,7 +5,7 @@
 namespace street_environment {
 
 bool RoadMatrix::initialize(float laneWidth, int cellsPerLane, float cellLength,
-                            int maxTranslation) {
+                            float maxTranslation) {
     if (!m_initalized) {
         m_cellsPerLane = cellsPerLane;
         m_cellLength = cellLength;
@@ -21,18 +21,11 @@ bool RoadMatrix::initialize(float laneWidth, int cellsPerLane, float cellLength,
 void RoadMatrix::aroundLine(const lms::math::polyLine2f& line,
                             const lms::math::vertex2f& deltaPosition,
                             float deltaRotation) {
-    if (size() > 0) {
-        if (deltaPosition.x >= m_cellLength) {
-            translate(deltaPosition);
-        }
-        rotate(deltaRotation);
-    }
-    lms::math::polyLine2f scaledLine =
-        line.getWithDistanceBetweenPoints(m_cellLength);
-    if (scaledLine.points().size() >= 2) {
-        aroundLine(scaledLine);
-    }
+    lms::math::polyLine2f centerLine =
+        prepCenterLine(line, deltaPosition, deltaRotation);
+    aroundLine(centerLine);
     initCells();
+    m_prevCenterLine = line;
 }
 
 bool RoadMatrix::findCell(const lms::math::vertex2f& v,
@@ -49,41 +42,81 @@ bool RoadMatrix::findCell(const lms::math::vertex2f& v,
     return false;
 }
 
-void RoadMatrix::rotate(float deltaRotation) {
-    for (int x = 0; x < m_translation; x++) {
-        for (int y = 0; y < m_pWidth; y++) {
-            point(x, y) = point(x, y).rotate(deltaRotation);
+lms::math::polyLine2f RoadMatrix::prepCenterLine(
+    const lms::math::polyLine2f& line, const lms::math::vertex2f& deltaPosition,
+    float deltaRotation) {
+    std::vector<lms::math::vertex2f> points(
+        negativeCenterLinePoints(deltaPosition, deltaRotation));
+
+    lms::math::polyLine2f centerLine = negativeCenterLine(points);
+
+    m_translation = centerLine.points().size();
+
+    if (line.points().size() > 0) {
+        lms::math::polyLine2f scaledLine =
+            line.getWithDistanceBetweenPoints(m_cellLength);
+        for (const auto& point : scaledLine.points()) {
+            centerLine.points().push_back(point);
         }
     }
+
+    return centerLine;
 }
 
-void RoadMatrix::translate(const lms::math::vertex2f& deltaPosition) {
-    RoadMatrixCell deltaCell;
-    if (findCell(deltaPosition, &deltaCell)) {
-        int prevTranslation = m_translation;
-        int deltaX = deltaCell.x - prevTranslation;
-        m_translation = std::min(deltaX + prevTranslation, m_maxTranslation);
-        int firstColumn = deltaX - m_translation + prevTranslation;
-        for (int x = 0; x < m_translation; x++) {
-            for (int y = 0; y < m_pWidth; y++) {
-                point(x, y) = point(x + firstColumn, y) - deltaPosition;
-            }
-        }
-        m_points.resize(m_translation * m_pWidth);
-        m_length = m_translation - 1;
-        m_pLength = m_translation;
+std::vector<lms::math::vertex2f> RoadMatrix::negativeCenterLinePoints(
+    const lms::math::vertex2f& deltaPosition, float deltaRotation) {
+    std::vector<lms::math::vertex2f> points;
+    for (const auto& point : m_negativeCenterLine.points()) {
+        points.push_back((point - deltaPosition).rotate(-deltaRotation));
     }
+    for (const auto& point : m_prevCenterLine.points()) {
+        lms::math::vertex2f newPoint =
+            (point - deltaPosition).rotate(-deltaRotation);
+        if (newPoint.x < 0) {
+            points.push_back(newPoint);
+        } else {
+            break;
+        }
+    }
+    return points;
+}
+
+lms::math::polyLine2f RoadMatrix::negativeCenterLine(
+    const std::vector<lms::math::vertex2f>& points) {
+    lms::math::polyLine2f negativeCenterLineBackwards;
+    for (auto it = points.crbegin(); it != points.crend(); it++) {
+        if (negativeCenterLineBackwards.length() < m_maxTranslation) {
+            negativeCenterLineBackwards.points().push_back(*it);
+        } else {
+            break;
+        }
+    }
+    const std::vector<lms::math::vertex2f>& centerLinePointsBackwards =
+        negativeCenterLineBackwards.points();
+    lms::math::polyLine2f centerLine;
+    for (auto it = centerLinePointsBackwards.crbegin();
+         it != centerLinePointsBackwards.crend(); it++) {
+        centerLine.points().push_back(*it);
+    }
+    if (centerLine.points().size() > 0) {
+        centerLine = centerLine.getWithDistanceBetweenPoints(m_cellLength);
+        centerLine.points().pop_back();
+        m_negativeCenterLine = centerLine;
+        centerLine.points().pop_back();
+    }
+
+    return centerLine;
 }
 
 void RoadMatrix::aroundLine(const lms::math::polyLine2f& line) {
-    m_length = line.points().size() - 1 + m_translation;
+    m_length = line.points().size() - 1;
     m_pLength = m_length + 1;
     m_points.resize(m_pLength * m_pWidth);
     for (int dy = m_cellsPerLane; dy >= -m_cellsPerLane; dy--) {
         lms::math::polyLine2f movedLine = line.moveOrthogonal(m_cellWidth * dy);
-        for (int x = m_translation, i = 0; x < m_pLength; x++, i++) {
+        for (int x = 0; x < m_pLength; x++) {
             int y = -(dy - m_cellsPerLane);
-            point(x, y) = movedLine.points().at(i);
+            point(x, y) = movedLine.points().at(x);
         }
     }
 }
